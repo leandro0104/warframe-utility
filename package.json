@@ -1,0 +1,13 @@
+{
+  "name": "warframe-utility",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Panel visual de utilidades para Warframe (precios de warframe.market, drops, reliquias, arcanos, rivens, builds y tiers).",
+  "scripts": {
+    "build-data": "node scripts/build-data.mjs",
+    "start": "node server.mjs"
+  },
+  "engines": { "node": ">=20" }
+}
+
