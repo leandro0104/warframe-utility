@@ -5,10 +5,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = import.meta.dirname || process.cwd();
-const PUB = path.join(ROOT, 'public');
+const PUB = fs.existsSync(path.join(ROOT, 'public', 'index.html')) ? path.join(ROOT, 'public') : ROOT;
 const CACHE_DIR = process.env.VERCEL ? path.join('/tmp', '.cache') : path.join(ROOT, '.cache');
 const PRICES_FILE = path.join(CACHE_DIR, 'prices.json');
-const SEED_PRICES_FILE = path.join(PUB, 'data', 'prices_seed.json');
+const SEED_PRICES_FILE = fs.existsSync(path.join(PUB, 'data', 'prices_seed.json'))
+  ? path.join(PUB, 'data', 'prices_seed.json')
+  : path.join(ROOT, 'data', 'prices_seed.json');
 const PORT = Number(process.env.PORT) || 3000;
 const WFM = 'https://api.warframe.market';
 const UA = 'warframe-utility/1.0 (personal project)';
@@ -128,7 +130,10 @@ async function itemOrders(slug) {
 
 let arbySchedule = null;
 try {
-  arbySchedule = JSON.parse(fs.readFileSync(path.join(PUB, 'data', 'arbitration_schedule.json'), 'utf8'));
+  const arbyFile = fs.existsSync(path.join(PUB, 'data', 'arbitration_schedule.json'))
+    ? path.join(PUB, 'data', 'arbitration_schedule.json')
+    : path.join(ROOT, 'data', 'arbitration_schedule.json');
+  arbySchedule = JSON.parse(fs.readFileSync(arbyFile, 'utf8'));
 } catch (e) {
   console.log('No arbitration schedule found');
 }
