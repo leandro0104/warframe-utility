@@ -75,9 +75,9 @@ export function worldStateView(root) {
       <p>Actualización en directo desde <b>Warframe Status API</b> con auto-recarga periódica y temporizadores segundo a segundo: Alertas, Regalos de Lotus, Cascada del Vacío SP, Arbitrajes, Fisuras, Baro Ki'Teer y Ciclos.</p>
     </section>
 
-    <!-- BANNER DESTACADO: CASCADA DEL VACÍO (STEEL PATH / OMNIA) -->
-    <div id="cascade-banner-container">
-      <div class="special-banner cascade-inactive" style="opacity:0.8">
+    <!-- ALERTA DESTACADA: CASCADA DEL VACÍO (STEEL PATH / OMNIA) -->
+    <div id="cascade-highlight-box">
+      <div class="featured-mission-card cascade-inactive" style="opacity:0.8">
         <div class="sb-icon">🌀</div>
         <div class="sb-info">
           <h3>Consultando estado de Cascada del Vacío en tiempo real…</h3>
@@ -86,8 +86,8 @@ export function worldStateView(root) {
       </div>
     </div>
 
-    <!-- BANNER DESTACADO: REGALO DE LOTUS / ALERTAS ESPECIALES -->
-    <div id="lotus-banner-container"></div>
+    <!-- ALERTA DESTACADA: REGALO DE LOTUS / ALERTAS ESPECIALES -->
+    <div id="lotus-highlight-box"></div>
 
     <div class="toolbar">
       <div class="seg wrap" id="statusseg">
@@ -137,21 +137,21 @@ export function worldStateView(root) {
   }
 
   function drawBanners() {
-    let cascadeBox = $('#cascade-banner-container', root);
-    let lotusBox = $('#lotus-banner-container', root);
+    let cascadeBox = $('#cascade-highlight-box', root);
+    let lotusBox = $('#lotus-highlight-box', root);
 
-    // Failsafe: Si por caché de navegador o reemplazo de DOM no existen en root, los inyectamos automáticamente antes de toolbar
+    // Failsafe: Si no existen en root, los inyectamos automáticamente antes de toolbar
     if (!cascadeBox || !lotusBox) {
       const toolbar = $('.toolbar', root);
       if (toolbar && toolbar.parentNode) {
         if (!cascadeBox) {
           cascadeBox = document.createElement('div');
-          cascadeBox.id = 'cascade-banner-container';
+          cascadeBox.id = 'cascade-highlight-box';
           toolbar.parentNode.insertBefore(cascadeBox, toolbar);
         }
         if (!lotusBox) {
           lotusBox = document.createElement('div');
-          lotusBox.id = 'lotus-banner-container';
+          lotusBox.id = 'lotus-highlight-box';
           toolbar.parentNode.insertBefore(lotusBox, toolbar);
         }
       }
@@ -160,7 +160,7 @@ export function worldStateView(root) {
     if (!state) return;
     const now = Date.now();
 
-    // 1. Banner de Cascada del Vacío (Steel Path / Zariman) - Solo misiones que NO hayan expirado
+    // 1. Cascada del Vacío (Steel Path / Zariman) - Solo misiones que NO hayan expirado
     const activeFissures = (state.fissures || []).filter((f) => f.expiry && new Date(f.expiry).getTime() > now);
 
     const isCascade = (f) => /cascade|cascada/i.test(f.missionType || '') || /cascade|cascada/i.test(f.missionTypeKey || '') || /tuvul/i.test(f.node || '');
@@ -169,7 +169,7 @@ export function worldStateView(root) {
 
     if (spCascade) {
       cascadeBox.innerHTML = `
-        <div class="special-banner cascade-active">
+        <div class="featured-mission-card cascade-active">
           <div class="sb-icon">🔥</div>
           <div class="sb-info">
             <div class="sb-tag-row">
@@ -189,7 +189,7 @@ export function worldStateView(root) {
       `;
     } else if (anyCascade) {
       cascadeBox.innerHTML = `
-        <div class="special-banner cascade-normal">
+        <div class="featured-mission-card cascade-normal">
           <div class="sb-icon">🌀</div>
           <div class="sb-info">
             <div class="sb-tag-row">
@@ -207,7 +207,7 @@ export function worldStateView(root) {
       `;
     } else {
       cascadeBox.innerHTML = `
-        <div class="special-banner cascade-inactive">
+        <div class="featured-mission-card cascade-inactive">
           <div class="sb-icon">⏸️</div>
           <div class="sb-info">
             <div class="sb-tag-row">
@@ -220,14 +220,14 @@ export function worldStateView(root) {
       `;
     }
 
-    // 2. Banner de Regalo de Lotus / Alertas Especiales (solo activas y vigentes)
-    lotusBox = $('#lotus-banner-container', root) || lotusBox;
+    // 2. Regalo de Lotus / Alertas Especiales (solo activas y vigentes)
+    lotusBox = $('#lotus-highlight-box', root) || lotusBox;
     const alerts = (state.alerts || []).filter((a) => a.expiry && new Date(a.expiry).getTime() > now);
     const lotusGifts = alerts.filter((a) => a.tag === 'LotusGift' || /lotus/i.test(a.mission?.description || '') || /tenno united/i.test(a.mission?.description || '') || /regalo/i.test(a.mission?.description || ''));
 
     if (lotusGifts.length > 0) {
       lotusBox.innerHTML = `
-        <div class="special-banner lotus-gift-banner">
+        <div class="featured-mission-card lotus-gift-highlight">
           <div class="sb-icon">🪷</div>
           <div class="sb-info">
             <div class="sb-tag-row">

@@ -233,7 +233,7 @@ function drawHomeCascade(el, ws) {
 
   if (spCascade) {
     el.innerHTML = `
-      <a href="#/status" class="special-banner cascade-active" style="text-decoration:none; color:inherit; display:flex;">
+      <a href="#/status" class="featured-mission-card cascade-active" style="text-decoration:none; color:inherit; display:flex;">
         <div class="sb-icon">🔥</div>
         <div class="sb-info">
           <div class="sb-tag-row">
@@ -253,7 +253,7 @@ function drawHomeCascade(el, ws) {
     `;
   } else if (anyCascade) {
     el.innerHTML = `
-      <a href="#/status" class="special-banner cascade-normal" style="text-decoration:none; color:inherit; display:flex;">
+      <a href="#/status" class="featured-mission-card cascade-normal" style="text-decoration:none; color:inherit; display:flex;">
         <div class="sb-icon">🌀</div>
         <div class="sb-info">
           <div class="sb-tag-row">
@@ -271,7 +271,7 @@ function drawHomeCascade(el, ws) {
     `;
   } else {
     el.innerHTML = `
-      <a href="#/status" class="special-banner cascade-inactive" style="text-decoration:none; color:inherit; display:flex;">
+      <a href="#/status" class="featured-mission-card cascade-inactive" style="text-decoration:none; color:inherit; display:flex;">
         <div class="sb-icon">⏸️</div>
         <div class="sb-info">
           <div class="sb-tag-row">
@@ -300,9 +300,9 @@ export function home(root) {
   root.innerHTML = `
     <section class="hero"><h1>WARFRAME <span>UTILITY</span></h1><p>Herramienta en español para Tenno: precios en vivo de warframe.market, tablas de drop oficiales, estado del mundo en tiempo real (Fisuras/Baro) y guías de farmeo.</p></section>
     
-    <!-- BANNER DESTACADO DE CASCADA DEL VACÍO EN EL INICIO -->
-    <div id="home-cascade-banner">
-      <div class="special-banner cascade-inactive" style="opacity:0.8">
+    <!-- ALERTA DESTACADA DE CASCADA DEL VACÍO EN EL INICIO -->
+    <div id="home-cascade-highlight">
+      <div class="featured-mission-card cascade-inactive" style="opacity:0.8">
         <div class="sb-icon">🌀</div>
         <div class="sb-info">
           <h3>Consultando estado de Cascada del Vacío en tiempo real…</h3>
@@ -316,7 +316,7 @@ export function home(root) {
     <div class="results"></div>`;
 
   fetchWorldState().then((ws) => {
-    const box = $('#home-cascade-banner', root);
+    const box = $('#home-cascade-highlight', root);
     if (box && ws) drawHomeCascade(box, ws);
   }).catch(() => {});
 
