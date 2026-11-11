@@ -1,8 +1,8 @@
-import { $, D, P } from './util.js?v=4.0';
-import './ui.js?v=4.0';
-import * as V1 from './views1.js?v=4.0';
-import * as V2 from './views2.js?v=4.0';
-import { worldStateView } from './viewStatus.js?v=4.0';
+import { $, D, P } from './util.js';
+import './ui.js';
+import * as V1 from './views1.js';
+import * as V2 from './views2.js';
+import { worldStateView } from './viewStatus.js';
 
 const ROUTES = {
   '': V1.home,

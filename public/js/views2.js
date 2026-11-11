@@ -118,7 +118,8 @@ export function builds(root) {
 
 // ========================= FARM (recursos + Dark Sectors + reliquias) =========================
 export function farm(root) {
-  let tab = 'res', cur = D.res.find((r) => r.name === 'Orokin Cell') || D.res[0], tier = 'Lith';
+  const resList = Array.isArray(D.res) ? D.res : [];
+  let tab = 'res', cur = resList.find((r) => r.name === 'Orokin Cell') || resList[0] || { name: 'Orokin Cell', missions: [], enemies: [] }, tier = 'Lith';
   root.innerHTML = `<section class="page-head"><h1>📍 Dónde farmear (Supervivencia & Sectores Oscuros)</h1>
     <p>Lugares recomendados con <b>bonificación de recursos (+10% a +35%)</b>, facción de infestados y estrategias de escuadrón, además de las tablas oficiales de drops.</p></section>
     <div class="seg wrap" id="mainseg">
@@ -149,10 +150,10 @@ export function farm(root) {
           </table>
         </article>`;
     } else if (tab === 'res') {
-      const guide = RESOURCE_GUIDE[cur.name];
-      const resNameEs = t(cur.name, guide?.nameEs || cur.name);
+      const guide = cur?.name ? RESOURCE_GUIDE[cur.name] : null;
+      const resNameEs = cur?.name ? t(cur.name, guide?.nameEs || cur.name) : 'Recurso';
       res.innerHTML = `
-        <div class="reslist">${D.res.map((r) => {
+        <div class="reslist">${(Array.isArray(D.res) ? D.res : []).map((r) => {
           const rEs = t(r.name, r.name);
           return `<button class="resbtn ${r === cur ? 'on' : ''}" data-r="${esc(r.name)}">${img(r.mi ? imgM(r.mi) : imgC(r.img), 'ri', r.name)}<span>${esc(rEs)}</span></button>`;
         }).join('')}</div>
@@ -200,7 +201,7 @@ export function farm(root) {
     }
     const rb = e.target.closest('.resbtn');
     if (rb) {
-      cur = D.res.find((r) => r.name === rb.dataset.r);
+      cur = (Array.isArray(D.res) ? D.res : []).find((r) => r.name === rb.dataset.r) || cur;
       return draw();
     }
     const tb = e.target.closest('[data-t]');
