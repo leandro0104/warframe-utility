@@ -185,21 +185,21 @@ export default async function handler(req, res) {
   const rawPath = req.headers?.['x-matched-path'] || req.url || '';
   const url = new URL(rawPath.startsWith('http') ? rawPath : 'http://x' + (rawPath.startsWith('/') ? '' : '/') + rawPath);
   try {
-    if (url.pathname === '/api/prices' || url.pathname.endsWith('/prices')) return send(res, 200, { progress, prices }, undefined, { 'Cache-Control': 'no-cache' });
-    if (url.pathname === '/api/worldstate' || url.pathname.endsWith('/worldstate')) return send(res, 200, await worldState(), undefined, { 'Cache-Control': 'no-cache' });
+    if (url.pathname.includes('/prices')) return send(res, 200, { progress, prices }, undefined, { 'Cache-Control': 'no-cache' });
+    if (url.pathname.includes('/worldstate')) return send(res, 200, await worldState(), undefined, { 'Cache-Control': 'no-cache' });
     let m;
-    if ((m = url.pathname.match(/\/api\/riven\/([\w-]+)$/))) return send(res, 200, await rivenAuctions(m[1]));
-    if ((m = url.pathname.match(/\/api\/orders\/([\w-]+)$/))) return send(res, 200, await itemOrders(m[1]));
+    if ((m = url.pathname.match(/\/riven\/([\w-]+)$/))) return send(res, 200, await rivenAuctions(m[1]));
+    if ((m = url.pathname.match(/\/orders\/([\w-]+)$/))) return send(res, 200, await itemOrders(m[1]));
 
-    if (process.env.VERCEL) {
-      return send(res, 404, 'Not Found', 'text/plain');
-    }
-
-    let file = path.normalize(path.join(PUB, decodeURIComponent(url.pathname)));
-    if (!file.startsWith(PUB)) return send(res, 403, 'Forbidden', 'text/plain');
+    let file = path.normalize(path.join(ROOT, decodeURIComponent(url.pathname)));
     if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');
     if (!fs.existsSync(file)) file = path.join(PUB, 'index.html');
-    send(res, 200, fs.readFileSync(file), MIME[path.extname(file)] || 'application/octet-stream', { 'Cache-Control': 'no-cache' });
+    if (!fs.existsSync(file)) file = path.join(ROOT, 'index.html');
+    if (fs.existsSync(file)) {
+      return send(res, 200, fs.readFileSync(file), MIME[path.extname(file)] || 'text/html; charset=utf-8', { 'Cache-Control': 'no-cache' });
+    }
+
+    send(res, 404, 'Not Found', 'text/plain');
   } catch (e) {
     send(res, 502, { error: e.message });
   }
