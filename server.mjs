@@ -3,6 +3,7 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
+import { pricesSeed } from './api/prices_seed.js';
 
 const ROOT = import.meta.dirname || process.cwd();
 const PUB = fs.existsSync(path.join(ROOT, 'public', 'index.html')) ? path.join(ROOT, 'public') : ROOT;
@@ -52,12 +53,12 @@ async function wfm(pathname, { prio = 1, headers = {} } = {}) {
 }
 
 // ---------- precios (crawler en segundo plano)
-let prices = {};
+let prices = { ...(pricesSeed || {}) };
 try {
   if (fs.existsSync(PRICES_FILE)) {
-    prices = JSON.parse(fs.readFileSync(PRICES_FILE, 'utf8'));
+    prices = { ...prices, ...JSON.parse(fs.readFileSync(PRICES_FILE, 'utf8')) };
   } else if (fs.existsSync(SEED_PRICES_FILE)) {
-    prices = JSON.parse(fs.readFileSync(SEED_PRICES_FILE, 'utf8'));
+    prices = { ...prices, ...JSON.parse(fs.readFileSync(SEED_PRICES_FILE, 'utf8')) };
   }
 } catch {}
 const progress = { done: Object.keys(prices).length, total: Object.keys(prices).length, cycleStart: 0, running: false };
