@@ -1,5 +1,6 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, modImg, debounce, norm, t } from './util.js';
 import { TYPE_ES, translateLocation } from './lang.js';
+import { formatCountdown } from './viewStatus.js';
 
 const relicChip = (r) => `<button class="chip relic ${r.rar?.toLowerCase()}" data-act="relic" data-relic="${esc(r.id)}" title="${esc(r.id)} · ${esc(r.rar)} · ${chance(r.ch)}${r.av ? '' : ' · vaulted'}">${esc(r.id)}<small>${chance(r.ch)}</small></button>`;
 
@@ -219,6 +220,67 @@ export function mods(root) {
 }
 
 // ========================= HOME =========================
+function drawHomeCascade(el, ws) {
+  if (!ws || !ws.fissures) return;
+  const now = Date.now();
+  const activeFissures = (ws.fissures || []).filter((f) => f.expiry && new Date(f.expiry).getTime() > now);
+  const spCascade = activeFissures.find((f) => (/cascade/i.test(f.missionType) || /cascada/i.test(f.missionType)) && f.isHard);
+  const anyCascade = activeFissures.find((f) => /cascade/i.test(f.missionType) || /cascada/i.test(f.missionType));
+
+  if (spCascade) {
+    el.innerHTML = `
+      <a href="#/status" class="special-banner cascade-active" style="text-decoration:none; color:inherit; display:flex;">
+        <div class="sb-icon">🔥</div>
+        <div class="sb-info">
+          <div class="sb-tag-row">
+            <span class="badge vault pulse-badge">⚡ ¡ACTIVA AHORA!</span>
+            <span class="badge ok">CAMINO DE ACERO (STEEL PATH)</span>
+            <span class="relic-badge ${spCascade.tier}">${spCascade.tier}</span>
+          </div>
+          <h2>🌀 Cascada del Vacío en Camino de Acero</h2>
+          <p><b>Nodo:</b> ${esc(spCascade.node)} · <b>Facción:</b> ${esc(spCascade.enemy)}</p>
+          <p class="small muted">¡El mejor método del juego para quemar reliquias a máxima velocidad, acumular Esencia de Acero y arcanos de Zariman!</p>
+        </div>
+        <div class="sb-timer-box">
+          <span class="small muted">Tiempo restante:</span>
+          <span class="countdown-large" data-expiry="${esc(spCascade.expiry)}">${formatCountdown(spCascade.expiry)}</span>
+        </div>
+      </a>
+    `;
+  } else if (anyCascade) {
+    el.innerHTML = `
+      <a href="#/status" class="special-banner cascade-normal" style="text-decoration:none; color:inherit; display:flex;">
+        <div class="sb-icon">🌀</div>
+        <div class="sb-info">
+          <div class="sb-tag-row">
+            <span class="badge ok">ACTIVA (NORMAL)</span>
+            <span class="relic-badge ${anyCascade.tier}">${anyCascade.tier}</span>
+          </div>
+          <h3>Cascada del Vacío Activa (${esc(anyCascade.node)})</h3>
+          <p class="small muted">Disponible en modo normal para abrir reliquias ${anyCascade.tier}. La variante de Camino de Acero está actualmente en espera.</p>
+        </div>
+        <div class="sb-timer-box">
+          <span class="small muted">Expira en:</span>
+          <span class="countdown-badge" data-expiry="${esc(anyCascade.expiry)}">${formatCountdown(anyCascade.expiry)}</span>
+        </div>
+      </a>
+    `;
+  } else {
+    el.innerHTML = `
+      <a href="#/status" class="special-banner cascade-inactive" style="text-decoration:none; color:inherit; display:flex;">
+        <div class="sb-icon">⏸️</div>
+        <div class="sb-info">
+          <div class="sb-tag-row">
+            <span class="badge">ESTADO: EN ESPERA</span>
+          </div>
+          <h3>Cascada del Vacío (Zariman): Inactiva en este momento</h3>
+          <p class="small muted">No hay fisura activa de Cascada del Vacío en Zariman en este momento. Toca aquí para ver todas las fisuras en vivo en Estado del Mundo.</p>
+        </div>
+      </a>
+    `;
+  }
+}
+
 export function home(root) {
   const cards = [
     ['#/primes', '💎', 'Partes Prime', 'Nombres en español, reliquias y precios'],
@@ -233,9 +295,34 @@ export function home(root) {
   ];
   root.innerHTML = `
     <section class="hero"><h1>WARFRAME <span>UTILITY</span></h1><p>Herramienta en español para Tenno: precios en vivo de warframe.market, tablas de drop oficiales, estado del mundo en tiempo real (Fisuras/Baro) y guías de farmeo.</p></section>
+    
+    <!-- BANNER DESTACADO DE CASCADA DEL VACÍO EN EL INICIO -->
+    <div id="home-cascade-banner">
+      <div class="special-banner cascade-inactive" style="opacity:0.8">
+        <div class="sb-icon">🌀</div>
+        <div class="sb-info">
+          <h3>Consultando estado de Cascada del Vacío en tiempo real…</h3>
+          <p class="small muted">Verificando fisuras activas en Zariman y Camino de Acero...</p>
+        </div>
+      </div>
+    </div>
+
     <div class="status"></div>
     <div class="grid tiles">${cards.map(([h, i, tTitle, d]) => `<a class="tile" href="${h}"><span class="ico">${i}</span><b>${tTitle}</b><small>${d}</small></a>`).join('')}</div>
     <div class="results"></div>`;
+
+  fetch('/api/worldstate').then((r) => r.ok ? r.json() : null).then((ws) => {
+    const box = $('#home-cascade-banner', root);
+    if (box && ws) drawHomeCascade(box, ws);
+  }).catch(() => {});
+
+  const homeTimer = setInterval(() => {
+    if (!root.isConnected) { clearInterval(homeTimer); return; }
+    $$('[data-expiry]', root).forEach((el) => {
+      const exp = el.dataset.expiry;
+      if (exp) el.textContent = formatCountdown(exp);
+    });
+  }, 1000);
 
   function draw() {
     $('.status', root).innerHTML = priceStatus();

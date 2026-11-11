@@ -23,7 +23,15 @@ export function worldStateView(root) {
     </section>
 
     <!-- BANNER DESTACADO: CASCADA DEL VACÍO (STEEL PATH / OMNIA) -->
-    <div id="cascade-banner-container"></div>
+    <div id="cascade-banner-container">
+      <div class="special-banner cascade-inactive" style="opacity:0.8">
+        <div class="sb-icon">🌀</div>
+        <div class="sb-info">
+          <h3>Consultando estado de Cascada del Vacío en tiempo real…</h3>
+          <p class="small muted">Verificando fisuras activas en Zariman y Camino de Acero...</p>
+        </div>
+      </div>
+    </div>
 
     <!-- BANNER DESTACADO: REGALO DE LOTUS / ALERTAS ESPECIALES -->
     <div id="lotus-banner-container"></div>
