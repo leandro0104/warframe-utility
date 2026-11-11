@@ -1,13 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 
+const require = createRequire(import.meta.url);
 let pricesData = null;
 
 export default async function handler(req, res) {
   if (!pricesData || !Object.keys(pricesData).length) {
     try {
-      const m = await import('../data/prices_seed.json', { with: { type: 'json' } });
-      pricesData = m.default || {};
+      pricesData = require('../data/prices_seed.json');
     } catch (e) {
       try {
         const seedPath = path.join(process.cwd(), 'data', 'prices_seed.json');
