@@ -177,13 +177,18 @@ const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; cha
 const send = (res, code, body, type = 'application/json; charset=utf-8', extra = {}) => { res.writeHead(code, { 'Content-Type': type, ...extra }); res.end(typeof body === 'string' || Buffer.isBuffer(body) ? body : JSON.stringify(body)); };
 
 export default async function handler(req, res) {
-  const url = new URL(req.url, 'http://x');
+  const rawPath = req.headers?.['x-matched-path'] || req.url || '';
+  const url = new URL(rawPath.startsWith('http') ? rawPath : 'http://x' + (rawPath.startsWith('/') ? '' : '/') + rawPath);
   try {
-    if (url.pathname === '/api/prices') return send(res, 200, { progress, prices }, undefined, { 'Cache-Control': 'no-cache' });
-    if (url.pathname === '/api/worldstate') return send(res, 200, await worldState(), undefined, { 'Cache-Control': 'no-cache' });
+    if (url.pathname === '/api/prices' || url.pathname.endsWith('/prices')) return send(res, 200, { progress, prices }, undefined, { 'Cache-Control': 'no-cache' });
+    if (url.pathname === '/api/worldstate' || url.pathname.endsWith('/worldstate')) return send(res, 200, await worldState(), undefined, { 'Cache-Control': 'no-cache' });
     let m;
-    if ((m = url.pathname.match(/^\/api\/riven\/([\w-]+)$/))) return send(res, 200, await rivenAuctions(m[1]));
-    if ((m = url.pathname.match(/^\/api\/orders\/([\w-]+)$/))) return send(res, 200, await itemOrders(m[1]));
+    if ((m = url.pathname.match(/\/api\/riven\/([\w-]+)$/))) return send(res, 200, await rivenAuctions(m[1]));
+    if ((m = url.pathname.match(/\/api\/orders\/([\w-]+)$/))) return send(res, 200, await itemOrders(m[1]));
+
+    if (process.env.VERCEL) {
+      return send(res, 404, 'Not Found', 'text/plain');
+    }
 
     let file = path.normalize(path.join(PUB, decodeURIComponent(url.pathname)));
     if (!file.startsWith(PUB)) return send(res, 403, 'Forbidden', 'text/plain');
