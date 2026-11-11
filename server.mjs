@@ -143,9 +143,16 @@ function resolveArbitration() {
 
 async function worldState() {
   return cached('worldstate:pc', 15e3, async () => {
-    const r = await fetch('https://api.warframestat.us/pc?language=es', {
-      headers: { 'User-Agent': UA }
-    });
+    const headers = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+      'Accept': 'application/json'
+    };
+    let r;
+    try {
+      r = await fetch('https://api.warframestat.us/pc?language=es', { headers, signal: AbortSignal.timeout(8000) });
+    } catch {
+      r = await fetch('https://api.warframestat.us/pc', { headers, signal: AbortSignal.timeout(8000) });
+    }
     if (!r.ok) throw new Error('Status API: ' + r.status);
     const data = await r.json();
 

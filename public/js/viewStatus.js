@@ -15,6 +15,59 @@ export function formatCountdown(expiryIso) {
   return `${m}m ${s}s`;
 }
 
+export function resolveClientArbitration(data) {
+  if (!data) return data;
+  if (!data.arbitration || data.arbitration.node === 'SolNode000' || data.arbitration.expired) {
+    const nowSec = Math.floor(Date.now() / 1000);
+    const hourSec = nowSec - (nowSec % 3600);
+    const expirySec = hourSec + 3600;
+    const match = D.arbySchedule ? D.arbySchedule[hourSec] : null;
+    data.arbitration = {
+      node: match?.node || 'Mapa Estelar',
+      type: match?.type || 'Misión Infinita',
+      enemy: match?.enemy || 'Enemigos',
+      activation: new Date(hourSec * 1000).toISOString(),
+      expiry: new Date(expirySec * 1000).toISOString(),
+      expired: false,
+      resolved: !!match,
+    };
+  }
+  return data;
+}
+
+export async function fetchWorldState() {
+  // 1. Intentar primero con el servidor local/backend
+  try {
+    const res = await fetch('/api/worldstate');
+    if (res.ok) {
+      const data = await res.json();
+      if (data && (data.fissures || data.alerts)) {
+        return resolveClientArbitration(data);
+      }
+    }
+  } catch (e) {
+    console.warn('Backend worldstate fallo, intentando llamada directa...', e);
+  }
+
+  // 2. Fallback infalible: llamada directa con CORS desde el navegador del usuario
+  try {
+    const r1 = await fetch('https://api.warframestat.us/pc?language=es', { mode: 'cors' });
+    if (r1.ok) {
+      const j = await r1.json();
+      return resolveClientArbitration(j);
+    }
+  } catch (e) {
+    console.warn('Direct fetch fallo en es, probando sin language...', e);
+  }
+
+  const r2 = await fetch('https://api.warframestat.us/pc', { mode: 'cors' });
+  if (r2.ok) {
+    const j = await r2.json();
+    return resolveClientArbitration(j);
+  }
+  throw new Error('No se pudo conectar a la API de Warframe');
+}
+
 export function worldStateView(root) {
   root.innerHTML = `
     <section class="page-head">
@@ -63,9 +116,7 @@ export function worldStateView(root) {
       $('.status-content', root).innerHTML = `<div class="notice">Cargando datos del servidor de Warframe…</div>`;
     }
     try {
-      const res = await fetch('/api/worldstate');
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      state = await res.json();
+      state = await fetchWorldState();
       $('#sync-time', root).textContent = `Actualizado: ${new Date().toLocaleTimeString('es-AR')}`;
       drawBanners();
       draw();

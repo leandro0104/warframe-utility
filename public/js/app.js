@@ -32,7 +32,8 @@ async function loadData() {
     relicfarm: 'relicfarm',
     rivens: 'rivens',
     modimg: 'modimg',
-    i18n: 'i18n'
+    i18n: 'i18n',
+    arbySchedule: 'arbitration_schedule'
   };
   await Promise.all(Object.entries(files).map(async ([k, f]) => {
     try {

@@ -1,6 +1,6 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, modImg, debounce, norm, t } from './util.js';
 import { TYPE_ES, translateLocation } from './lang.js';
-import { formatCountdown } from './viewStatus.js';
+import { formatCountdown, fetchWorldState } from './viewStatus.js';
 
 const relicChip = (r) => `<button class="chip relic ${r.rar?.toLowerCase()}" data-act="relic" data-relic="${esc(r.id)}" title="${esc(r.id)} · ${esc(r.rar)} · ${chance(r.ch)}${r.av ? '' : ' · vaulted'}">${esc(r.id)}<small>${chance(r.ch)}</small></button>`;
 
@@ -311,7 +311,7 @@ export function home(root) {
     <div class="grid tiles">${cards.map(([h, i, tTitle, d]) => `<a class="tile" href="${h}"><span class="ico">${i}</span><b>${tTitle}</b><small>${d}</small></a>`).join('')}</div>
     <div class="results"></div>`;
 
-  fetch('/api/worldstate').then((r) => r.ok ? r.json() : null).then((ws) => {
+  fetchWorldState().then((ws) => {
     const box = $('#home-cascade-banner', root);
     if (box && ws) drawHomeCascade(box, ws);
   }).catch(() => {});
