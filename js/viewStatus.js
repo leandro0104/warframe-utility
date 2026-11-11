@@ -221,7 +221,7 @@ export function worldStateView(root) {
     }
 
     // 2. Banner de Regalo de Lotus / Alertas Especiales (solo activas y vigentes)
-    const lotusBox = $('#lotus-banner-container', root);
+    lotusBox = $('#lotus-banner-container', root) || lotusBox;
     const alerts = (state.alerts || []).filter((a) => a.expiry && new Date(a.expiry).getTime() > now);
     const lotusGifts = alerts.filter((a) => a.tag === 'LotusGift' || /lotus/i.test(a.mission?.description || '') || /tenno united/i.test(a.mission?.description || '') || /regalo/i.test(a.mission?.description || ''));
 
