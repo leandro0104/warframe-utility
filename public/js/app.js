@@ -1,8 +1,8 @@
-import { $, D, P } from './util.js';
-import './ui.js';
-import * as V1 from './views1.js';
-import * as V2 from './views2.js';
-import { worldStateView } from './viewStatus.js';
+import { $, D, P } from './util.js?v=4.0';
+import './ui.js?v=4.0';
+import * as V1 from './views1.js?v=4.0';
+import * as V2 from './views2.js?v=4.0';
+import { worldStateView } from './viewStatus.js?v=4.0';
 
 const ROUTES = {
   '': V1.home,
@@ -47,12 +47,19 @@ async function loadData() {
 async function loadPrices() {
   try {
     const j = await (await fetch('/api/prices')).json();
-    P.prices = j.prices;
-    P.progress = j.progress;
+    if (j.prices && Object.keys(j.prices).length > 0) {
+      P.prices = j.prices;
+      P.progress = j.progress;
+      return true;
+    }
+  } catch {}
+  try {
+    const p = await (await fetch('/data/prices_seed.json')).json();
+    P.prices = p;
+    P.progress = { done: Object.keys(p).length, total: Object.keys(p).length, running: false };
     return true;
-  } catch {
-    return false;
-  }
+  } catch {}
+  return false;
 }
 
 function route() {

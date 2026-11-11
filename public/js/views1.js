@@ -161,19 +161,22 @@ export function mods(root) {
   function draw() {
     $('.status', root).innerHTML = priceStatus();
     const q = norm(S.q);
-    const list = D.mods.filter((m) => {
-      const hasPrice = P.prices[m.slug]?.s != null;
-      if (!hasPrice) return false;
+    
+    // Filtrar por rareza, tipo y término de búsqueda
+    let list = D.mods.filter((m) => {
       if (S.rarity !== 'all' && m.rarity !== S.rarity) return false;
       if (S.type !== 'all' && m.type !== S.type) return false;
       if (!q) return true;
       const mEs = norm(t(m.name, m.name));
       return mEs.includes(q) || norm(m.name).includes(q);
-    }).sort((a, b) => price(b.slug) - price(a.slug));
+    });
+
+    // Ordenar de mayor a menor precio; los que tienen precio van primero
+    list.sort((a, b) => (price(b.slug) || 0) - (price(a.slug) || 0));
 
     const res = $('.results', root);
     if (!list.length) {
-      res.innerHTML = '<p class="muted center">Cargando precios o sin resultados…</p>';
+      res.innerHTML = '<p class="muted center">No se encontraron mods que coincidan con la búsqueda.</p>';
       return;
     }
 
@@ -224,8 +227,9 @@ function drawHomeCascade(el, ws) {
   if (!ws || !ws.fissures) return;
   const now = Date.now();
   const activeFissures = (ws.fissures || []).filter((f) => f.expiry && new Date(f.expiry).getTime() > now);
-  const spCascade = activeFissures.find((f) => (/cascade/i.test(f.missionType) || /cascada/i.test(f.missionType)) && f.isHard);
-  const anyCascade = activeFissures.find((f) => /cascade/i.test(f.missionType) || /cascada/i.test(f.missionType));
+  const isCascade = (f) => /cascade|cascada/i.test(f.missionType || '') || /cascade|cascada/i.test(f.missionTypeKey || '') || /tuvul/i.test(f.node || '');
+  const spCascade = activeFissures.find((f) => isCascade(f) && f.isHard);
+  const anyCascade = activeFissures.find((f) => isCascade(f));
 
   if (spCascade) {
     el.innerHTML = `

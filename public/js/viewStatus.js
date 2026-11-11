@@ -144,8 +144,9 @@ export function worldStateView(root) {
     const cascadeBox = $('#cascade-banner-container', root);
     const activeFissures = (state.fissures || []).filter((f) => f.expiry && new Date(f.expiry).getTime() > now);
 
-    const spCascade = activeFissures.find((f) => (/cascade/i.test(f.missionType) || /cascada/i.test(f.missionType)) && f.isHard);
-    const anyCascade = activeFissures.find((f) => /cascade/i.test(f.missionType) || /cascada/i.test(f.missionType));
+    const isCascade = (f) => /cascade|cascada/i.test(f.missionType || '') || /cascade|cascada/i.test(f.missionTypeKey || '') || /tuvul/i.test(f.node || '');
+    const spCascade = activeFissures.find((f) => isCascade(f) && f.isHard);
+    const anyCascade = activeFissures.find((f) => isCascade(f));
 
     if (spCascade) {
       cascadeBox.innerHTML = `
@@ -203,7 +204,7 @@ export function worldStateView(root) {
     // 2. Banner de Regalo de Lotus / Alertas Especiales (solo activas y vigentes)
     const lotusBox = $('#lotus-banner-container', root);
     const alerts = (state.alerts || []).filter((a) => a.expiry && new Date(a.expiry).getTime() > now);
-    const lotusGifts = alerts.filter((a) => a.tag === 'LotusGift' || /lotus/i.test(a.mission?.description || ''));
+    const lotusGifts = alerts.filter((a) => a.tag === 'LotusGift' || /lotus/i.test(a.mission?.description || '') || /tenno united/i.test(a.mission?.description || '') || /regalo/i.test(a.mission?.description || ''));
 
     if (lotusGifts.length > 0) {
       lotusBox.innerHTML = `
