@@ -4,14 +4,15 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const ROOT = import.meta.dirname;
+const ROOT = import.meta.dirname || process.cwd();
 const PUB = path.join(ROOT, 'public');
-const CACHE_DIR = path.join(ROOT, '.cache');
+const CACHE_DIR = process.env.VERCEL ? path.join('/tmp', '.cache') : path.join(ROOT, '.cache');
 const PRICES_FILE = path.join(CACHE_DIR, 'prices.json');
+const SEED_PRICES_FILE = path.join(PUB, 'data', 'prices_seed.json');
 const PORT = Number(process.env.PORT) || 3000;
 const WFM = 'https://api.warframe.market';
 const UA = 'warframe-utility/1.0 (personal project)';
-fs.mkdirSync(CACHE_DIR, { recursive: true });
+try { fs.mkdirSync(CACHE_DIR, { recursive: true }); } catch {}
 
 // ---------- cola con límite de tasa (prioridad alta = peticiones del usuario)
 const queue = [[], []];
@@ -50,8 +51,14 @@ async function wfm(pathname, { prio = 1, headers = {} } = {}) {
 
 // ---------- precios (crawler en segundo plano)
 let prices = {};
-try { prices = JSON.parse(fs.readFileSync(PRICES_FILE, 'utf8')); } catch {}
-const progress = { done: 0, total: 0, cycleStart: 0, running: false };
+try {
+  if (fs.existsSync(PRICES_FILE)) {
+    prices = JSON.parse(fs.readFileSync(PRICES_FILE, 'utf8'));
+  } else if (fs.existsSync(SEED_PRICES_FILE)) {
+    prices = JSON.parse(fs.readFileSync(SEED_PRICES_FILE, 'utf8'));
+  }
+} catch {}
+const progress = { done: Object.keys(prices).length, total: Object.keys(prices).length, cycleStart: 0, running: false };
 
 function summarize(top) {
   const sell = (top?.data?.sell || []).map((o) => o.platinum).sort((a, b) => a - b);
@@ -76,12 +83,14 @@ async function crawl() {
   fs.writeFileSync(PRICES_FILE, JSON.stringify(prices));
   progress.running = false;
 }
-(async function loop() {
-  for (;;) {
-    try { await crawl(); } catch (e) { console.error('crawl error', e.message); }
-    await new Promise((r) => setTimeout(r, 5 * 60e3));
-  }
-})();
+if (!process.env.VERCEL) {
+  (async function loop() {
+    for (;;) {
+      try { await crawl(); } catch (e) { console.error('crawl error', e.message); }
+      await new Promise((r) => setTimeout(r, 5 * 60e3));
+    }
+  })();
+}
 
 // ---------- caché simple para endpoints on-demand
 const memo = new Map();
@@ -167,7 +176,7 @@ async function worldState() {
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon' };
 const send = (res, code, body, type = 'application/json; charset=utf-8', extra = {}) => { res.writeHead(code, { 'Content-Type': type, ...extra }); res.end(typeof body === 'string' || Buffer.isBuffer(body) ? body : JSON.stringify(body)); };
 
-http.createServer(async (req, res) => {
+export default async function handler(req, res) {
   const url = new URL(req.url, 'http://x');
   try {
     if (url.pathname === '/api/prices') return send(res, 200, { progress, prices }, undefined, { 'Cache-Control': 'no-cache' });
@@ -184,4 +193,8 @@ http.createServer(async (req, res) => {
   } catch (e) {
     send(res, 502, { error: e.message });
   }
-}).listen(PORT, () => console.log(`Warframe Utility en http://localhost:${PORT}`));
+}
+
+if (!process.env.VERCEL && !process.env.NOW_REGION) {
+  http.createServer(handler).listen(PORT, () => console.log(`Warframe Utility en http://localhost:${PORT}`));
+}
