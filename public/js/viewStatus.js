@@ -137,15 +137,34 @@ export function worldStateView(root) {
   }
 
   function drawBanners() {
+    let cascadeBox = $('#cascade-banner-container', root);
+    let lotusBox = $('#lotus-banner-container', root);
+
+    // Failsafe: Si por caché de navegador o reemplazo de DOM no existen en root, los inyectamos automáticamente antes de toolbar
+    if (!cascadeBox || !lotusBox) {
+      const toolbar = $('.toolbar', root);
+      if (toolbar && toolbar.parentNode) {
+        if (!cascadeBox) {
+          cascadeBox = document.createElement('div');
+          cascadeBox.id = 'cascade-banner-container';
+          toolbar.parentNode.insertBefore(cascadeBox, toolbar);
+        }
+        if (!lotusBox) {
+          lotusBox = document.createElement('div');
+          lotusBox.id = 'lotus-banner-container';
+          toolbar.parentNode.insertBefore(lotusBox, toolbar);
+        }
+      }
+    }
+
     if (!state) return;
     const now = Date.now();
 
     // 1. Banner de Cascada del Vacío (Steel Path / Zariman) - Solo misiones que NO hayan expirado
-    const cascadeBox = $('#cascade-banner-container', root);
     const activeFissures = (state.fissures || []).filter((f) => f.expiry && new Date(f.expiry).getTime() > now);
 
     const isCascade = (f) => /cascade|cascada/i.test(f.missionType || '') || /cascade|cascada/i.test(f.missionTypeKey || '') || /tuvul/i.test(f.node || '');
-    const spCascade = activeFissures.find((f) => isCascade(f) && f.isHard);
+    const spCascade = activeFissures.find((f) => isCascade(f) && (f.isHard || f.tier === 'Omnia' || /steel path|camino/i.test(f.tier || '')));
     const anyCascade = activeFissures.find((f) => isCascade(f));
 
     if (spCascade) {

@@ -181,8 +181,8 @@ export function farm(root) {
         <article class="card wide">
           <header>${img(cur.mi ? imgM(cur.mi) : imgC(cur.img), 'big-img', cur.name)}<div><h3>${esc(resNameEs)} (${esc(cur.name)})</h3><p class="muted small">Otras fuentes según datos de drops oficiales</p></div></header>
           <div class="two">
-            <div><h4>🎯 Misiones y alijos</h4>${cur.missions.length ? srcList(cur.missions) : '<p class="muted small">Sin misiones en tablas de drops.</p>'}</div>
-            <div><h4>☠️ Enemigos y contenedores</h4>${cur.enemies.length ? srcList(cur.enemies) : '<p class="muted small">Sin enemigos en tablas de drops.</p>'}</div>
+            <div><h4>🎯 Misiones y alijos</h4>${(cur.missions || []).length ? srcList(cur.missions) : '<p class="muted small">Sin misiones en tablas de drops.</p>'}</div>
+            <div><h4>☠️ Enemigos y contenedores</h4>${(cur.enemies || []).length ? srcList(cur.enemies) : '<p class="muted small">Sin enemigos en tablas de drops.</p>'}</div>
           </div>
         </article>`;
     } else {
