@@ -223,6 +223,7 @@ input:focus,select:focus{outline:2px solid var(--gold);outline-offset:-1px}
 
 .cascade-active{background:radial-gradient(ellipse at 10% 20%,#4a1525 0%,#190b14 60%,#0e0f18 100%);border:2px solid #ff4d6d}
 .cascade-normal{background:radial-gradient(ellipse at 10% 20%,#152e4a 0%,#0b1626 60%,#0e0f18 100%);border:1px solid #4fd1e888}
+.cascade-normal .countdown-large{color:var(--cyan);border-color:#4fd1e888;box-shadow:0 0 12px #4fd1e844}
 .cascade-inactive{background:#111624;border:1px solid var(--line);opacity:.85}
 
 .lotus-gift-highlight{background:radial-gradient(ellipse at 10% 20%,#3d2e10 0%,#1a150c 60%,#0e0f18 100%);border:2px solid var(--gold);box-shadow:0 0 20px #e8c46a33}

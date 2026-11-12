@@ -164,8 +164,8 @@ export function worldStateView(root) {
     const activeFissures = (state.fissures || []).filter((f) => f.expiry && new Date(f.expiry).getTime() > now);
 
     const isCascade = (f) => /cascade|cascada/i.test(f.missionType || '') || /cascade|cascada/i.test(f.missionTypeKey || '') || /tuvul/i.test(f.node || '');
-    const spCascade = activeFissures.find((f) => isCascade(f) && (f.isHard || f.tier === 'Omnia' || /steel path|camino/i.test(f.tier || '')));
-    const anyCascade = activeFissures.find((f) => isCascade(f));
+    const spCascade = activeFissures.find((f) => isCascade(f) && f.isHard);
+    const normalCascade = activeFissures.find((f) => isCascade(f) && !f.isHard);
 
     if (spCascade) {
       cascadeBox.innerHTML = `
@@ -174,11 +174,11 @@ export function worldStateView(root) {
           <div class="sb-info">
             <div class="sb-tag-row">
               <span class="badge vault pulse-badge">⚡ ¡ACTIVA AHORA!</span>
-              <span class="badge ok">CAMINO DE ACERO (STEEL PATH)</span>
+              <span class="badge vault">⚔️ CAMINO DE ACERO (STEEL PATH)</span>
               <span class="relic-badge ${spCascade.tier}">${spCascade.tier}</span>
             </div>
-            <h2>🌀 Cascada del Vacío en Camino de Acero</h2>
-            <p><b>Nodo:</b> ${esc(translateNode(spCascade.node))} · <b>Facción:</b> ${esc(spCascade.enemy)}</p>
+            <h2>🌀 Cascada del Vacío: Camino de Acero</h2>
+            <p><b>Nodo:</b> ${esc(translateNode(spCascade.node))} · <b>Facción:</b> ${esc(spCascade.enemy)} · <b>Modo:</b> <span class="badge vault">Camino de Acero (+100 Lvl, +100% Drops)</span></p>
             <p class="small muted">¡El mejor método del juego para quemar reliquias a máxima velocidad, acumular Esencia de Acero y arcanos de Zariman!</p>
           </div>
           <div class="sb-timer-box">
@@ -187,21 +187,23 @@ export function worldStateView(root) {
           </div>
         </div>
       `;
-    } else if (anyCascade) {
+    } else if (normalCascade) {
       cascadeBox.innerHTML = `
         <div class="featured-mission-card cascade-normal">
           <div class="sb-icon">🌀</div>
           <div class="sb-info">
             <div class="sb-tag-row">
-              <span class="badge ok">ACTIVA (NORMAL)</span>
-              <span class="relic-badge ${anyCascade.tier}">${anyCascade.tier}</span>
+              <span class="badge ok pulse-badge">⚡ ¡ACTIVA AHORA!</span>
+              <span class="badge ok">🛡️ MODO NORMAL (ESTÁNDAR)</span>
+              <span class="relic-badge ${normalCascade.tier}">${normalCascade.tier}</span>
             </div>
-            <h3>Cascada del Vacío Activa (${esc(translateNode(anyCascade.node))})</h3>
-            <p class="small muted">Disponible en modo normal para abrir reliquias ${anyCascade.tier}. La variante de Camino de Acero está actualmente en espera.</p>
+            <h2>🌀 Cascada del Vacío: Modo Normal</h2>
+            <p><b>Nodo:</b> ${esc(translateNode(normalCascade.node))} · <b>Facción:</b> ${esc(normalCascade.enemy)} · <b>Modo:</b> <span class="badge ok">Nivel Estándar (Sin modificadores de Acero)</span></p>
+            <p class="small muted">Disponible en Zariman para quemar reliquias ${normalCascade.tier} a máxima velocidad y farmear reputación de los Holdfasts / Arcanos. <i>(La variante de Camino de Acero está actualmente en espera).</i></p>
           </div>
           <div class="sb-timer-box">
-            <span class="small muted">Expira en:</span>
-            <span class="countdown-badge" data-expiry="${esc(anyCascade.expiry)}">${formatCountdown(anyCascade.expiry)}</span>
+            <span class="small muted">Tiempo restante:</span>
+            <span class="countdown-large" data-expiry="${esc(normalCascade.expiry)}">${formatCountdown(normalCascade.expiry)}</span>
           </div>
         </div>
       `;
