@@ -36,19 +36,25 @@ export function tiers(root) {
 
 // ========================= BUILDS =========================
 function modTile(name) {
-  const m = D.modimg[name.toLowerCase()];
+  const m = D.modimg ? D.modimg[name.toLowerCase()] : null;
   const nameEs = t(name, name);
-  return `<div class="modtile ${(m?.r || '').toLowerCase()}" title="${esc(nameEs)} (${esc(name)})">
-    <div class="modtile-img-box">${img(modImg(name), 'mod-img', name)}</div>
+  const rarity = (m?.r || 'common').toLowerCase();
+  const imgSrc = modImg(name);
+  const itemPrice = m?.s ? price(m.s) : null;
+
+  return `<div class="modtile ${rarity}" title="${esc(nameEs)} (${esc(name)})">
+    <div class="modtile-img-box">
+      ${img(imgSrc, 'mod-img', name)}
+    </div>
     <span class="modtile-name">${esc(nameEs)}</span>
-    ${m?.s && price(m.s) != null ? `<span class="modtile-price">${fmt(price(m.s))}p</span>` : ''}
+    ${itemPrice != null ? `<span class="modtile-price">${fmt(itemPrice)}p</span>` : ''}
   </div>`;
 }
 
 export function builds(root) {
   const S = { tab: 'frames', q: '' };
   root.innerHTML = `<section class="page-head"><h1>🛠️ Top builds</h1>
-    <p>Builds de referencia con vista expandida y nítida de mods y arcanos en español. Haz clic sobre cualquier mod o imagen para ampliarla en detalle.</p></section>
+    <p>Builds de referencia en pantalla completa con vista panorámica de mods y arcanos en español. Pasa el cursor sobre la imagen de cualquier mod para ampliarlo en gran tamaño y apreciar sus detalles.</p></section>
     <div class="toolbar"><div class="seg"><button data-v="frames" class="on">Warframes</button><button data-v="weapons">Armas</button></div>
     <input type="search" placeholder="Buscar Warframe o arma en español…" data-k="q"></div><div class="results"></div>`;
 
@@ -81,7 +87,7 @@ export function builds(root) {
         </header>
 
         <div class="build-body">
-          <div class="build-section-label">⚙️ Ranuras de Modificación (8 Mods) — Pasa el cursor para ampliar detalles</div>
+          <div class="build-section-label">⚙️ Ranuras de Modificación (8 Mods) — Pasa el cursor sobre cada mod para ampliar detalles</div>
           <div class="modgrid large">${b.mods.map(modTile).join('')}</div>
 
           <div class="build-section-label">🔮 Arcanos Recomendados</div>
@@ -101,7 +107,7 @@ export function builds(root) {
     }).join('');
 
     const extra = q && !list.length ? `<div class="notice">No hay build curada para “${esc(S.q)}”. <a target="_blank" rel="noopener" href="${overframeSearch(S.q)}">Buscar en Overframe ↗</a></div>` : '';
-    $('.results', root).innerHTML = extra + `<div class="grid cards builds-container">${cards}</div>`;
+    $('.results', root).innerHTML = extra + `<div class="builds-container">${cards}</div>`;
   }
 
   root.addEventListener('input', debounce((e) => { if (e.target.dataset.k) { S.q = e.target.value; draw(); } }, 150));

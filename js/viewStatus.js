@@ -111,6 +111,55 @@ export function worldStateView(root) {
   let timerInterval = null;
   let autoFetchInterval = null;
 
+  // Filtros de Fisuras del Vacío
+  let fissureTier = 'all';
+  let fissureType = 'all';
+  let fissureFastOnly = false;
+  let fissureMode = 'all';
+
+  function isFissureFast(mType = '') {
+    return /capture|captura|extermination|exterminate|exterminio/i.test(mType);
+  }
+
+  function isFissureDefense(mType = '') {
+    return /defense|defensa/i.test(mType) && !/mobile/i.test(mType);
+  }
+
+  function translateMissionType(mType = '') {
+    const low = (mType || '').toLowerCase();
+    if (/capture/i.test(low)) return 'Captura';
+    if (/extermination|exterminate/i.test(low)) return 'Exterminio';
+    if (/mobile defense/i.test(low)) return 'Defensa Móvil';
+    if (/defense/i.test(low)) return 'Defensa';
+    if (/survival/i.test(low)) return 'Supervivencia';
+    if (/interception/i.test(low)) return 'Intercepción';
+    if (/spy/i.test(low)) return 'Espionaje';
+    if (/rescue/i.test(low)) return 'Rescate';
+    if (/sabotage/i.test(low)) return 'Sabotaje';
+    if (/disruption/i.test(low)) return 'Interrupción';
+    if (/excavation/i.test(low)) return 'Excavación';
+    if (/skirmish/i.test(low)) return 'Escaramuza';
+    if (/void cascade|cascade/i.test(low)) return 'Cascada del Vacío';
+    if (/void flood|flood/i.test(low)) return 'Inundación del Vacío';
+    if (/void armageddon|armageddon/i.test(low)) return 'Armagedón del Vacío';
+    if (/alchemy/i.test(low)) return 'Alquimia';
+    if (/assault/i.test(low)) return 'Asalto';
+    if (/hijack/i.test(low)) return 'Secuestro';
+    return mType || 'Misión';
+  }
+
+  function translateFaction(enemy = '') {
+    const low = (enemy || '').toLowerCase();
+    if (/grineer/i.test(low)) return { name: 'Grineer', icon: '🔴', cls: 'grineer' };
+    if (/corpus/i.test(low)) return { name: 'Corpus', icon: '🔵', cls: 'corpus' };
+    if (/infested|infestation/i.test(low)) return { name: 'Infestados', icon: '🟢', cls: 'infested' };
+    if (/corrupted|orokin/i.test(low)) return { name: 'Corruptos', icon: '🟡', cls: 'corrupted' };
+    if (/murmur/i.test(low)) return { name: 'Murmullo', icon: '🟣', cls: 'murmur' };
+    if (/crossfire/i.test(low)) return { name: 'Fuego Cruzado', icon: '⚔️', cls: 'crossfire' };
+    if (/narmer/i.test(low)) return { name: 'Narmer', icon: '🟠', cls: 'narmer' };
+    return { name: enemy || 'Desconocido', icon: '👾', cls: 'unknown' };
+  }
+
   async function loadState(silent = false) {
     if (!silent) {
       $('.status-content', root).innerHTML = `<div class="notice">Cargando datos del servidor de Warframe…</div>`;
@@ -128,10 +177,20 @@ export function worldStateView(root) {
   }
 
   function updateTimers() {
+    const now = Date.now();
     $$('[data-expiry]', root).forEach((el) => {
       const exp = el.dataset.expiry;
       if (exp) {
         el.textContent = formatCountdown(exp);
+        const diff = new Date(exp).getTime() - now;
+        const badge = el.closest('.countdown-badge');
+        if (badge) {
+          if (diff <= 10 * 60 * 1000 && diff > 0) {
+            badge.classList.add('expiring-soon');
+          } else {
+            badge.classList.remove('expiring-soon');
+          }
+        }
       }
     });
   }
@@ -261,38 +320,171 @@ export function worldStateView(root) {
 
     if (tab === 'fissures') {
       const now = Date.now();
-      const fissures = (state.fissures || [])
+      const allFissures = (state.fissures || [])
         .filter((f) => f.expiry && new Date(f.expiry).getTime() > now)
         .sort((a, b) => (a.tierNum || 0) - (b.tierNum || 0));
+
+      const filteredFissures = allFissures.filter((f) => {
+        // 1. Filtro por Era / Tier de Reliquia
+        if (fissureTier !== 'all' && f.tier !== fissureTier) return false;
+
+        // 2. Filtro de Dificultad (Modo Normal vs Camino de Acero)
+        if (fissureMode === 'normal' && f.isHard) return false;
+        if (fissureMode === 'steelpath' && !f.isHard) return false;
+
+        // 3. Filtro de misiones rápidas (Captura, Exterminio, Defensa)
+        if (fissureFastOnly) {
+          const fast = isFissureFast(f.missionType) || isFissureDefense(f.missionType);
+          if (!fast) return false;
+        }
+
+        // 4. Filtro por Tipo de Misión
+        if (fissureType !== 'all') {
+          const mt = (f.missionType || '').toLowerCase();
+          if (fissureType === 'capture' && !/capture|captura/i.test(mt)) return false;
+          if (fissureType === 'extermination' && !/extermination|exterminate|exterminio/i.test(mt)) return false;
+          if (fissureType === 'defense' && (!/defense|defensa/i.test(mt) || /mobile/i.test(mt))) return false;
+          if (fissureType === 'survival' && !/survival|supervivencia/i.test(mt)) return false;
+          if (fissureType === 'disruption' && !/disruption|interrupci|disrupci/i.test(mt)) return false;
+          if (fissureType === 'spy' && !/spy|espionaje/i.test(mt)) return false;
+          if (fissureType === 'rescue' && !/rescue|rescate/i.test(mt)) return false;
+          if (fissureType === 'sabotage' && !/sabotage|sabotaje/i.test(mt)) return false;
+          if (fissureType === 'mobile-defense' && !/mobile defense|defensa m/i.test(mt)) return false;
+          if (fissureType === 'interception' && !/interception|intercepci/i.test(mt)) return false;
+          if (fissureType === 'excavation' && !/excavation|excavaci/i.test(mt)) return false;
+          if (fissureType === 'cascade' && !/cascade|cascada/i.test(mt)) return false;
+        }
+
+        return true;
+      });
+
+      const hasActiveFilters = fissureTier !== 'all' || fissureType !== 'all' || fissureFastOnly || fissureMode !== 'all';
+
       content.innerHTML = `
         <article class="card wide">
-          <header><div>
-            <h3>Fisuras del Vacío Activas (${fissures.length})</h3>
-            <p class="muted">Elige una fisura según la era de tu reliquia (Lith, Meso, Neo, Axi, Requiem, Omnia). Solo se muestran misiones vigentes con su tiempo restante en vivo.</p>
-          </div></header>
-          <div class="fissure-grid">
-            ${fissures.map((f) => {
-              const node = translateNode(f.node);
-              const isHard = f.isHard ? '<span class="badge vault">Camino de Acero</span>' : '';
-              const isStorm = f.isStorm ? '<span class="badge type">Tormenta del Vacío</span>' : '';
-              const isCascade = /cascade/i.test(f.missionType) ? '<span class="badge gold">⭐ Cascada</span>' : '';
-              return `
-                <div class="fissure-card ${f.tier} ${f.isHard ? 'is-hard-card' : ''}">
-                  <div class="fc-head">
-                    <span class="relic-badge ${f.tier}">${f.tier}</span>
-                    <span class="countdown-badge">⏳ <span data-expiry="${esc(f.expiry)}">${formatCountdown(f.expiry)}</span></span>
-                  </div>
-                  <b>${esc(node)}</b>
-                  <div class="meta">
-                    <span class="badge">${esc(f.missionType)}</span>
-                    <span class="badge ok">${esc(f.enemy)}</span>
-                    ${isCascade}
-                    ${isHard}
-                    ${isStorm}
-                  </div>
-                </div>`;
-            }).join('')}
-          </div>
+          <header class="fissure-filter-bar">
+            <div class="fissure-filter-header">
+              <div class="fissure-title-block">
+                <h3>🔥 Fisuras del Vacío Activas (${filteredFissures.length}${hasActiveFilters ? ` de ${allFissures.length}` : ''})</h3>
+                <p class="muted">Filtra por era o tipo de misión. Las misiones de <b>Captura</b>, <b>Exterminio</b> y <b>Defensa</b> están resaltadas con marco especial para abrir reliquias rápido.</p>
+              </div>
+              <div class="fissure-quick-actions">
+                <button class="btn-fast-toggle ${fissureFastOnly ? 'active' : ''}" id="toggle-fast-only" title="Ver solo misiones rápidas de Captura, Exterminio o Defensa">
+                  ⚡ ${fissureFastOnly ? 'Viendo solo Rápidas' : 'Solo Rápidas (Captura/Exterm/Def)'}
+                </button>
+              </div>
+            </div>
+
+            <div class="fissure-controls-row">
+              <div class="fissure-tier-buttons" id="fissure-tier-filter">
+                <span class="fc-label">Era:</span>
+                <button class="tier-btn ${fissureTier === 'all' ? 'on' : ''}" data-tier="all">Todas</button>
+                <button class="tier-btn Lith ${fissureTier === 'Lith' ? 'on' : ''}" data-tier="Lith">Lith</button>
+                <button class="tier-btn Meso ${fissureTier === 'Meso' ? 'on' : ''}" data-tier="Meso">Meso</button>
+                <button class="tier-btn Neo ${fissureTier === 'Neo' ? 'on' : ''}" data-tier="Neo">Neo</button>
+                <button class="tier-btn Axi ${fissureTier === 'Axi' ? 'on' : ''}" data-tier="Axi">Axi</button>
+                <button class="tier-btn Requiem ${fissureTier === 'Requiem' ? 'on' : ''}" data-tier="Requiem">Requiem</button>
+                <button class="tier-btn Omnia ${fissureTier === 'Omnia' ? 'on' : ''}" data-tier="Omnia">Omnia</button>
+              </div>
+
+              <div class="fissure-selects-group">
+                <div class="fissure-select-item">
+                  <label for="fissure-type-select">Misión:</label>
+                  <select id="fissure-type-select" class="f-select">
+                    <option value="all" ${fissureType === 'all' ? 'selected' : ''}>Todas las misiones</option>
+                    <option value="capture" ${fissureType === 'capture' ? 'selected' : ''}>⚡ Captura (Muy Rápida)</option>
+                    <option value="extermination" ${fissureType === 'extermination' ? 'selected' : ''}>⚡ Exterminio (Muy Rápida)</option>
+                    <option value="defense" ${fissureType === 'defense' ? 'selected' : ''}>🛡️ Defensa (Oleadas)</option>
+                    <option value="survival" ${fissureType === 'survival' ? 'selected' : ''}>⏳ Supervivencia</option>
+                    <option value="disruption" ${fissureType === 'disruption' ? 'selected' : ''}>🔑 Interrupción</option>
+                    <option value="spy" ${fissureType === 'spy' ? 'selected' : ''}>🕵️ Espionaje</option>
+                    <option value="rescue" ${fissureType === 'rescue' ? 'selected' : ''}>🏃 Rescate</option>
+                    <option value="sabotage" ${fissureType === 'sabotage' ? 'selected' : ''}>💣 Sabotaje</option>
+                    <option value="mobile-defense" ${fissureType === 'mobile-defense' ? 'selected' : ''}>📡 Defensa Móvil</option>
+                    <option value="interception" ${fissureType === 'interception' ? 'selected' : ''}>📻 Intercepción</option>
+                    <option value="excavation" ${fissureType === 'excavation' ? 'selected' : ''}>⛏️ Excavación</option>
+                    <option value="cascade" ${fissureType === 'cascade' ? 'selected' : ''}>⭐ Cascada del Vacío</option>
+                  </select>
+                </div>
+
+                <div class="fissure-select-item">
+                  <label for="fissure-mode-select">Dificultad:</label>
+                  <select id="fissure-mode-select" class="f-select">
+                    <option value="all" ${fissureMode === 'all' ? 'selected' : ''}>Todos los modos</option>
+                    <option value="normal" ${fissureMode === 'normal' ? 'selected' : ''}>🛡️ Solo Modo Normal</option>
+                    <option value="steelpath" ${fissureMode === 'steelpath' ? 'selected' : ''}>⚔️ Solo Camino de Acero</option>
+                  </select>
+                </div>
+
+                ${hasActiveFilters ? `<button class="btn ghost small reset-fissures-btn" id="reset-fissure-filters">↺ Quitar filtros</button>` : ''}
+              </div>
+            </div>
+          </header>
+
+          ${filteredFissures.length === 0 ? `
+            <div class="notice center" style="padding: 34px 20px; margin: 15px 0;">
+              <h3>No hay fisuras que coincidan con estos filtros</h3>
+              <p class="muted">Prueba seleccionando otra era de reliquia o quitando los filtros activos para ver todas las disponibles.</p>
+              <button class="btn small" id="reset-fissure-filters-empty" style="margin-top: 10px;">↺ Ver todas las fisuras activas</button>
+            </div>
+          ` : `
+            <div class="fissure-grid">
+              ${filteredFissures.map((f) => {
+                const node = translateNode(f.node);
+                const isFast = isFissureFast(f.missionType);
+                const isDef = isFissureDefense(f.missionType);
+                const typeEs = translateMissionType(f.missionType);
+                const faction = translateFaction(f.enemy);
+
+                let highlightClass = '';
+                let highlightBadge = '';
+                if (isFast) {
+                  highlightClass = 'is-fast-mission';
+                  highlightBadge = '<span class="badge-fissure-highlight fast">⚡ RÁPIDA</span>';
+                } else if (isDef) {
+                  highlightClass = 'is-defense-mission';
+                  highlightBadge = '<span class="badge-fissure-highlight defense">🛡️ DEFENSA</span>';
+                }
+
+                const isHard = f.isHard ? '<span class="badge-fissure-sp">⚔️ Steel Path</span>' : '';
+                const isStorm = f.isStorm ? '<span class="badge-fissure-storm">🌀 Tormenta Railjack</span>' : '';
+                const isCascade = /cascade/i.test(f.missionType) ? '<span class="badge-fissure-cascade">⭐ Cascada</span>' : '';
+
+                return `
+                  <div class="fissure-card ${f.tier} ${highlightClass} ${f.isHard ? 'is-hard-card' : ''}">
+                    <div class="fc-head">
+                      <div class="fc-tier-box">
+                        <span class="relic-badge ${f.tier}">${f.tier}</span>
+                        ${highlightBadge}
+                      </div>
+                      <span class="countdown-badge" title="Tiempo restante de esta fisura">
+                        ⏳ <span data-expiry="${esc(f.expiry)}">${formatCountdown(f.expiry)}</span>
+                      </span>
+                    </div>
+
+                    <div class="fc-body">
+                      <div class="fc-node-title" title="${esc(node)}">${esc(node)}</div>
+                      <div class="fc-mission-type">
+                        <span class="fc-type-pill ${isFast ? 'fast' : isDef ? 'defense' : ''}">
+                          ${isFast ? '⚡ ' : isDef ? '🛡️ ' : ''}${esc(typeEs)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="fc-footer">
+                      <div class="fc-tags">
+                        <span class="fissure-enemy-tag ${faction.cls}" title="Facción enemiga">
+                          ${faction.icon} ${esc(faction.name)}
+                        </span>
+                        ${isHard}
+                        ${isCascade}
+                        ${isStorm}
+                      </div>
+                    </div>
+                  </div>`;
+              }).join('')}
+            </div>
+          `}
         </article>
       `;
     } else if (tab === 'alerts') {
@@ -546,6 +738,36 @@ export function worldStateView(root) {
     }
     if (e.target.closest('#ref-status')) {
       loadState();
+      return;
+    }
+    if (e.target.closest('#toggle-fast-only')) {
+      fissureFastOnly = !fissureFastOnly;
+      draw();
+      return;
+    }
+    const tb = e.target.closest('#fissure-tier-filter button');
+    if (tb) {
+      fissureTier = tb.dataset.tier;
+      draw();
+      return;
+    }
+    if (e.target.closest('#reset-fissure-filters') || e.target.closest('#reset-fissure-filters-empty')) {
+      fissureTier = 'all';
+      fissureType = 'all';
+      fissureFastOnly = false;
+      fissureMode = 'all';
+      draw();
+      return;
+    }
+  });
+
+  root.addEventListener('change', (e) => {
+    if (e.target.id === 'fissure-type-select') {
+      fissureType = e.target.value;
+      draw();
+    } else if (e.target.id === 'fissure-mode-select') {
+      fissureMode = e.target.value;
+      draw();
     }
   });
 
