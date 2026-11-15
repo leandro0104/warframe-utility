@@ -1,7 +1,7 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, srcLine, modImg, debounce, norm, wikiLink, overframeSearch, t } from './util.js';
 import { openModal } from './ui.js';
 import { TIERS, TIER_COLORS } from './tiers.js';
-import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=15.0';
+import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=16.0';
 import { DARK_SECTOR_SURVIVALS, RESOURCE_GUIDE } from './darksector.js';
 import { TYPE_ES } from './lang.js';
 
@@ -85,12 +85,14 @@ function wfModSlot(name, slotType = 'normal', isAura = false, isExilus = false) 
   if (isAura) slotLabel = '⚡ AURA';
   else if (isExilus) slotLabel = '◈ EXILUS';
   else if (slotType === 'stance') slotLabel = '⚔️ POSTURA';
+  else if (slotType === 'precept') slotLabel = '🐾 PRECEPTO';
 
   // Puntos de rango iluminados
   const maxRank = modData?.max || (isPrime || isUmbral || isArchon || /blind rage|narrow minded/i.test(name) ? 10 : 5);
   const dotsHtml = `<div class="wf-slot-rank-dots">${Array(maxRank).fill('<span>•</span>').join('')}</div>`;
 
-  const drainBadge = isAura ? `^${drain} =` : `${drain} =`;
+  const isBonusCapacity = isAura || slotType === 'stance' || slotType === 'precept';
+  const drainBadge = isBonusCapacity ? `^${drain} =` : `${drain} =`;
 
   return `
     <div class="wf-mod-slot ${frameClass} ${isExilus ? 'is-exilus' : ''}" title="${esc(nameEs)} (${esc(name)})">
@@ -145,6 +147,116 @@ const SHARD_NAMES_ES = {
   topaz: 'Topacio',
 };
 
+function renderGearArsenalBoard(gear, parentNameEs) {
+  let topSlotsHtml = '';
+  if (gear.slot === 'Primary' || gear.slot === 'Secondary') {
+    if (gear.exilus) {
+      topSlotsHtml = `
+        <div class="wf-top-slots-row is-weapon-top">
+          <div class="wf-slot-container exilus-container">
+            ${wfModSlot(gear.exilus, 'exilus', false, true)}
+          </div>
+        </div>`;
+    }
+  } else if (gear.slot === 'Melee') {
+    if (gear.stance || gear.exilus) {
+      topSlotsHtml = `
+        <div class="wf-top-slots-row ${!gear.stance ? 'is-weapon-top' : ''}">
+          ${gear.stance ? `
+            <div class="wf-slot-container aura-container">
+              ${wfModSlot(gear.stance, 'stance', false, false)}
+            </div>` : ''}
+          ${gear.exilus ? `
+            <div class="wf-slot-container exilus-container">
+              ${wfModSlot(gear.exilus, 'exilus', false, true)}
+            </div>` : ''}
+        </div>`;
+    }
+  } else if (gear.slot === 'Companion') {
+    topSlotsHtml = `
+      <div class="wf-top-slots-row">
+        <div class="wf-slot-container aura-container">
+          ${wfModSlot(gear.aura || 'Venari Bodyguard', 'precept', true, false)}
+        </div>
+        <div class="wf-slot-container exilus-container">
+          ${wfModSlot(gear.exilus || 'Primed Animal Instinct', 'exilus', false, true)}
+        </div>
+      </div>`;
+  } else {
+    topSlotsHtml = `
+      <div class="wf-top-slots-row">
+        <div class="wf-slot-container aura-container">
+          ${wfModSlot(gear.aura || 'Steel Charge', 'aura', true, false)}
+        </div>
+        <div class="wf-slot-container exilus-container">
+          ${wfModSlot(gear.exilus || 'Power Drift', 'exilus', false, true)}
+        </div>
+      </div>`;
+  }
+
+  const modsGridHtml = `
+    <div class="wf-main-mods-grid">
+      ${(gear.mods || []).slice(0, 8).map((modName) => wfModSlot(modName, 'normal')).join('')}
+    </div>`;
+
+  const hasArcanes = gear.arcanes && gear.arcanes.length > 0;
+  const arcanesHtml = `
+    <div class="wf-arcanes-column ${hasArcanes ? '' : 'is-empty'}">
+      <span class="wf-arcanes-header-label">${hasArcanes ? 'ARCANOS' : 'SIN ARCANOS'}</span>
+      ${hasArcanes ? gear.arcanes.slice(0, 2).map(wfArcaneSlot).join('') : '<div class="wf-arcane-empty-slot"><span class="muted small">Arma / Bestia sin ranuras de Arcano</span></div>'}
+    </div>`;
+
+  let incarnonHtml = '';
+  if (gear.incarnon && gear.incarnon.length) {
+    incarnonHtml = `
+      <div class="wf-incarnon-box">
+        <div class="wf-synergy-title">🧬 Evoluciones Incarnon recomendadas (eduiy16):</div>
+        <div class="wf-incarnon-grid">
+          ${gear.incarnon.map((evo) => `
+            <div class="incarnon-evo-pill">
+              <span class="evo-diamond">◈</span>
+              <span class="evo-text">${esc(evo)}</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  let elementsHtml = '';
+  if (gear.elements) {
+    elementsHtml = `
+      <div class="wf-synergy-row">
+        <div class="wf-synergy-chip elements">
+          <span class="chip-badge">🔥 Combinación Elemental & Estados</span>
+          <div class="chip-content">
+            <span class="chip-ability">${esc(gear.elements)}</span>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  return `
+    <div class="wf-arsenal-board">
+      <div class="wf-mods-cluster">
+        ${topSlotsHtml}
+        ${modsGridHtml}
+      </div>
+      ${arcanesHtml}
+    </div>
+
+    ${(elementsHtml || incarnonHtml) ? `
+      <div class="wf-synergies-panel">
+        ${elementsHtml}
+        ${incarnonHtml}
+      </div>` : ''}
+
+    ${gear.notes ? `
+      <div class="build-strategy-box gear-strategy">
+        <h4>💡 Sinergia con ${esc(parentNameEs)} & Mecánicas (eduiy16)</h4>
+        <p>${esc(gear.notes)}</p>
+      </div>` : ''}
+  `;
+}
+
 export function builds(root) {
   const S = { tab: 'frames', q: '' };
   root.innerHTML = `<section class="page-head"><h1>🛠️ Top builds</h1>
@@ -157,7 +269,17 @@ export function builds(root) {
     const list = (S.tab === 'frames' ? FRAME_BUILDS : WEAPON_BUILDS).filter((x) => {
       if (!q) return true;
       const esName = norm(t(x.name, x.name));
-      return esName.includes(q) || norm(x.name).includes(q);
+      const matchMain = esName.includes(q) || norm(x.name).includes(q);
+      if (matchMain) return true;
+      if (x.builds) {
+        return x.builds.some((b) => {
+          if (b.loadout) {
+            return b.loadout.some((g) => norm(g.name).includes(q) || norm(g.type || '').includes(q));
+          }
+          return false;
+        });
+      }
+      return false;
     });
 
     const cards = list.map((x) => {
@@ -165,6 +287,7 @@ export function builds(root) {
       const nameEs = t(x.name, x.name);
       const isPrimeAvail = D.cat[x.name + ' Prime'] ? x.name + ' Prime' : null;
       return bs.map((b) => {
+        const hasLoadout = b.loadout && b.loadout.length > 0;
         // Shards HTML con imágenes oficiales del juego
         let shardsHtml = '';
         if (b.shards && b.shards.length) {
@@ -289,45 +412,99 @@ export function builds(root) {
                 ${isPrimeAvail ? `<span class="badge vault">Versión Prime disponible</span>` : ''}
                 <span class="badge ok">${esc(b.role)}</span>
                 ${b.author ? `<span class="badge eduiy-badge">Guía por ${esc(b.author)}</span>` : ''}
+                ${hasLoadout ? `<span class="badge tier-s" title="Incluye armas exaltadas, compañeros y stat-sticks">Kit Completo (${1 + b.loadout.length} Builds)</span>` : ''}
               </div>
               <h2>${esc(nameEs)}</h2>
               <h4 class="build-name-tag">Configuración: <span>${esc(b.name)}</span></h4>
             </div>
           </header>
 
+          ${hasLoadout ? `
+            <div class="wf-kit-selector">
+              <div class="wf-kit-header">
+                <span class="wf-kit-title">🎒 EQUIPO COMPLETO DEL CONJUNTO (${1 + b.loadout.length} BUILDS):</span>
+                <span class="wf-kit-hint">Haz clic para ver la build detallada de cada componente:</span>
+              </div>
+              <div class="wf-kit-pills">
+                <button class="wf-kit-pill on" data-target="gear-main">
+                  <span class="kit-icon">🛡️</span>
+                  <div class="kit-info">
+                    <span class="kit-name">${esc(nameEs)}</span>
+                    <span class="kit-badge">Warframe Principal</span>
+                  </div>
+                </button>
+                ${b.loadout.map((gear, idx) => `
+                  <button class="wf-kit-pill" data-target="gear-${idx}">
+                    <span class="kit-icon">${gear.icon || '⚔️'}</span>
+                    <div class="kit-info">
+                      <span class="kit-name">${esc(gear.name)}</span>
+                      <span class="kit-badge">${esc(gear.type || 'Equipamiento')}</span>
+                    </div>
+                  </button>
+                `).join('')}
+              </div>
+            </div>` : ''}
+
           <div class="build-body">
-            <div class="build-section-label">⚡ Arsenal Oficial — Pasa el cursor sobre la carta de cualquier mod para ampliarla</div>
+            <!-- PANEL PRINCIPAL (WARFRAME) -->
+            <div class="wf-gear-panel active" data-gear-id="gear-main">
+              <div class="build-section-label">⚡ Arsenal de ${esc(nameEs)} — Pasa el cursor sobre la carta de cualquier mod para ampliarla</div>
 
-            <div class="wf-arsenal-board">
-              <!-- Clúster de Mods: Aura/Postura + Exilus arriba, 2 filas de 4 mods abajo -->
-              <div class="wf-mods-cluster">
-                ${topSlotsHtml}
+              <div class="wf-arsenal-board">
+                <!-- Clúster de Mods: Aura/Postura + Exilus arriba, 2 filas de 4 mods abajo -->
+                <div class="wf-mods-cluster">
+                  ${topSlotsHtml}
 
-                <div class="wf-main-mods-grid">
-                  ${b.mods.slice(0, 8).map((modName) => wfModSlot(modName, 'normal')).join('')}
+                  <div class="wf-main-mods-grid">
+                    ${b.mods.slice(0, 8).map((modName) => wfModSlot(modName, 'normal')).join('')}
+                  </div>
+                </div>
+
+                <!-- Columna de Arcanos a la derecha -->
+                <div class="wf-arcanes-column">
+                  <span class="wf-arcanes-header-label">ARCANOS</span>
+                  ${(b.arcanes && b.arcanes.length ? b.arcanes : ['Primary Merciless']).slice(0, 2).map(wfArcaneSlot).join('')}
                 </div>
               </div>
 
-              <!-- Columna de Arcanos a la derecha -->
-              <div class="wf-arcanes-column">
-                <span class="wf-arcanes-header-label">ARCANOS</span>
-                ${(b.arcanes && b.arcanes.length ? b.arcanes : ['Primary Merciless']).slice(0, 2).map(wfArcaneSlot).join('')}
+              <!-- Panel de Sinergias Avanzadas (Helminto, Enfoque, Elementos, Incarnon y Fragmentos) -->
+              ${(helminthFocusHtml || shardsHtml || elementsHtml || incarnonHtml) ? `
+                <div class="wf-synergies-panel">
+                  ${helminthFocusHtml}
+                  ${elementsHtml}
+                  ${incarnonHtml}
+                  ${shardsHtml}
+                </div>` : ''}
+
+              <div class="build-strategy-box">
+                <h4>💡 ${x.slot ? 'Guía de Disparo & Mecánicas (eduiy16)' : 'Estrategia de Combate & Rotación Endgame (eduiy16)'}</h4>
+                <p>${esc(b.notes)}</p>
               </div>
             </div>
 
-            <!-- Panel de Sinergias Avanzadas (Helminto, Enfoque, Elementos, Incarnon y Fragmentos) -->
-            ${(helminthFocusHtml || shardsHtml || elementsHtml || incarnonHtml) ? `
-              <div class="wf-synergies-panel">
-                ${helminthFocusHtml}
-                ${elementsHtml}
-                ${incarnonHtml}
-                ${shardsHtml}
-              </div>` : ''}
+            <!-- PANELES DE EQUIPAMIENTO ADICIONAL (SI TIENE LOADOUT) -->
+            ${hasLoadout ? b.loadout.map((gear, idx) => `
+              <div class="wf-gear-panel" data-gear-id="gear-${idx}">
+                <div class="wf-gear-panel-header">
+                  <div class="gear-header-left">
+                    <span class="gear-header-icon">${gear.icon || '⚔️'}</span>
+                    <div>
+                      <h3>${esc(gear.name)}</h3>
+                      <span class="gear-sub-type">${esc(gear.type || 'Equipamiento')}</span>
+                    </div>
+                  </div>
+                  ${gear.elements ? `
+                    <div class="wf-synergy-chip elements compact">
+                      <span class="chip-badge">🔥 Elementos</span>
+                      <span class="chip-ability">${esc(gear.elements)}</span>
+                    </div>` : ''}
+                </div>
 
-            <div class="build-strategy-box">
-              <h4>💡 ${x.slot ? 'Guía de Disparo & Mecánicas (eduiy16)' : 'Estrategia de Combate & Rotación Endgame (eduiy16)'}</h4>
-              <p>${esc(b.notes)}</p>
-            </div>
+                <div class="build-section-label">⚡ Arsenal de ${esc(gear.name)} — Pasa el cursor sobre la carta de cualquier mod para ampliarla</div>
+
+                ${renderGearArsenalBoard(gear, nameEs)}
+              </div>
+            `).join('') : ''}
           </div>
 
           <footer>
@@ -345,6 +522,17 @@ export function builds(root) {
 
   root.addEventListener('input', debounce((e) => { if (e.target.dataset.k) { S.q = e.target.value; draw(); } }, 150));
   root.addEventListener('click', (e) => {
+    const pill = e.target.closest('.wf-kit-pill');
+    if (pill) {
+      const card = pill.closest('.build-showcase');
+      if (!card) return;
+      const targetId = pill.dataset.target;
+      card.querySelectorAll('.wf-kit-pill').forEach((p) => p.classList.toggle('on', p === pill));
+      card.querySelectorAll('.wf-gear-panel').forEach((panel) => {
+        panel.classList.toggle('active', panel.dataset.gearId === targetId);
+      });
+      return;
+    }
     const b = e.target.closest('.seg button');
     if (!b) return;
     S.tab = b.dataset.v;

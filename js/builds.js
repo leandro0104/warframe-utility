@@ -23,7 +23,20 @@ export const FRAME_BUILDS = [
       { type: 'topaz', tau: false, stat: '+Regeneración de Sobreguardia con daño ígneo' }
     ],
     focus: 'Madurai (+Fuerza y Velocidad de casteo al instante)',
-    notes: 'Ciclo 2-2-4 para conceder decenas de miles de Sobreguardia a todo el escuadrón (inmunidad total a estados y derribos). Luego usa 3-3-4 (Tragedia) para detonar todos los cortes y DoTs acumulados aniquilando hordas enteras al instante.'
+    notes: 'Ciclo 2-2-4 para conceder decenas de miles de Sobreguardia a todo el escuadrón (inmunidad total a estados y derribos). Luego usa 3-3-4 (Tragedia) para detonar todos los cortes y DoTs acumulados aniquilando hordas enteras al instante.',
+    loadout: [
+      {
+        name: 'Noctua (Grimorio Exaltado)',
+        type: 'Tomo Exaltado de Sabiduría',
+        icon: '📖',
+        slot: 'Secondary',
+        exilus: 'Gunslinger',
+        mods: ['Galvanized Diffusion', 'Lethal Torrent', 'Jahu Canticle', 'Vome Invocation', 'Primed Pistol Gambit', 'Primed Target Cracker', 'Convulsion', 'Pistol Pestilence'],
+        arcanes: ['Secondary Fortifier', 'Secondary Outburst'],
+        elements: 'Corrosivo + Proyectiles Perforantes de Tomo',
+        notes: 'Noctua puede equipar mods exclusivos de Tomo: Invocación Vome otorga hasta +60% de Fuerza de Habilidad acumulativa pasiva para Dante al disparar, y Cántico Jahu despoja el 5% de armadura enemiga por segundo de forma pasiva.'
+      }
+    ]
   }]),
 
   F('Kullervo', [{
@@ -86,7 +99,20 @@ export const FRAME_BUILDS = [
       { type: 'amber', tau: true, stat: '+37.5% Velocidad de lanzamiento' }
     ],
     focus: 'Zenurik (Pozo de energía constante) o Madurai',
-    notes: 'Mantén siempre activos Escudo Fragmentador (3) para un 95% de reducción de daño por proyectiles y Galería de Tiro (2) para aturdir. Pillaje limpia defensas y recarga tu Shield Gate al instante mientras barres con Pacificadoras.'
+    notes: 'Mantén siempre activos Escudo Fragmentador (3) para un 95% de reducción de daño por proyectiles y Galería de Tiro (2) para aturdir. Pillaje limpia defensas y recarga tu Shield Gate al instante mientras barres con Pacificadoras.',
+    loadout: [
+      {
+        name: 'Reguladoras Prime (Regulators)',
+        type: 'Pistolas Exaltadas de Pacificador',
+        icon: '🔫',
+        slot: 'Secondary',
+        exilus: 'Lethal Momentum',
+        mods: ['Galvanized Diffusion', 'Galvanized Shot', 'Lethal Torrent', 'Primed Target Cracker', 'Primed Pistol Gambit', 'Primed Heated Charge', 'Convulsion', 'Pistol Pestilence'],
+        arcanes: ['Secondary Fortifier', 'Secondary Outburst'],
+        elements: 'Corrosivo + Fuego (Anti-Armaduras & DoT)',
+        notes: 'La cadencia de fuego se incrementa por cada disparo continuado de Pacificador. Galvanized Diffusion y Shot multiplican el daño exponencialmente. Secondary Fortifier roba Sobreguardia directamente de unidades Eximus con cada impacto.'
+      }
+    ]
   }]),
 
   F('Khora', [{
@@ -107,7 +133,44 @@ export const FRAME_BUILDS = [
       { type: 'amber', tau: true, stat: '+37.5% Velocidad de casteo de Látigo' }
     ],
     focus: 'Naramon (Combo melee para Statstick con Magistar o Riven)',
-    notes: 'El daño de Látigo Garra escala directamente con tu arma cuerpo a cuerpo (Statstick). Con 4 fragmentos violetas y combo x12, cada azote golpea en área por decenas de millones de daño mientras Domo duplicará recursos.'
+    notes: 'El daño de Látigo Garra escala directamente con tu arma cuerpo a cuerpo (Statstick). Con 4 fragmentos violetas y combo x12, cada azote golpea en área por decenas de millones de daño mientras Domo duplicará recursos.',
+    loadout: [
+      {
+        name: 'Látigo Garra (Whipclaw)',
+        type: 'Stat-stick Melee (Magistar Incarnon / Ceramic Dagger)',
+        icon: '💥',
+        slot: 'Melee',
+        stance: 'Crushing Ruin',
+        exilus: 'Melee Elementalist',
+        mods: ['Blood Rush', 'Weeping Wounds', 'Organ Shatter', 'Gladiator Might', 'Primed Fever Strike', 'North Wind', 'Sacrificial Steel', 'Primed Pressure Point'],
+        arcanes: ['Melee Crescendo', 'Melee Exposure'],
+        elements: 'Viral (Frío + Toxina) + Daño Crítico Puro de Statstick',
+        notes: 'Látigo Garra hereda el combo x12, multiplicador crítico y daño base de tu melee. Con Magistar Incarnon obtienes +100% de daño crítico base y probabilidad crítica abrumadora para alcanzar críticos rojos de cientos de millones por azote.'
+      },
+      {
+        name: 'Venari Prime',
+        type: 'Compañero Kavat Exaltado',
+        icon: '🐱',
+        slot: 'Companion',
+        aura: 'Venari Bodyguard',
+        exilus: 'Primed Animal Instinct',
+        mods: ['Fetch', 'Tenacious Bond', 'Reinforced Bond', 'Bite', 'Maul', 'Link Vitality', 'Link Armor', 'Pack Leader'],
+        arcanes: [],
+        notes: 'Mordisco (Bite) supera el 50% de probabilidad crítica en Venari, lo que activa pasivamente Vínculo Tenaz (Tenacious Bond) otorgando un multiplicador final de +1.2x de daño crítico permanente a Khora y a su látigo. Además, Venari Bodyguard se sacrifica para revivir a Khora si cae en combate.'
+      },
+      {
+        name: 'Garras de Venari',
+        type: 'Garras de Bestia Exaltadas',
+        icon: '🐾',
+        slot: 'Melee',
+        stance: 'Sharpened Claws',
+        exilus: '',
+        mods: ['Blood Rush', 'Condition Overload', 'Organ Shatter', 'Weeping Wounds', 'Gladiator Might', 'Carnis Mandible', 'Virulent Scourge', 'Vicious Frost'],
+        arcanes: [],
+        elements: 'Viral + Cortante (Trituración de Armadura 100%)',
+        notes: 'Garras Afiladas (Sharpened Claws) arranca el 100% de la armadura enemiga con cada zarpazo de Venari, facilitando la eliminación instantánea de acólitos y enemigos Level Cap en Camino de Acero.'
+      }
+    ]
   }]),
 
   F('Wisp', [{
@@ -317,7 +380,21 @@ export const FRAME_BUILDS = [
       { type: 'amber', tau: true, stat: '+37.5% Velocidad de casteo' }
     ],
     focus: 'Naramon (Combo melee permanente)',
-    notes: 'Tormenta Serena con Golpe Reactivo adapta las ondas de choque automáticamente al elemento al que el enemigo es más débil con +250% de probabilidad de estado, pulverizando salas completas en segundos.'
+    notes: 'Tormenta Serena con Golpe Reactivo adapta las ondas de choque automáticamente al elemento al que el enemigo es más débil con +250% de probabilidad de estado, pulverizando salas completas en segundos.',
+    loadout: [
+      {
+        name: 'Viento Desértico Prime (Desert Wind)',
+        type: 'Puños Exaltados de Tormenta Serena',
+        icon: '👊',
+        slot: 'Melee',
+        stance: '',
+        exilus: 'Reactive Storm',
+        mods: ['Sacrificial Steel', 'Blood Rush', 'Organ Shatter', 'Gladiator Might', 'Primed Fever Strike', 'Shocking Touch', 'Condition Overload', 'Gladiator Rush'],
+        arcanes: ['Melee Influence', 'Melee Exposure'],
+        elements: 'Daño Adaptativo (Tormenta Reactiva + Corrosivo)',
+        notes: 'Tormenta Reactiva (Reactive Storm) altera el tipo de daño automáticamente al tipo de elemento al que los enemigos son más débiles y suma +250% de probabilidad de estado. Las ondas de choque atraviesan columnas y paredes golpeando en toda la sala.'
+      }
+    ]
   }]),
 
   F('Xaku', [{
@@ -485,7 +562,31 @@ export const FRAME_BUILDS = [
       { type: 'azure', tau: true, stat: '+Max Energía inicial' }
     ],
     focus: 'Zenurik o Madurai',
-    notes: 'En Razorwing eres un objetivo minúsculo con 50% de evasión pasiva. Las pistolas Dex Pixia con Arcane Velocity alcanzan una cadencia monstruosa que liquida acólitos y jefes en fracciones de segundo.'
+    notes: 'En Razorwing eres un objetivo minúsculo con 50% de evasión pasiva. Las pistolas Dex Pixia con Arcane Velocity alcanzan una cadencia monstruosa que liquida acólitos y jefes en fracciones de segundo.',
+    loadout: [
+      {
+        name: 'Dex Pixia Prime',
+        type: 'Pistolas Dobles Exaltadas',
+        icon: '🔫',
+        slot: 'Secondary',
+        exilus: 'Lethal Momentum',
+        mods: ['Galvanized Diffusion', 'Galvanized Shot', 'Lethal Torrent', 'Primed Target Cracker', 'Primed Pistol Gambit', 'Pistol Pestilence', 'Frostbite', 'Primed Heated Charge'],
+        arcanes: ['Secondary Encumber', 'Secondary Fortifier'],
+        elements: 'Viral + Fuego (30+ disparos/segundo)',
+        notes: 'Dispara a más de 30 proyectiles por segundo con Alas de Navaja y Razorwing Blitz activos. Secondary Encumber satura con todos los estados del juego activando Galvanized Shot para aniquilar acólitos y jefes en milisegundos.'
+      },
+      {
+        name: 'Diwata Prime',
+        type: 'Espada Ligera Exaltada',
+        icon: '🗡️',
+        slot: 'Melee',
+        stance: '',
+        exilus: '',
+        mods: ['Blood Rush', 'Organ Shatter', 'Gladiator Might', 'Condition Overload', 'Weeping Wounds', 'Primed Fever Strike', 'Shocking Touch', 'Carnis Mandible'],
+        arcanes: [],
+        notes: 'Equipada con mods del conjunto Gladiador para transferir probabilidad crítica pasiva a Dex Pixia y realizar remates aéreos si es necesario.'
+      }
+    ]
   }]),
 
   F('Nezha', [{
@@ -527,7 +628,21 @@ export const FRAME_BUILDS = [
       { type: 'azure', tau: true, stat: '+225 Armadura' }
     ],
     focus: 'Naramon o Zenurik',
-    notes: 'Nube Nebulosa (2) atraviesa trampas y láseres sin alertar alarmas, curando el 100% de tu salud y la del clon. El clon celestial usa tu arma secundaria o primaria con munición y precisión excepcionales.'
+    notes: 'Nube Nebulosa (2) atraviesa trampas y láseres sin alertar alarmas, curando el 100% de tu salud y la del clon. El clon celestial usa tu arma secundaria o primaria con munición y precisión excepcionales.',
+    loadout: [
+      {
+        name: 'Vara de Hierro Prime (Iron Staff)',
+        type: 'Báculo Exaltado de Furia Primitiva',
+        icon: '🦯',
+        slot: 'Melee',
+        stance: 'Crushing Ruin',
+        exilus: 'Primal Rage',
+        mods: ['Blood Rush', 'Weeping Wounds', 'Organ Shatter', 'Condition Overload', 'Gladiator Might', 'Primed Reach', 'Primed Fever Strike', 'North Wind'],
+        arcanes: ['Melee Influence', 'Melee Exposure'],
+        elements: 'Viral + Impacto + Cortante',
+        notes: 'Ira Primitiva (Primal Rage) acumula hasta +150% de probabilidad crítica plana por bajas. Sumado a Primed Reach, la vara barre áreas enormes con críticos rojos constantes.'
+      }
+    ]
   }]),
 
   F('Harrow', [{
@@ -590,7 +705,21 @@ export const FRAME_BUILDS = [
       { type: 'amber', tau: true, stat: '+37.5% Velocidad de casteo' }
     ],
     focus: 'Naramon (Combo para el Statstick de Shattered Lash)',
-    notes: 'Rompe Vitrificación Masiva (4) desde afuera usando Látigo Destrozador (1) para sumar el daño de la barrera a Tormenta de Astillas (2). El daño escala sin límite alguno, matando enemigos solo con caminar cerca de ellos.'
+    notes: 'Rompe Vitrificación Masiva (4) desde afuera usando Látigo Destrozador (1) para sumar el daño de la barrera a Tormenta de Astillas (2). El daño escala sin límite alguno, matando enemigos solo con caminar cerca de ellos.',
+    loadout: [
+      {
+        name: 'Látigo Fragmentado (Shattered Lash / Stat-Stick Magistar)',
+        type: 'Stat-stick Melee para Romper Vitrificación',
+        icon: '🗡️',
+        slot: 'Melee',
+        stance: 'Crushing Ruin',
+        exilus: 'Melee Elementalist',
+        mods: ['Primed Pressure Point', 'Blood Rush', 'Organ Shatter', 'Primed Fever Strike', 'Shocking Touch', 'Molten Impact', 'Gladiator Might', 'Spoiled Strike'],
+        arcanes: ['Melee Exposure', 'Melee Crescendo'],
+        elements: 'Radiación + Viral / Daño Melee Plano',
+        notes: 'Látigo Fragmentado traslada todo el daño físico y elemental directamente a la explosión del muro vitrificado, inyectando cientos de miles de puntos de daño acumulativo a Tormenta de Astillas.'
+      }
+    ]
   }]),
 
   F('Styanax', [{
@@ -695,8 +824,170 @@ export const FRAME_BUILDS = [
       { type: 'violet', tau: true, stat: '+37.5% Daño Crítico Melee (para la Sombra)' }
     ],
     focus: 'Madurai o Vazarin',
-    notes: 'Penumbra (3) ralentiza a los enemigos hasta un 95% y otorga robo de vida continuo. El combo Sembrar (2) + Cosechar (1) con el aumento Shadow Haze genera detonaciones en cadena con críticos rojos garantizados.'
-  }])
+    notes: 'Penumbra (3) ralentiza a los enemigos hasta un 95% y otorga robo de vida continuo. El combo Sembrar (2) + Cosechar (1) con el aumento Shadow Haze genera detonaciones en cadena con críticos rojos garantizados.',
+    loadout: [
+      {
+        name: 'Sombra de Sevagoth Prime (Sevagoth\'s Shadow)',
+        type: 'Forma Exaltada Espectral',
+        icon: '👻',
+        slot: 'Warframe',
+        aura: 'Steel Charge',
+        exilus: 'Power Drift',
+        mods: ['Shadow Haze', 'Primed Flow', 'Transient Fortitude', 'Overextended', 'Streamline', 'Stretch', 'Rolling Guard', 'Umbral Intensify'],
+        arcanes: ['Arcane Strike', 'Arcane Reaper'],
+        notes: 'La Sombra se convoca al llenar la lápida de almas. Usa Consumir para agrupar hordas completas en un solo punto y activa Niebla de la Sombra para otorgar hasta +500% de probabilidad crítica Melee recibida.'
+      },
+      {
+        name: 'Garras de la Sombra Prime (Shadow Claws)',
+        type: 'Garras de Combate de la Sombra',
+        icon: '🐾',
+        slot: 'Melee',
+        stance: 'Malicious Raptor',
+        exilus: 'Melee Elementalist',
+        mods: ['Blood Rush', 'Weeping Wounds', 'Organ Shatter', 'Condition Overload', 'Gladiator Might', 'Primed Fever Strike', 'Shocking Touch', 'Carnis Mandible'],
+        arcanes: ['Melee Influence', 'Melee Duplicate'],
+        elements: 'Corrosivo + Electricidad (Contagio Melee Influence)',
+        notes: 'Con Melee Influence y su alto crítico base, los estados eléctricos transmiten los golpes de las garras a todos los enemigos a 20 metros a la redonda al instante.'
+      }
+    ]
+  }]),
+
+  F('Excalibur Umbra', [{
+    name: 'Cuchillada Radial & Destello Inmortal (eduiy16)',
+    role: 'Ondas Cortantes de Espada Exaltada & Control Total',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/@eduiy16',
+    aura: 'Steel Charge',
+    exilus: 'Power Drift',
+    mods: ['Chromatic Blade', 'Umbral Intensify', 'Umbral Vitality', 'Umbral Fiber', 'Primed Continuity', 'Primed Flow', 'Streamline', 'Furious Javelin'],
+    arcanes: ['Arcane Strike', 'Arcane Fury'],
+    helminth: { ability: 'Gloom (Sevagoth) o Nutrir (Grendel)', replaces: 'Habilidad 1 (Corte Fugaz)' },
+    shards: [
+      { type: 'crimson', tau: true, stat: '+15% Fuerza de Habilidad' },
+      { type: 'crimson', tau: true, stat: '+15% Fuerza de Habilidad' },
+      { type: 'crimson', tau: true, stat: '+15% Duración de Habilidad' },
+      { type: 'amber', tau: true, stat: '+37.5% Velocidad de casteo' },
+      { type: 'violet', tau: true, stat: '+37.5% Daño Crítico Melee' }
+    ],
+    focus: 'Naramon o Madurai',
+    notes: 'Jabalina Furiosa otorga un incremento porcentual de daño masivo por cada enemigo atravesado. Destello Radial ciega y abre a remates a acólitos y eximus mientras las ondas de Espada Exaltada barren pasillos completos.',
+    loadout: [
+      {
+        name: 'Espada Exaltada Umbra (Exalted Umbra Blade)',
+        type: 'Espada Exaltada de Ondas Cortantes',
+        icon: '🗡️',
+        slot: 'Melee',
+        exilus: 'Melee Elementalist',
+        mods: ['Sacrificial Steel', 'Sacrificial Pressure', 'Organ Shatter', 'Condition Overload', 'Gladiator Might', 'Primed Fever Strike', 'North Wind', 'Archon Stretch'],
+        arcanes: ['Melee Influence', 'Melee Exposure'],
+        elements: 'Viral + Electricidad (o Corrosivo con emisivo de Espada Cromática)',
+        notes: 'Espada Cromática (Chromatic Blade) transforma todo el daño en elemental con un +300% de probabilidad de estado. En combinación con Melee Influence y daño eléctrico, cada onda expansiva electrocuta y despedaza a todos los enemigos adyacentes a través del mapa.'
+      }
+    ]
+  }]),
+
+  F('Valkyr', [{
+    name: 'Histeria Inmortal & Berserker SP (eduiy16)',
+    role: '100% Invencibilidad, Robo de Vida & Críticos Rojos',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/@eduiy16',
+    aura: 'Steel Charge',
+    exilus: 'Power Drift',
+    mods: ['Eternal War', 'Enraged', 'Umbral Intensify', 'Umbral Vitality', 'Umbral Fiber', 'Primed Continuity', 'Primed Flow', 'Narrow Minded'],
+    arcanes: ['Arcane Strike', 'Arcane Fury'],
+    helminth: { ability: 'Nutrir (Grendel) o Rugido (Rhino)', replaces: 'Habilidad 1 (Línea de Ruptura)' },
+    shards: [
+      { type: 'violet', tau: true, stat: '+37.5% Daño Crítico Melee' },
+      { type: 'violet', tau: true, stat: '+37.5% Daño Crítico Melee' },
+      { type: 'violet', tau: true, stat: '+37.5% Daño Crítico Melee' },
+      { type: 'crimson', tau: true, stat: '+15% Fuerza de Habilidad' },
+      { type: 'amber', tau: true, stat: '+37.5% Velocidad de casteo' }
+    ],
+    focus: 'Naramon o Madurai',
+    notes: 'Guerra Eterna (Eternal War) renueva la duración de Grito de Guerra con cada baja melee para mantener velocidad de ataque y armadura al máximo. Histeria activa invulnerabilidad absoluta y regenera salud con cada golpe.',
+    loadout: [
+      {
+        name: 'Garras de Valkyr (Valkyr Talons)',
+        type: 'Garras Exaltadas de Histeria',
+        icon: '🐾',
+        slot: 'Melee',
+        stance: '',
+        exilus: 'Melee Elementalist',
+        mods: ['Sacrificial Steel', 'Organ Shatter', 'Gladiator Might', 'Condition Overload', 'Blood Rush', 'Primed Fever Strike', 'Shocking Touch', 'Primed Pressure Point'],
+        arcanes: ['Melee Duplicate', 'Melee Animosity'],
+        elements: 'Corrosivo + Cortante Puro',
+        notes: 'Con Encolerizada (Enraged) obtienes +300% de daño y +200% de probabilidad crítica durante la activación de Histeria. Las garras alcanzan multiplicadores críticos astronómicos con zarpazos que destrozan cualquier jefe o acólito en segundos.'
+      }
+    ]
+  }]),
+
+  F('Hildryn', [{
+    name: 'Pillaje Masivo & Tanque de Escudos Infinito (eduiy16)',
+    role: '100% Despojo de Armadura/Escudos & Munición de Escudo',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/@eduiy16',
+    aura: 'Corrosive Projection',
+    exilus: 'Primed Sure Footed',
+    mods: ['Blazing Pillage', 'Primed Redirection', 'Umbral Intensify', 'Transient Fortitude', 'Blind Rage', 'Primed Continuity', 'Stretch', "Boreal's Hatred"],
+    arcanes: ['Arcane Aegis', 'Arcane Barrier'],
+    helminth: { ability: 'Rugido (Rhino) o Fuego Térmico (Gauss)', replaces: 'Habilidad 4 (Égida de Tormenta)' },
+    shards: [
+      { type: 'crimson', tau: true, stat: '+15% Fuerza de Habilidad' },
+      { type: 'crimson', tau: true, stat: '+15% Fuerza de Habilidad' },
+      { type: 'azure', tau: true, stat: '+225 Capacidad de Escudos' },
+      { type: 'azure', tau: true, stat: '+225 Capacidad de Escudos' },
+      { type: 'amber', tau: true, stat: '+37.5% Velocidad de casteo' }
+    ],
+    focus: 'Madurai',
+    notes: 'Pillaje Ardiente (Blazing Pillage) despoja el 100% de armadura y escudos de los enemigos en un solo casteo alcanzando 400% de Fuerza de habilidad, y recarga miles de escudos a Hildryn para mantener su invulnerabilidad pasiva de escudo.',
+    loadout: [
+      {
+        name: 'Cargador Balefire Prime (Balefire Charger)',
+        type: 'Cañón Exaltado de Plasma y Radiación',
+        icon: '⚡',
+        slot: 'Secondary',
+        exilus: 'Balefire Surge',
+        mods: ['Galvanized Diffusion', 'Primed Pistol Gambit', 'Primed Target Cracker', 'Primed Heated Charge', 'Galvanized Shot', 'Anemic Agility', 'Convulsion', 'Pistol Pestilence'],
+        arcanes: ['Secondary Fortifier', 'Secondary Outburst'],
+        elements: 'Radiación + Corrosivo (Explosión en Área)',
+        notes: 'Oleada de Balefire (Balefire Surge) recarga escudos al impactar y destruye al instante las burbujas de los Nulificadores Corpus. Dispara orbes de plasma masivo con daño de área abrumador impulsado por los escudos de Hildryn.'
+      }
+    ]
+  }]),
+
+  F('Ivara', [{
+    name: 'Merodeo Fantasma & Disparo Concentrado Level Cap (eduiy16)',
+    role: 'Invisibilidad Permanente & Daño a la Cabeza x10',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/@eduiy16',
+    aura: 'Growing Power',
+    exilus: 'Power Drift',
+    mods: ['Concentrated Arrow', 'Infiltrate', 'Primed Continuity', 'Narrow Minded', 'Primed Flow', 'Streamline', 'Transient Fortitude', 'Overextended'],
+    arcanes: ['Arcane Precision', 'Arcane Arachne'],
+    helminth: { ability: 'Nutrir (Grendel) o Eclipse (Mirage)', replaces: 'Habilidad 2 (Navegador)' },
+    shards: [
+      { type: 'crimson', tau: true, stat: '+15% Fuerza de Habilidad' },
+      { type: 'crimson', tau: true, stat: '+15% Fuerza de Habilidad' },
+      { type: 'crimson', tau: true, stat: '+15% Duración de Habilidad' },
+      { type: 'amber', tau: true, stat: '+37.5% Velocidad de casteo' },
+      { type: 'azure', tau: true, stat: '+75 Energía Máxima' }
+    ],
+    focus: 'Madurai',
+    notes: 'Merodeo (Prowl) te mantiene en sigilo perpetuo mientras roba recursos y multiplica el daño a la cabeza. Infiltrado (Infiltrate) te permite atravesar cualquier rayo láser sin activar alarmas.',
+    loadout: [
+      {
+        name: 'Arco de Artemisa Prime (Artemis Bow)',
+        type: 'Arco Exaltado de Disparo Múltiple',
+        icon: '🏹',
+        slot: 'Primary',
+        exilus: 'Vigilante Supplies',
+        mods: ['Galvanized Chamber', 'Galvanized Aptitude', 'Critical Delay', 'Vital Sense', 'Hunter Munitions', 'Primed Cryo Rounds', 'Malignant Force', 'Vigilante Armaments'],
+        arcanes: ['Primary Deadhead', 'Primary Merciless'],
+        elements: 'Viral + Cortes Forzados por Hunter Munitions',
+        notes: 'Disparo Concentrado (Concentrated Arrow) transforma las flechas en un único proyectil que al impactar en la cabeza detona una explosión masiva con +50% de probabilidad crítica plana en un radio de 7 metros, vaporizando salas completas.'
+      }
+    ]
+  }]),
 ];
 
 export const WEAPON_BUILDS = [
