@@ -1,7 +1,7 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, srcLine, modImg, debounce, norm, wikiLink, overframeSearch, t } from './util.js';
 import { openModal } from './ui.js';
 import { TIERS, TIER_COLORS } from './tiers.js';
-import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=13.0';
+import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=14.0';
 import { DARK_SECTOR_SURVIVALS, RESOURCE_GUIDE } from './darksector.js';
 import { TYPE_ES } from './lang.js';
 
@@ -178,7 +178,7 @@ export function builds(root) {
                   const shardLabel = SHARD_NAMES_ES[shardType] || shardType;
                   return `
                     <div class="shard-chip ${shardType}" title="${s.tau ? 'Tauforjado: ' : ''}${esc(s.stat)}">
-                      <img class="shard-img-icon" src="${shardImgSrc}" alt="${shardLabel}" loading="lazy" onerror="this.style.display='none'">
+                      <img class="shard-img-icon" src="${shardImgSrc}" alt="${shardLabel}" loading="lazy">
                       <div class="shard-info-wrap">
                         <span class="shard-type-title ${shardType}">${s.tau ? '<span class="tau-star" title="Tauforjado">★ TAUFORJADO</span> ' : ''}${shardLabel}</span>
                         <span class="shard-text">${esc(s.stat)}</span>

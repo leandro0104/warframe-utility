@@ -440,7 +440,7 @@ main:has(.builds-container){max-width:1440px}
 .wf-shards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}
 .shard-chip{display:flex;align-items:center;gap:12px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 12px;font-size:.82rem;color:#e2e8f0;transition:transform .15s ease}
 .shard-chip:hover{transform:translateY(-1px);background:rgba(255,255,255,.05)}
-.shard-img-icon{width:40px;height:40px;object-fit:contain;flex:none;filter:drop-shadow(0 2px 8px rgba(0,0,0,.95))}
+.shard-img-icon{width:46px;height:46px;object-fit:contain;flex:none;filter:drop-shadow(0 2px 8px rgba(0,0,0,.95))}
 .shard-info-wrap{display:flex;flex-direction:column;gap:2px;min-width:0}
 .shard-type-title{font-size:.76rem;font-weight:900;text-transform:uppercase;letter-spacing:.5px}
 .shard-type-title.crimson{color:#ff4d6d}
