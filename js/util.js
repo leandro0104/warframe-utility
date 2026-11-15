@@ -27,8 +27,20 @@ export const imgC = (n) => (n ? CDN_IMG + n : '');
 export const img = (src, cls = '', alt = '') =>
   src ? `<img class="${cls}" src="${esc(src)}" alt="${esc(alt)}" loading="lazy" onerror="this.style.visibility='hidden'">` : `<span class="${cls} noimg"></span>`;
 
+const CUSTOM_MOD_CARDS = {
+  'umbral intensify': '/img/mods/umbral_intensify.png',
+  'umbral fiber': '/img/mods/umbral_fiber.png',
+  'umbral vitality': '/img/mods/umbral_vitality.png',
+  'sacrificial steel': '/img/mods/sacrificial_steel.png',
+  'sacrificial pressure': '/img/mods/sacrificial_pressure.png',
+  'primed sure footed': '/img/mods/primed_sure_footed.png',
+};
+
 export function modImg(name) {
-  const m = D.modimg[name.toLowerCase()];
+  if (!name) return '';
+  const key = name.toLowerCase().trim();
+  if (CUSTOM_MOD_CARDS[key]) return CUSTOM_MOD_CARDS[key];
+  const m = D.modimg ? D.modimg[key] : null;
   if (!m) return '';
   return m.i ? imgM(m.i) : imgC(m.w);
 }
