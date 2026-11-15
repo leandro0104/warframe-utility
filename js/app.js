@@ -1,8 +1,8 @@
 import { $, D, P } from './util.js';
 import './ui.js';
-import * as V1 from './views1.js?v=16.0';
-import * as V2 from './views2.js?v=16.0';
-import { worldStateView } from './viewStatus.js?v=16.0';
+import * as V1 from './views1.js?v=17.0';
+import * as V2 from './views2.js?v=17.0';
+import { worldStateView } from './viewStatus.js?v=17.0';
 
 const ROUTES = {
   '': V1.home,
@@ -13,6 +13,7 @@ const ROUTES = {
   tiers: V2.tiers,
   builds: V2.builds,
   farm: V2.farm,
+  plat: V2.platGuide,
   warframes: V2.warframes,
   rivens: V2.rivens,
 };

@@ -498,6 +498,35 @@ main:has(.builds-container){max-width:1440px}
 .wf-arcane-empty-slot{text-align:center;padding:12px;opacity:.7}
 .badge.tier-s{background:linear-gradient(135deg,#e8c46a 0%,#d97706 100%);color:#0d1222;font-weight:900;border:none}
 
+/* ================== GUÍA DE CONSEGUIR PLATINO RÁPIDO ================== */
+.plat-route-card{position:relative;background:linear-gradient(170deg,#141c30 0%,#0c111e 100%);border:1px solid #28375a;margin-bottom:20px}
+.plat-route-card:hover{border-color:rgba(232,196,106,.5);box-shadow:0 8px 30px rgba(0,0,0,.6)}
+.plat-route-header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:14px;margin-bottom:12px}
+.plat-route-header h3{font-size:1.4rem;font-weight:900;color:#fff;margin:6px 0}
+.plat-route-location,.plat-route-gear{font-size:.88rem;color:#cbd5e1;margin:4px 0}
+.plat-route-desc{font-size:.95rem;color:#94a3b8;line-height:1.55;margin:8px 0 16px}
+.plat-items-section-title{font-size:.84rem;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--gold);margin:14px 0 8px}
+
+.plat-items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:10px;margin-bottom:14px}
+.plat-item-chip{display:flex;justify-content:space-between;align-items:center;gap:12px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:10px 14px;transition:all .2s ease}
+.plat-item-chip:hover{border-color:rgba(232,196,106,.4);background:rgba(255,255,255,.04);transform:translateY(-1px)}
+.plat-item-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.plat-item-img{width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 2px 6px #000);flex:none}
+.plat-item-info{display:flex;flex-direction:column;gap:3px;min-width:0}
+.plat-item-title-row{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.plat-item-name{font-size:.92rem;font-weight:800;color:#f1f5f9;line-height:1.2}
+.plat-item-note{font-size:.78rem;color:#94a3b8;margin:0;line-height:1.3}
+.plat-item-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
+.plat-item-est{font-size:.82rem;font-weight:800;color:var(--gold);background:rgba(232,196,106,.12);border:1px solid rgba(232,196,106,.3);padding:2px 8px;border-radius:6px;white-space:nowrap}
+
+.plat-strategy-box{margin-top:14px}
+
+.plat-tips-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.plat-tip-card{background:linear-gradient(160deg,#161e33 0%,#0d1322 100%);border:1px solid #28375a;border-left:4px solid var(--gold);padding:18px 20px}
+.plat-tip-card h3{font-size:1.1rem;color:var(--gold);margin:0 0 8px;font-weight:800}
+.plat-tip-card p{font-size:.92rem;color:#cbd5e1;line-height:1.5;margin:0}
+
+
 
 
 

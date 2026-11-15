@@ -1,8 +1,9 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, srcLine, modImg, debounce, norm, wikiLink, overframeSearch, t } from './util.js';
 import { openModal } from './ui.js';
 import { TIERS, TIER_COLORS } from './tiers.js';
-import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=16.0';
+import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=17.0';
 import { DARK_SECTOR_SURVIVALS, RESOURCE_GUIDE } from './darksector.js';
+import { PLAT_CATEGORIES, PLAT_ROUTES, PRIME_JUNK_RATES, PLAT_TIPS } from './platData.js?v=17.0';
 import { TYPE_ES } from './lang.js';
 
 const catImg = (name) => (D.cat[name] ? imgC(D.cat[name].img) : '');
@@ -831,4 +832,230 @@ export function rivens(root) {
   root.addEventListener('input', debounce((e) => { if (e.target.id === 'rq' || e.target.id === 'rg') list(); }, 150));
   root.addEventListener('click', (e) => { const b = e.target.closest('[data-w]'); if (b) pick(b.dataset.w); });
   list();
+}
+
+// ========================= PLAT GUIDE (CONSEGUIR PLATINO RÁPIDO) =========================
+export function platGuide(root) {
+  const S = { tab: 'routes', q: '' };
+
+  root.innerHTML = `
+    <section class="page-head">
+      <h1>💰 Conseguir Platino Rápido</h1>
+      <p>Estrategias confirmadas al meta actual de Warframe para ganar platino de forma constante y rápida. Descubre qué mods, sets prime, arcanos y armas farmear, cuánto platino recibirás y consulta los precios en vivo de <b>warframe.market</b>.</p>
+    </section>
+    <div class="toolbar">
+      <div class="seg wrap" id="plat-seg">
+        ${PLAT_CATEGORIES.map((c) => `<button data-tab="${c.id}" class="${c.id === S.tab ? 'on' : ''}">${esc(c.label)}</button>`).join('')}
+      </div>
+      <input type="search" placeholder="Buscar método, mod, set prime o arcano…" data-k="q">
+    </div>
+    <div class="results" id="plat-results"></div>
+  `;
+
+  function renderItemChip(item) {
+    const slug = item.slug;
+    const it = slug ? D.mk[slug] : null;
+    const imgSrc = slugImg(slug) || (item.name ? modImg(item.name) : '');
+    const p = slug ? price(slug) : null;
+    const nameEs = it?.n ? t(it.n, item.name) : item.name;
+
+    return `
+      <div class="plat-item-chip">
+        <div class="plat-item-left">
+          ${img(imgSrc, 'plat-item-img', nameEs)}
+          <div class="plat-item-info">
+            <div class="plat-item-title-row">
+              <span class="plat-item-name">${esc(nameEs)}</span>
+            </div>
+            <p class="plat-item-note">${esc(item.note || '')}</p>
+          </div>
+        </div>
+        <div class="plat-item-right">
+          <span class="plat-item-est" title="Rango de precio estimado en el mercado">${esc(item.estPl || item.pl || '')}</span>
+          ${slug ? platBtn(slug, p, ' Ver ofertas') : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  function draw() {
+    const q = norm(S.q);
+    const container = $('#plat-results', root);
+    let html = '';
+
+    if (S.tab === 'routes') {
+      const filteredRoutes = PLAT_ROUTES.filter((r) => {
+        if (!q) return true;
+        return norm(r.title).includes(q) || norm(r.desc).includes(q) || norm(r.location).includes(q) || (r.items || []).some((it) => norm(it.name).includes(q));
+      });
+
+      html = filteredRoutes.map((r) => `
+        <article class="card wide plat-route-card">
+          <header class="plat-route-header">
+            <div>
+              <div class="meta">
+                <span class="badge ${r.badgeClass}">${esc(r.level)}</span>
+                <span class="badge ok">${esc(r.potential)}</span>
+              </div>
+              <h3>${esc(r.title)}</h3>
+              <p class="plat-route-location">📍 <b>Ubicación:</b> ${esc(r.location)}</p>
+              <p class="plat-route-gear">🛡️ <b>Equipamiento sugerido:</b> ${esc(r.gear)}</p>
+            </div>
+          </header>
+
+          <p class="plat-route-desc">${esc(r.desc)}</p>
+
+          <div class="plat-items-section-title">📦 Artículos destacados de este farmeo:</div>
+          <div class="plat-items-grid">
+            ${(r.items || []).map(renderItemChip).join('')}
+          </div>
+
+          <div class="build-strategy-box plat-strategy-box">
+            <h4>💡 Estrategia de Venta & Consejo Pro (eduiy16)</h4>
+            <p>${esc(r.strategy)}</p>
+          </div>
+        </article>
+      `).join('') || '<div class="notice">No se encontraron rutas con ese término de búsqueda.</div>';
+    } else if (S.tab === 'mods') {
+      const modRoutes = PLAT_ROUTES.filter(r => r.title.includes('Mods') || r.title.includes('Sindicatos') || r.title.includes('Arbitrajes'));
+      const allModItems = [];
+      modRoutes.forEach(r => {
+        (r.items || []).forEach(it => {
+          if (!allModItems.some(x => x.slug === it.slug)) allModItems.push({ ...it, from: r.title });
+        });
+      });
+      const additionalMods = [
+        { name: 'Continuidad Arconte (Archon Continuity)', slug: 'archon_continuity', estPl: '20 – 35 pl', note: 'Romper Narmer / Kahl. Añade corrosivo a toxina.', from: 'Guarnición de Kahl' },
+        { name: 'Estirar Arconte (Archon Stretch)', slug: 'archon_stretch', estPl: '25 – 40 pl', note: 'Genera energía con daño eléctrico.', from: 'Guarnición de Kahl' },
+        { name: 'Intensificación Arconte (Archon Intensify)', slug: 'archon_intensify', estPl: '25 – 40 pl', note: '+30% de Fuerza adicional al curar aliados.', from: 'Guarnición de Kahl' },
+        { name: 'Vitalidad Arconte (Archon Vitality)', slug: 'archon_vitality', estPl: '20 – 35 pl', note: 'Duplica los estados de Fuego.', from: 'Guarnición de Kahl' },
+        { name: 'Flujo Prime (Primed Flow)', slug: 'primed_flow', estPl: '45 – 70 pl (250 – 350 pl R10)', note: 'Baro Ki’Teer. Triplica la energía máxima.', from: 'Baro Ki’Teer' },
+        { name: 'Continuidad Prime (Primed Continuity)', slug: 'primed_continuity', estPl: '45 – 70 pl (250 – 350 pl R10)', note: 'Baro Ki’Teer. +55% duración de habilidad.', from: 'Baro Ki’Teer' },
+        { name: 'Destroza Objetivos Prime (Primed Target Cracker)', slug: 'primed_target_cracker', estPl: '40 – 60 pl (220 – 300 pl R10)', note: 'Daño crítico vital para pistolas.', from: 'Baro Ki’Teer' },
+        { name: 'Gambito de Pistola Prime (Primed Pistol Gambit)', slug: 'primed_pistol_gambit', estPl: '40 – 60 pl (220 – 300 pl R10)', note: 'Probabilidad crítica para pistolas.', from: 'Baro Ki’Teer' }
+      ];
+      additionalMods.forEach(m => allModItems.push(m));
+
+      const filtered = allModItems.filter(m => !q || norm(m.name).includes(q) || norm(m.note).includes(q) || norm(m.from || '').includes(q));
+
+      html = `
+        <article class="card wide">
+          <header><div><h3>🪙 Mods Más Rentables & de Venta Inmediata</h3><p class="muted small">Estos mods siempre tienen cientos de compradores buscando en warframe.market. Subirlos a Rango 10 con Endo multiplica su valor x5.</p></div></header>
+          <div class="plat-items-grid">
+            ${filtered.map(renderItemChip).join('')}
+          </div>
+        </article>
+      `;
+    } else if (S.tab === 'primes') {
+      const primeRoute = PLAT_ROUTES.find(r => r.title.includes('Reliquias'));
+      const filteredSets = (primeRoute?.items || []).filter(s => !q || norm(s.name).includes(q) || norm(s.note).includes(q));
+
+      html = `
+        <article class="card wide">
+          <header><div><h3>💎 Sets Prime Más Cotizados</h3><p class="muted small">Vende siempre el SET COMPLETO (Plano principal + Chasis + Sistemas + Neurópticas) para obtener entre un 30% y 50% más de platino.</p></div></header>
+          <div class="plat-items-grid">
+            ${filteredSets.map(renderItemChip).join('')}
+          </div>
+        </article>
+
+        <article class="card wide">
+          <header><div><h3>⚖️ Tabla de Cotización de "Prime Junk" (Basura Prime para Baro)</h3><p class="muted small">Vende lotes de 6 partes en el chat de comercio los viernes cuando Baro Ki’Teer llega a los repetidores.</p></div></header>
+          <table class="tbl">
+            <thead><tr><th>Rareza / Ducados</th><th>Ratio Estándar (Lote de 6 partes)</th><th>Precio Por Pieza</th><th>Consejo de Venta</th></tr></thead>
+            <tbody>
+              ${PRIME_JUNK_RATES.map(j => `
+                <tr>
+                  <td><b>${esc(j.tier)}</b></td>
+                  <td><span class="badge ok">${esc(j.ratio)}</span></td>
+                  <td>${esc(j.perPart)}</td>
+                  <td><small class="muted">${esc(j.tip)}</small></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </article>
+      `;
+    } else if (S.tab === 'arcanes') {
+      const arcaneRoutes = PLAT_ROUTES.filter(r => r.title.includes('Zariman') || r.title.includes('Sanctum') || r.title.includes('Tridolon'));
+      const allArcanes = [];
+      arcaneRoutes.forEach(r => {
+        (r.items || []).forEach(it => {
+          if (!allArcanes.some(x => x.slug === it.slug)) allArcanes.push({ ...it, from: r.title });
+        });
+      });
+      const filteredArcanes = allArcanes.filter(a => !q || norm(a.name).includes(q) || norm(a.note).includes(q) || norm(a.from || '').includes(q));
+
+      html = `
+        <article class="card wide">
+          <header><div><h3>🔮 Arcanos Más Valiosos de Warframe</h3><p class="muted small">Desde Energizar Arcano hasta los nuevos arcanos de Sanctum Anatomica (*Melee Influence, Crescendo, Duplicate*).</p></div></header>
+          <div class="plat-items-grid">
+            ${filteredArcanes.map(renderItemChip).join('')}
+          </div>
+          <div class="build-strategy-box plat-strategy-box">
+            <h4>💡 Truco de Disolución de Arcanos en Vosfor (Sanctum Anatomica)</h4>
+            <p>Habla con <b>Loid</b> en el Sanctum Anatomica de Deimos y usa la opción <i>Disolución de Arcanos</i>. Puedes desintegrar cientos de arcanos comunes de Acólitos de Camino de Acero que no uses y cambiarlos por paquetes de Arcanos de Colección de Eidolon, permitiéndote sacar <b>Energizar Arcano (50 pl cada uno)</b> sin tener que esperar la noche en las llanuras.</p>
+          </div>
+        </article>
+      `;
+    } else if (S.tab === 'special') {
+      const specialItems = [
+        { name: 'Set de Necramech Voidrig Completo', slug: 'voidrig_set', estPl: '65 – 90 pl', note: 'Requisito obligatorio para la aventura La Nueva Guerra. Cientos de nuevos jugadores lo compran a diario.' },
+        { name: 'Braton Vandal Set', slug: 'braton_vandal_set', estPl: '150 – 220 pl', note: 'Masacre en el Santuario Élite (Rotación C). Muy difícil de conseguir.' },
+        { name: 'Lato Vandal Set', slug: 'lato_vandal_set', estPl: '180 – 250 pl', note: 'Masacre en el Santuario Élite (Rotación C). Alta demanda de coleccionistas.' }
+      ];
+      const filteredSpecial = specialItems.filter(s => !q || norm(s.name).includes(q) || norm(s.note).includes(q));
+
+      html = `
+        <article class="card wide">
+          <header><div><h3>⚔️ Necramechs, Armas Especiales & Liches Kuva</h3><p class="muted small">Objetos comerciales fuera de las reliquias estándar que generan cantidades masivas de platino.</p></div></header>
+          <div class="plat-items-grid">
+            ${filteredSpecial.map(renderItemChip).join('')}
+          </div>
+
+          <div class="two" style="margin-top:16px">
+            <div class="build-strategy-box plat-strategy-box">
+              <h4>🤖 El Negocio de los Necramechs Voidrig</h4>
+              <p>Para jugar <i>La Nueva Guerra</i>, todo jugador necesita obligatoriamente un Necramech. Farmear los minerales, peces y partes dañadas en Deimos toma días. Si compras partes dañadas baratas o las farmeas en Bóvedas de Aislamiento y las construyes, el set completo se vende instantáneamente por <b>70 a 90 pl</b>.</p>
+            </div>
+            <div class="build-strategy-box plat-strategy-box">
+              <h4>👑 Comercio de Liches Kuva & Hermanas de Parvos</h4>
+              <p>Cuando derrotes a tu Lich Kuva o Hermana, si tiene un arma meta (*Kuva Bramma, Kuva Zarr, Tenet Arca Plasmor*) con bonificación del <b>55% al 60% de elemento</b>, o si tiene una <b>Efímera elemental</b>, <b>CONVIÉRTELO</b> en lugar de matarlo. Puedes vender el Lich en el bazar del Dojo por <b>80 a 200 pl</b>.</p>
+            </div>
+          </div>
+        </article>
+      `;
+    } else if (S.tab === 'tips') {
+      const filteredTips = PLAT_TIPS.filter(t => !q || norm(t.title).includes(q) || norm(t.body).includes(q));
+      html = `
+        <div class="plat-tips-container">
+          ${filteredTips.map(t => `
+            <article class="card plat-tip-card">
+              <h3>${esc(t.title)}</h3>
+              <p>${esc(t.body)}</p>
+            </article>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    container.innerHTML = html;
+  }
+
+  root.addEventListener('input', debounce((e) => {
+    if (e.target.dataset.k === 'q') {
+      S.q = e.target.value;
+      draw();
+    }
+  }, 150));
+
+  root.addEventListener('click', (e) => {
+    const b = e.target.closest('#plat-seg button');
+    if (!b) return;
+    S.tab = b.dataset.tab;
+    $$('#plat-seg button', root).forEach((x) => x.classList.toggle('on', x === b));
+    draw();
+  });
+
+  draw();
+  return draw;
 }
