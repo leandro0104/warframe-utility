@@ -271,33 +271,107 @@ main:has(.builds-container){max-width:1440px}
 .build-name-tag span{color:var(--gold);font-weight:700}
 
 .build-section-label{font-size:.85rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--gold);margin:16px 0 10px}
-.modgrid.large{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:12px;margin-bottom:16px;overflow:visible}
-.modgrid.arc.large{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,240px));gap:14px;margin-bottom:16px;overflow:visible}
 
-@media(max-width:1200px){
-  .modgrid.large{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+/* ================== ARSENAL BOARD (MODS HORIZONTALES & ARCANOS) ================== */
+.wf-arsenal-board{display:flex;align-items:center;justify-content:center;gap:28px;background:radial-gradient(ellipse at 50% 25%,#18223c 0%,#0c111e 75%,#070912 100%);border:1px solid #2a3b61;border-radius:18px;padding:24px 20px;margin:12px 0 20px;box-shadow:inset 0 0 35px rgba(0,0,0,.8),0 10px 30px rgba(0,0,0,.6);position:relative;overflow:visible}
+.wf-mods-cluster{display:flex;flex-direction:column;align-items:center;gap:12px;flex:1;max-width:960px;overflow:visible}
+
+/* Fila Superior: Aura + Exilus */
+.wf-top-slots-row{display:flex;justify-content:center;gap:14px;margin-bottom:2px;width:100%}
+.wf-slot-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;width:215px;max-width:100%;position:relative;overflow:visible}
+.wf-slot-badge-label{font-size:.68rem;font-weight:800;color:var(--muted);letter-spacing:.8px;text-transform:uppercase}
+
+/* Cuadrícula de 8 Mods: 4 columnas x 2 filas */
+.wf-main-mods-grid{display:grid;grid-template-columns:repeat(4,minmax(180px,220px));gap:12px 14px;width:100%;justify-content:center;overflow:visible}
+
+/* Cápsula de Mod Horizontal */
+.wf-mod-capsule{position:relative;width:100%;height:60px;border-radius:6px;padding:2px;cursor:pointer;background:#090e18;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease,border-color .2s ease;overflow:visible;user-select:none}
+.wf-mod-capsule:hover{transform:translateY(-2px) scale(1.03);z-index:60}
+
+/* Fondo con el arte del Mod difuminado en viñeta */
+.wf-mod-capsule::before{content:'';position:absolute;inset:2px;border-radius:4px;background-image:var(--mod-bg,none);background-size:cover;background-position:center 25%;opacity:.25;filter:saturate(1.2) contrast(1.1);pointer-events:none;z-index:1}
+
+.capsule-frame-outer{width:100%;height:100%;border-radius:4px;display:flex;flex-direction:column;justify-content:space-between;padding:4px 8px 3px;position:relative;background:linear-gradient(180deg,rgba(16,23,40,.88) 0%,rgba(8,12,22,.95) 100%);box-shadow:inset 0 0 14px rgba(0,0,0,.85);z-index:2}
+
+/* Marcos según Rareza / Categoría */
+/* ARCHON (Continuidad Arconte, etc.) */
+.wf-mod-capsule.archon{border:2px solid #e63946;box-shadow:0 0 12px rgba(230,57,70,.4),inset 0 0 8px rgba(255,75,50,.25)}
+.wf-mod-capsule.archon:hover{border-color:#ff5c6a;box-shadow:0 0 20px rgba(230,57,70,.7)}
+.wf-mod-capsule.archon .capsule-name{color:#ffb885;text-shadow:0 0 8px rgba(230,57,70,.6)}
+.wf-mod-capsule.archon .capsule-rank-dots span{color:#ff7b25;text-shadow:0 0 6px #ff7b25}
+
+/* PRIME / LEGENDARY */
+.wf-mod-capsule.prime,.wf-mod-capsule.legendary{border:2px solid #e2e8f0;box-shadow:0 0 14px rgba(255,255,255,.45),inset 0 0 8px rgba(226,232,240,.3)}
+.wf-mod-capsule.prime:hover,.wf-mod-capsule.legendary:hover{border-color:#fff;box-shadow:0 0 22px rgba(255,255,255,.75)}
+.wf-mod-capsule.prime .capsule-name,.wf-mod-capsule.legendary .capsule-name{color:#fff;text-shadow:0 0 8px rgba(255,255,255,.8)}
+.wf-mod-capsule.prime .capsule-rank-dots span,.wf-mod-capsule.legendary .capsule-rank-dots span{color:#38bdf8;text-shadow:0 0 6px #38bdf8}
+
+/* RARE (Dorado) */
+.wf-mod-capsule.rare{border:2px solid #eab308;box-shadow:0 0 10px rgba(234,179,8,.35),inset 0 0 6px rgba(234,179,8,.15)}
+.wf-mod-capsule.rare:hover{border-color:#facc15;box-shadow:0 0 18px rgba(234,179,8,.6)}
+.wf-mod-capsule.rare .capsule-name{color:#fef08a;text-shadow:0 0 6px rgba(234,179,8,.4)}
+.wf-mod-capsule.rare .capsule-rank-dots span{color:#38bdf8;text-shadow:0 0 6px #38bdf8}
+
+/* UNCOMMON (Plata) */
+.wf-mod-capsule.uncommon{border:2px solid #94a3b8;box-shadow:0 0 8px rgba(148,163,184,.25)}
+.wf-mod-capsule.uncommon:hover{border-color:#cbd5e1;box-shadow:0 0 16px rgba(148,163,184,.5)}
+.wf-mod-capsule.uncommon .capsule-name{color:#e2e8f0}
+
+/* COMMON (Bronce) */
+.wf-mod-capsule.common{border:2px solid #b08d57;box-shadow:0 0 6px rgba(176,141,87,.25)}
+.wf-mod-capsule.common:hover{border-color:#d4a373;box-shadow:0 0 14px rgba(176,141,87,.5)}
+.wf-mod-capsule.common .capsule-name{color:#e6d5bc}
+
+/* AURA (Celeste Místico) */
+.wf-mod-capsule.aura{border:2px solid #38bdf8;box-shadow:0 0 14px rgba(56,189,248,.45),inset 0 0 8px rgba(56,189,248,.2)}
+.wf-mod-capsule.aura:hover{border-color:#7dd3fc;box-shadow:0 0 22px rgba(56,189,248,.7)}
+.wf-mod-capsule.aura .capsule-name{color:#f0f9ff;text-shadow:0 0 8px rgba(56,189,248,.6)}
+
+/* Fila Superior de la Cápsula */
+.capsule-top-row{display:flex;justify-content:space-between;align-items:center;height:14px}
+.capsule-left-flag{font-size:.7rem;color:#38bdf8;line-height:1}
+.capsule-slot-symbol{font-size:.68rem;font-weight:800;padding:1px 5px;border-radius:4px;background:rgba(0,0,0,.6);line-height:1}
+.capsule-slot-symbol.aura{color:#38bdf8;border:1px solid rgba(56,189,248,.4)}
+.capsule-slot-symbol.exilus{color:#fbbf24;border:1px solid rgba(251,191,36,.4)}
+.capsule-drain.matched{color:#4ade80;font-family:monospace;font-size:.75rem;font-weight:800;letter-spacing:.5px;text-shadow:0 0 6px rgba(74,222,128,.5);line-height:1}
+
+/* Área Central: Nombre del Mod */
+.capsule-name-area{display:flex;align-items:center;justify-content:center;text-align:center;padding:0 4px;flex:1}
+.capsule-name{font-size:.82rem;font-weight:700;color:#fff;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 3px #000}
+
+/* Fila Inferior: Puntos de Rango */
+.capsule-bottom-row{display:flex;justify-content:center;align-items:center;height:8px}
+.capsule-rank-dots{display:flex;justify-content:center;gap:2.5px;font-size:.65rem;line-height:1}
+.capsule-rank-dots span{color:#38bdf8;text-shadow:0 0 5px #38bdf8}
+
+/* Popover Flotante de Carta Completa en HD al pasar el puntero */
+.mod-card-popover,.arcane-popover-card{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%) translateY(8px) scale(.9);opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s cubic-bezier(.175,.885,.32,1.275);z-index:300;width:180px;background:rgba(10,15,26,.96);border:1.5px solid var(--cyan);border-radius:12px;padding:10px;box-shadow:0 16px 36px rgba(0,0,0,.95),0 0 24px rgba(79,209,232,.45);backdrop-filter:blur(8px)}
+.wf-mod-capsule:hover .mod-card-popover,.wf-arcane-slot:hover .arcane-popover-card{opacity:1;transform:translateX(-50%) translateY(0) scale(1);pointer-events:auto}
+.popover-card-img,.popover-arcane-img{width:100%;max-height:190px;object-fit:contain;border-radius:6px;filter:drop-shadow(0 4px 10px #000)}
+.popover-title{display:block;font-size:.88rem;color:#fff;margin-top:6px;line-height:1.2;text-align:center}
+.popover-en{display:block;font-size:.72rem;color:var(--muted);text-align:center}
+.popover-price{display:block;font-size:.8rem;color:var(--cyan);font-weight:800;text-align:center;margin-top:4px}
+.popover-effect{font-size:.75rem;color:#d1d5db;line-height:1.3;margin:4px 0 0;text-align:center}
+
+/* ================== COLUMNA DE ARCANOS (DERECHA) ================== */
+.wf-arcanes-column{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding-left:24px;border-left:1px solid rgba(255,255,255,.08);min-width:130px}
+.wf-arcanes-header-label{font-size:.72rem;font-weight:800;color:#f5cf53;letter-spacing:1px}
+.wf-arcane-slot{display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;position:relative;cursor:pointer;transition:transform .2s ease}
+.wf-arcane-slot:hover{transform:translateY(-2px)}
+.arcane-glyph-pedestal{position:relative;width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#0e2938 0%,#061118 100%);border:2px solid #38bdf8;box-shadow:0 0 16px rgba(56,189,248,.4),inset 0 0 12px rgba(56,189,248,.3);transition:box-shadow .2s ease,border-color .2s ease}
+.wf-arcane-slot:hover .arcane-glyph-pedestal{border-color:#7dd3fc;box-shadow:0 0 24px rgba(56,189,248,.7),inset 0 0 16px rgba(56,189,248,.5)}
+.arcane-ico-img{width:48px;height:48px;object-fit:contain;filter:drop-shadow(0 2px 8px #000)}
+.arcane-label-name{font-size:.8rem;font-weight:700;color:#f5cf53;max-width:120px;line-height:1.2}
+.arcane-rank-diamonds{display:flex;gap:3px;font-size:.75rem;color:#38bdf8;text-shadow:0 0 6px #38bdf8}
+
+/* Responsividad para móviles y pantallas medianas */
+@media(max-width:1100px){
+  .wf-arsenal-board{flex-direction:column;gap:20px}
+  .wf-arcanes-column{flex-direction:row;border-left:0;border-top:1px solid rgba(255,255,255,.08);padding-left:0;padding-top:18px;width:100%}
 }
-@media(max-width:640px){
-  .modgrid.large{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .build-showcase{padding:16px}
-  .build-hero{flex-direction:column;text-align:center}
+@media(max-width:820px){
+  .wf-main-mods-grid{grid-template-columns:repeat(2,minmax(140px,1fr))}
 }
-
-.modtile{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;background:linear-gradient(180deg,#101628 0%,#090d18 100%);border:1px solid var(--line);border-radius:14px;padding:12px 6px;gap:8px;min-height:210px;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;cursor:pointer;overflow:visible}
-.modtile:hover{border-color:var(--cyan);box-shadow:0 10px 24px rgba(0,0,0,.7);z-index:30}
-.modtile.rare{border-color:rgba(242,201,76,.65);box-shadow:inset 0 0 10px rgba(242,201,76,.08)}
-.modtile.legendary{border-color:rgba(255,255,255,.85);box-shadow:inset 0 0 12px rgba(255,255,255,.14)}
-.modtile.uncommon{border-color:rgba(192,200,212,.45)}
-.modtile.common{border-color:rgba(176,141,87,.45)}
-
-.modtile-img-box{width:100%;height:140px;display:flex;justify-content:center;align-items:center;position:relative;overflow:visible}
-.modtile-img-box .mod-img{max-width:115px;max-height:136px;width:auto;height:auto;object-fit:contain;filter:drop-shadow(0 6px 12px rgba(0,0,0,.8));transition:transform .25s cubic-bezier(.175,.885,.32,1.275),filter .25s ease;pointer-events:auto;transform-origin:center center}
-
-/* Hover ZOOM de gran escala para apreciar el mod con total nitidez */
-.modtile-img-box:hover .mod-img,.modtile:hover .modtile-img-box .mod-img{transform:scale(1.68);z-index:100;position:relative;filter:drop-shadow(0 18px 36px rgba(0,0,0,.95)) drop-shadow(0 0 20px rgba(79,209,232,.65))}
-
-.modtile-name{font-size:.82rem;font-weight:700;color:var(--txt);line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2em}
-.modtile-price{display:inline-block;background:rgba(79,209,232,.12);color:var(--cyan);border:1px solid rgba(79,209,232,.4);border-radius:6px;padding:2px 7px;font-size:.75rem;font-weight:800}
 
 .build-strategy-box{background:linear-gradient(160deg,#1e172b,#111524);border-left:4px solid var(--gold);border-radius:0 12px 12px 0;padding:14px 18px;margin-top:10px}
 .build-strategy-box h4{color:var(--gold);margin:0 0 6px 0;font-size:.9rem;letter-spacing:.5px}

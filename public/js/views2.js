@@ -35,26 +35,138 @@ export function tiers(root) {
 }
 
 // ========================= BUILDS =========================
-function modTile(name) {
+function wfModCapsule(name, slotType = 'normal', isAura = false, isExilus = false) {
+  if (!name) {
+    return `<div class="wf-mod-capsule empty">
+      <div class="capsule-frame-outer">
+        <span class="capsule-name muted">Ranura Vacía</span>
+      </div>
+    </div>`;
+  }
   const m = D.modimg ? D.modimg[name.toLowerCase()] : null;
+  const modData = (D.mods || []).find((x) => x.name.toLowerCase() === name.toLowerCase());
   const nameEs = t(name, name);
-  const rarity = (m?.r || 'common').toLowerCase();
   const imgSrc = modImg(name);
   const itemPrice = m?.s ? price(m.s) : null;
 
-  return `<div class="modtile ${rarity}" title="${esc(nameEs)} (${esc(name)})">
-    <div class="modtile-img-box">
-      ${img(imgSrc, 'mod-img', name)}
+  // Determinar Rareza y Tipo de Marco
+  const isArchon = /archon/i.test(name);
+  const isPrime = /primed/i.test(name);
+  const isUmbral = /umbral|sacrificial/i.test(name);
+  let rarity = (m?.r || modData?.rarity || 'rare').toLowerCase();
+
+  let frameClass = rarity;
+  if (isArchon) frameClass = 'archon';
+  else if (isPrime) frameClass = 'prime';
+  else if (isUmbral) frameClass = 'umbral';
+  else if (isAura) frameClass = 'aura';
+
+  // Costo de Drenaje y Polaridad
+  let drain = 7;
+  if (isAura) {
+    drain = 14;
+  } else if (isPrime || isUmbral) {
+    drain = 8;
+  } else if (/blind rage|transient fortitude|narrow minded/i.test(name)) {
+    drain = 8;
+  } else if (/ampliado|overextended|streamline/i.test(name)) {
+    drain = 6;
+  } else if (/catalyzing|catalizador|whipclaw|látigo|strangledome|domo|equilibrio|equilibrium/i.test(name)) {
+    drain = 9;
+  } else if (/archon continuity|continuidad arconte/i.test(name)) {
+    drain = 8;
+  }
+
+  // Ícono superior central (Aura o Exilus)
+  let slotSymbol = '';
+  if (isAura) {
+    slotSymbol = `<div class="capsule-slot-symbol aura" title="Aura"><span>(A)</span></div>`;
+  } else if (isExilus) {
+    slotSymbol = `<div class="capsule-slot-symbol exilus" title="Exilus"><span>{A}</span></div>`;
+  }
+
+  // Puntos de rango iluminados
+  const maxRank = modData?.max || (isPrime || isUmbral || isArchon || /blind rage|narrow minded/i.test(name) ? 10 : 5);
+  const dotsHtml = `<div class="capsule-rank-dots">${Array(maxRank).fill('<span>•</span>').join('')}</div>`;
+
+  const drainBadge = isAura ? `^${drain} =` : `${drain} =`;
+
+  return `
+    <div class="wf-mod-capsule ${frameClass} ${isExilus ? 'is-exilus' : ''}" style="${imgSrc ? `--mod-bg: url('${esc(imgSrc)}')` : ''}">
+      <div class="capsule-frame-outer">
+        <div class="capsule-top-row">
+          <div class="capsule-left-flag">
+            ${isAura ? '<span class="aura-icon-mini">⚡</span>' : isExilus ? '<span class="exilus-icon-mini">◈</span>' : ''}
+          </div>
+          ${slotSymbol}
+          <div class="capsule-drain matched" title="Drenaje con polaridad coincidente">${drainBadge}</div>
+        </div>
+
+        <div class="capsule-name-area">
+          <span class="capsule-name">${esc(nameEs)}</span>
+        </div>
+
+        <div class="capsule-bottom-row">
+          ${dotsHtml}
+        </div>
+      </div>
+
+      <!-- Popover de carta completa en HD al pasar el cursor -->
+      <div class="mod-card-popover">
+        <div class="popover-inner">
+          <div class="popover-img-wrap">
+            ${img(imgSrc, 'popover-card-img', name)}
+          </div>
+          <div class="popover-info">
+            <b class="popover-title">${esc(nameEs)}</b>
+            <span class="popover-en">(${esc(name)})</span>
+            ${itemPrice != null ? `<span class="popover-price">🪙 ${fmt(itemPrice)}p</span>` : ''}
+          </div>
+        </div>
+      </div>
     </div>
-    <span class="modtile-name">${esc(nameEs)}</span>
-    ${itemPrice != null ? `<span class="modtile-price">${fmt(itemPrice)}p</span>` : ''}
-  </div>`;
+  `;
+}
+
+function wfArcaneSlot(name) {
+  if (!name) return `<div class="wf-arcane-slot empty"><div class="arcane-glyph-pedestal empty"></div><span class="arcane-label-name">Sin arcano</span></div>`;
+  const nameEs = t(name, name);
+  const arcData = (D.arcanes || []).find((x) => x.name.toLowerCase() === name.toLowerCase());
+  const imgSrc = slugImg(arcData?.slug) || imgC(arcData?.img) || modImg(name);
+  const itemPrice = arcData?.slug ? price(arcData.slug) : null;
+
+  return `
+    <div class="wf-arcane-slot" title="${esc(nameEs)} (${esc(name)})">
+      <div class="arcane-glyph-pedestal">
+        <div class="arcane-glyph-inner">
+          ${imgSrc ? `<img class="arcane-ico-img" src="${esc(imgSrc)}" alt="${esc(name)}">` : '<span class="arcane-default-icon">🔮</span>'}
+        </div>
+      </div>
+      <span class="arcane-label-name">${esc(nameEs)}</span>
+      <div class="arcane-rank-diamonds" title="Rango 5 (Máximo)">
+        <span>◆</span><span>◆</span><span>◆</span><span>◆</span><span>◆</span>
+      </div>
+
+      <!-- Popover con información del Arcano al pasar el cursor -->
+      <div class="arcane-popover-card">
+        <div class="popover-inner">
+          ${imgSrc ? `<div class="popover-img-wrap">${img(imgSrc, 'popover-arcane-img', name)}</div>` : ''}
+          <div class="popover-info">
+            <b class="popover-title">${esc(nameEs)}</b>
+            <span class="popover-en">(${esc(name)})</span>
+            ${arcData?.effect ? `<p class="popover-effect">${esc(arcData.effect)}</p>` : ''}
+            ${itemPrice != null ? `<span class="popover-price">🪙 ${fmt(itemPrice)}p (R0)</span>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 export function builds(root) {
   const S = { tab: 'frames', q: '' };
   root.innerHTML = `<section class="page-head"><h1>🛠️ Top builds</h1>
-    <p>Builds de referencia en pantalla completa con vista panorámica de mods y arcanos en español. Pasa el cursor sobre la imagen de cualquier mod para ampliarlo en gran tamaño y apreciar sus detalles.</p></section>
+    <p>Builds de referencia con el formato oficial del Arsenal de Warframe. Incluye ranuras de Aura, Exilus, 8 mods principales en 2 filas y Arcanos. Pasa el cursor por cualquier mod o arcano para ver su carta en alta resolución.</p></section>
     <div class="toolbar"><div class="seg"><button data-v="frames" class="on">Warframes</button><button data-v="weapons">Armas</button></div>
     <input type="search" placeholder="Buscar Warframe o arma en español…" data-k="q"></div><div class="results"></div>`;
 
@@ -87,11 +199,33 @@ export function builds(root) {
         </header>
 
         <div class="build-body">
-          <div class="build-section-label">⚙️ Ranuras de Modificación (8 Mods) — Pasa el cursor sobre cada mod para ampliar detalles</div>
-          <div class="modgrid large">${b.mods.map(modTile).join('')}</div>
+          <div class="build-section-label">⚡ Distribución de Ranuras (Arsenal Oficial) — Pasa el cursor sobre cada mod o arcano para ampliar</div>
 
-          <div class="build-section-label">🔮 Arcanos Recomendados</div>
-          <div class="modgrid arc large">${b.arcanes.map(modTile).join('')}</div>
+          <div class="wf-arsenal-board">
+            <!-- Clúster de Mods: Aura + Exilus arriba, 2 filas de 4 mods abajo -->
+            <div class="wf-mods-cluster">
+              <div class="wf-top-slots-row">
+                <div class="wf-slot-wrap">
+                  <span class="wf-slot-badge-label">${x.slot ? (x.slot === 'Melee' ? 'POSTURA' : 'EXILUS') : 'AURA'}</span>
+                  ${wfModCapsule(b.aura || (x.slot === 'Melee' ? b.stance : 'Brief Respite'), 'aura', !x.slot, false)}
+                </div>
+                <div class="wf-slot-wrap">
+                  <span class="wf-slot-badge-label">EXILUS</span>
+                  ${wfModCapsule(b.exilus || (x.slot ? 'Vigilante Supplies' : 'Sure Footed'), 'exilus', false, true)}
+                </div>
+              </div>
+
+              <div class="wf-main-mods-grid">
+                ${b.mods.slice(0, 8).map((modName) => wfModCapsule(modName, 'normal')).join('')}
+              </div>
+            </div>
+
+            <!-- Columna de Arcanos a la derecha -->
+            <div class="wf-arcanes-column">
+              <span class="wf-arcanes-header-label">ARCANOS</span>
+              ${(b.arcanes && b.arcanes.length ? b.arcanes : ['Arcane Energize', 'Arcane Guardian']).slice(0, 2).map(wfArcaneSlot).join('')}
+            </div>
+          </div>
 
           <div class="build-strategy-box">
             <h4>💡 Estrategia de Combate & Estilo de Juego</h4>
