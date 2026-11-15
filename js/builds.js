@@ -17,7 +17,7 @@ export const FRAME_BUILDS = [
     helminth: { ability: 'Disparo Oscuro o Eclipse (Mirage)', replaces: 'Habilidad 1 (Noctua)' },
     shards: [
       { type: 'crimson', tau: true, stat: '+15% Fuerza de Habilidad' },
-      { type: 'crimson', tau: true, stat: "+15% Fuerza de Habilidad" },
+      { type: 'crimson', tau: true, stat: '+15% Fuerza de Habilidad' },
       { type: 'amber', tau: true, stat: '+37.5% Velocidad de lanzamiento' },
       { type: 'amber', tau: true, stat: '+37.5% Velocidad de lanzamiento' },
       { type: 'topaz', tau: false, stat: '+Regeneración de Sobreguardia con daño ígneo' }
@@ -668,7 +668,7 @@ export const FRAME_BUILDS = [
     helminth: { ability: 'Rugido (Rhino) o Eclipse', replaces: 'Habilidad 4 o Habilidad 3' },
     shards: [
       { type: 'violet', tau: true, stat: '+37.5% Daño Crítico Cuerpo a Cuerpo' },
-      { type: 'violet', tau: true, stat: '+37.5% Daño Crítico Cuerpo a Cuerpo' },
+      { type: 'violet', tau: true, stat: '+37.5% Daño Crítico Melee' },
       { type: 'crimson', tau: true, stat: '+15% Fuerza de Habilidad' },
       { type: 'crimson', tau: true, stat: '+15% Fuerza de Habilidad' },
       { type: 'amber', tau: true, stat: '+37.5% Velocidad de casteo' }
@@ -700,16 +700,218 @@ export const FRAME_BUILDS = [
 ];
 
 export const WEAPON_BUILDS = [
-  { name: 'Cedo Prime', slot: 'Primary', role: 'Disparo secundario cebador + Escopeta', exilus: 'Shotgun Ammo Mutation', mods: ['Galvanized Hell', 'Galvanized Savvy', 'Point Blank', "Hell's Chamber", 'Toxic Barrage', 'Frigid Blast', 'Scattering Inferno', 'Shotgun Elementalist'], arcanes: ['Primary Merciless'], notes: 'Lanza el disco secundario para aplicar todos los estados elementales en área; el disparo primario inflige daño multiplicado por cada estado activo.' },
-  { name: 'Torid', slot: 'Primary', role: 'Rayo Incarnon masivo (Meta SP)', exilus: 'Vigilante Supplies', mods: ['Galvanized Chamber', 'Serration', 'Vital Sense', 'Point Strike', 'Hunter Munitions', 'Infected Clip', 'Stormbringer', 'Rifle Elementalist'], arcanes: ['Primary Merciless'], notes: 'Carga la barra Incarnon en el cuerpo de los enemigos en un instante y se transforma en un rayo continuo que encadena salas completas.' },
-  { name: 'Burston Prime', slot: 'Primary', role: 'Ráfaga Incarnon de crítico', exilus: 'Vigilante Supplies', mods: ['Galvanized Chamber', 'Serration', 'Point Strike', 'Vital Sense', 'Hunter Munitions', 'Hellfire', 'Stormbringer', 'Vigilante Armaments'], arcanes: ['Primary Merciless', 'Primary Deadhead'], notes: 'Modo Incarnon ametralladora con velocidad de proyectil altísima y cortes garantizados con Hunter Munitions.' },
-  { name: 'Kuva Bramma', slot: 'Primary', role: 'Arco explosivo de área', exilus: 'Vigilante Supplies', mods: ['Serration', 'Split Chamber', 'Point Strike', 'Vital Sense', 'Hellfire', 'Infected Clip', 'Stormbringer', 'Hunter Munitions'], arcanes: ['Primary Merciless'], notes: 'Flechas de racimo para barrido masivo de pasillos en farmeo rápido.' },
-  { name: 'Tenet Arca Plasmor', slot: 'Primary', role: 'Onda expansiva de radiación', exilus: 'Fatal Acceleration', mods: ['Galvanized Hell', 'Galvanized Savvy', 'Point Blank', 'Blaze', 'Seeking Fury', 'Toxic Barrage', 'Frigid Blast', 'Shotgun Elementalist'], arcanes: ['Primary Merciless'], notes: 'Disparo de plasma ancho con rebote que atraviesa grupos de enemigos densos.' },
-  { name: 'Soma Prime', slot: 'Primary', role: 'Ametralladora Incarnon', exilus: 'Vigilante Supplies', mods: ['Serration', 'Split Chamber', 'Vital Sense', 'Point Strike', 'Hunter Munitions', 'Stormbringer', 'Infected Clip', 'Rifle Elementalist'], arcanes: ['Primary Merciless', 'Arcane Avenger'], notes: 'Aprovecha la evolución Incarnon que eleva la probabilidad crítica base de la Soma Prime.' },
-  { name: 'Laetum', slot: 'Secondary', role: 'Pistola ametralladora Incarnon', exilus: 'Ruinous Extension', mods: ['Galvanized Diffusion', 'Hornet Strike', 'Pistol Gambit', 'Lethal Torrent', 'Heated Charge', 'Infected Clip', 'Pistol Elementalist', 'Stormbringer'], arcanes: ['Secondary Merciless'], notes: 'Disparos a la cabeza activan el modo ametralladora explosiva. El daño escala brutalmente.' },
-  { name: 'Dual Toxocyst', slot: 'Secondary', role: 'Pistolas duales Incarnon', exilus: 'Ruinous Extension', mods: ['Galvanized Diffusion', 'Hornet Strike', 'Lethal Torrent', 'Pistol Gambit', 'Infected Clip', 'Stormbringer', 'Heated Charge', 'Pistol Elementalist'], arcanes: ['Secondary Merciless'], notes: 'Un disparo a la cabeza activa cadencia desmedida y proyectiles que rebotan entre enemigos.' },
-  { name: 'Kuva Nukor', slot: 'Secondary', role: 'Rayo cebador de estado (Primer)', exilus: 'Ruinous Extension', mods: ['Galvanized Diffusion', 'Hornet Strike', 'Lethal Torrent', 'Hellfire', 'Infected Clip', 'Stormbringer', 'Pistol Gambit', 'Pistol Elementalist'], arcanes: ['Secondary Merciless'], notes: 'El mejor cebador secundario del juego. Aplica Microondas y 4+ estados para Condition Overload.' },
-  { name: 'Glaive Prime', slot: 'Melee', role: 'Explosión pesada de corte forzado', stance: 'Gleaming Talon', mods: ['Killing Blow', 'Corrupt Charge', 'Organ Shatter', 'Sacrificial Steel', 'Volatile Quick Return', 'Pressure Point', 'Melee Elementalist', 'Gladiator Might'], arcanes: ['Melee Duplicate', 'Arcane Strike'], notes: 'Lanza la guja y detónala en el aire con el botón de ataque pesado para infligir millones de daño cortante puro en área.' },
-  { name: 'Kronen Prime', slot: 'Melee', role: 'Tonfas de combo rápido', stance: 'Sovereign Outcast', mods: ['Condition Overload', 'Blood Rush', 'Weeping Wounds', 'Organ Shatter', 'Berserker Fury', 'Carnis Mandible', 'Melee Elementalist', 'Drifting Contact'], arcanes: ['Melee Duplicate', 'Arcane Strike'], notes: 'Postura de Tonfas con cortes garantizados y escalamiento al multiplicador de combo 12x.' },
-  { name: 'Nikana Prime', slot: 'Melee', role: 'Katana tradicional de crítico/estado', stance: 'Blind Justice', mods: ['Condition Overload', 'Blood Rush', 'Weeping Wounds', 'Organ Shatter', 'Berserker Fury', 'Pressure Point', 'Melee Elementalist', 'Drifting Contact'], arcanes: ['Arcane Strike'], notes: 'Excelente velocidad y daño slash puro con la postura Tranquil Cleave o Blind Justice.' },
+  // ==================== ARMAS PRIMARIAS ====================
+  {
+    name: 'Torid',
+    slot: 'Primary',
+    role: 'Rayo Incarnon Encadenado (Meta SP Absoluto)',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/watch?v=AUZIYQE2NZt8KVugCnDOOsNS7gp-e9wqJ2HXHLB5vl9Szhu04-IwofTO8hXTjaAs0weaeHIrxjTcIOwTfy2D60I5DCjcFyrxaIv3ZQrefgP9NuOu_8q3BMtLCCmgQcUoneIR0ddh',
+    exilus: 'Vigilante Supplies',
+    mods: ['Galvanized Chamber', 'Critical Delay', 'Vital Sense', 'Serration', 'Hunter Munitions', 'Malignant Force', 'Rime Rounds', 'Rifle Elementalist'],
+    arcanes: ['Primary Merciless'],
+    elements: 'Viral + Calor + Sangrado Forzado (Hunter Munitions)',
+    incarnon: [
+      'Evolución II: Furia de Final (+Daño base y cadencia acelerada)',
+      'Evolución III: Manos Extendidas (+Velocidad de recarga)',
+      'Evolución IV: Ventaja de Sobreviviente (+54% Probabilidad Crítica plana)'
+    ],
+    notes: 'Dispara al cuerpo de cualquier enemigo para cargar la barra Incarnon en un segundo; al transformar el arma en rayo continuo salta automáticamente entre enemigos derritiendo salas enteras en Steel Path con críticos rojos ininterrumpidos.'
+  },
+  {
+    name: 'Burston Prime',
+    slot: 'Primary',
+    role: 'Ametralladora Incarnon de Críticos Rojos & Cortes',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/@eduiy16',
+    exilus: 'Vigilante Supplies',
+    mods: ['Galvanized Chamber', 'Critical Delay', 'Vital Sense', 'Serration', 'Hunter Munitions', 'Hellfire', 'High Voltage', 'Rifle Elementalist'],
+    arcanes: ['Primary Deadhead', 'Primary Merciless'],
+    elements: 'Radiación + Fuego + Cortante',
+    incarnon: [
+      'Evolución II: Firmeza del Tirador (+Daño base y -Retroceso)',
+      'Evolución III: Despliegue Rápido (+Velocidad de cambio y recarga)',
+      'Evolución IV: Fatalidad Absoluta (+Probabilidad y Multiplicador Crítico)'
+    ],
+    notes: 'En forma Incarnon se convierte en una ametralladora rotatoria con 600 proyectiles por minuto de dispersión milimétrica, triturando acólitos con sangrado de Hunter Munitions.'
+  },
+  {
+    name: 'Cedo Prime',
+    slot: 'Primary',
+    role: 'Cebador de Estados en Área & Escopeta Multiplicativa',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/@eduiy16',
+    exilus: 'Shotgun Ammo Mutation',
+    mods: ['Galvanized Hell', 'Galvanized Savvy', 'Primed Point Blank', 'Critical Deceleration', 'Primed Ravage', 'Toxic Barrage', 'Frigid Blast', 'Shotgun Elementalist'],
+    arcanes: ['Primary Merciless'],
+    elements: 'Viral + Disco de Estados Físicos y Elementales Rebotantes',
+    notes: 'Lanza el disco con el disparo secundario (aplica 6+ estados elementales en área rebotando entre enemigos). El disparo primario inflige daño aumentado exponencialmente por cada estado activo en el objetivo.'
+  },
+  {
+    name: 'Trumna Prime',
+    slot: 'Primary',
+    role: 'Nuke Explosivo de Rebote & Viral/Calor SP',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/watch?v=AUZIYQGpHE2vIBLckzaUTmsuis86sxJn_qkb_cM3XE-rCpHiUy3AmpPgKAaldpQBihGpnmt8Ah2JG-fqQ3I1VFS9wPCcvIExB3VLz4m1aIbUSDjQU8cya4ylBlX5mDwbLhb86zqq',
+    exilus: 'Vigilante Supplies',
+    mods: ['Galvanized Chamber', 'Critical Delay', 'Vital Sense', 'Serration', 'Hunter Munitions', 'Thermite Rounds', 'Malignant Force', 'Rifle Elementalist'],
+    arcanes: ['Primary Deadhead'],
+    elements: 'Viral + Calor + Sangrado Masivo en Área',
+    notes: 'Acumula 5 bajas con el disparo automático para cargar el disparo secundario: una granada de rebote que detona 7 veces en cadena provocando millones de daño explosivo en área.'
+  },
+  {
+    name: 'Tenet Arca Plasmor',
+    slot: 'Primary',
+    role: 'Onda Expansiva de Radiación & Despedazamiento SP',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/@eduiy16',
+    exilus: 'Fatal Acceleration',
+    mods: ['Galvanized Hell', 'Galvanized Savvy', 'Critical Deceleration', 'Primed Ravage', 'Primed Point Blank', 'Toxic Barrage', 'Frigid Blast', 'Shotgun Elementalist'],
+    arcanes: ['Primary Merciless'],
+    elements: 'Radiación + Viral + Electricidad con Rebote',
+    notes: 'El proyectil ancho de plasma atraviesa grupos compactos de enemigos rebotando en pasillos cerrados e infligiendo impacto garantizado y estados letales.'
+  },
+  {
+    name: 'Kuva Bramma',
+    slot: 'Primary',
+    role: 'Arco Explosivo de Racimo & Barrido Rápido',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/@eduiy16',
+    exilus: 'Vigilante Supplies',
+    mods: ['Galvanized Chamber', 'Critical Delay', 'Vital Sense', 'Serration', 'Hunter Munitions', 'Hellfire', 'Malignant Force', 'Rifle Elementalist'],
+    arcanes: ['Primary Merciless'],
+    elements: 'Viral + Fuego + Bombetas de Racimo Cortante',
+    notes: 'Flechas de impacto masivo que se fragmentan en microbombas al impactar, despejando salas de farmeo y fisuras rápidamente.'
+  },
+  {
+    name: 'Soma Prime',
+    slot: 'Primary',
+    role: 'Incarnon Crítico Puro de Alta Cadencia',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/@eduiy16',
+    exilus: 'Vigilante Supplies',
+    mods: ['Galvanized Chamber', 'Critical Delay', 'Vital Sense', 'Serration', 'Hunter Munitions', 'Hellfire', 'Malignant Force', 'Rifle Elementalist'],
+    arcanes: ['Primary Merciless', 'Primary Deadhead'],
+    elements: 'Viral + Calor + Cortante',
+    incarnon: [
+      'Evolución II: Furia Continua (+Daño base por disparo)',
+      'Evolución III: Capacidad de Cargador Incarnon',
+      'Evolución IV: Probabilidad Crítica Base Aumentada'
+    ],
+    notes: 'La evolución Incarnon eleva la probabilidad crítica base de la Soma Prime a niveles exorbitantes, encadenando impactos críticos rojos a la cabeza.'
+  },
+
+  // ==================== ARMAS SECUNDARIAS ====================
+  {
+    name: 'Laetum',
+    slot: 'Secondary',
+    role: 'Metralleta Incarnon 3.000.000 DPS (Anti-Jefes & Level Cap)',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/watch?v=AUZIYQH2qnZu-_eb4z4PI5DoOWurEcUSlzYCvXxAYbEcD6PejQMwJaQF9OJ2_AZGXQJ1gvRcWNijXpWyICSt__fvHYYzoLFnXzHU1zIsjXdqOpUyX4eELtQG3n2f04qGUgEN6r_O',
+    exilus: 'Ruinous Extension',
+    mods: ['Galvanized Diffusion', 'Galvanized Shot', 'Hornet Strike', 'Lethal Torrent', 'Jolt', 'Pistol Pestilence', 'Scorch', 'Pistol Elementalist'],
+    arcanes: ['Secondary Merciless', 'Cascadia Flare'],
+    elements: 'Corrosivo + Calor + Golpe No Crítico x2000%',
+    incarnon: [
+      'Evolución II: Furia de Semidiós (+Daño base y cadencia)',
+      'Evolución III: Manos Ágiles (+Velocidad de recarga)',
+      'Evolución IV: Gracia Devastadora (50% de probabilidad de +2000% Daño en golpes no críticos)'
+    ],
+    notes: 'No lleves mods de probabilidad crítica: la evolución V otorga un 50% de probabilidad de multiplicar el daño por un 2000% adicional en impactos no críticos, pulverizando acólitos y jefes de nivel 9999 en un abrir y cerrar de ojos.'
+  },
+  {
+    name: 'Dual Toxocyst',
+    slot: 'Secondary',
+    role: 'Pistolas Duales Incarnon con Rebote Teledirigido',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/watch?v=AUZIYQFLAmfS_3OA5KIauMhZRw8Z2u2GVD1pmS6037HL--iiQ7ZlPp_Q7xgpwFHkZKuDgtt9Ux5mgLsf6baKoZ2ofDskRkTzvvr-iUvU_dYvThqJaVl_0XGEeyCrcrrICitmwC2K',
+    exilus: 'Ruinous Extension',
+    mods: ['Galvanized Diffusion', 'Galvanized Crosshairs', 'Primed Target Cracker', 'Lethal Torrent', 'Pistol Pestilence', 'Frostbite', 'Scorch', 'Pistol Elementalist'],
+    arcanes: ['Secondary Merciless', 'Cascadia Flare'],
+    elements: 'Viral + Calor + Balas Incarnon Rebotantes',
+    incarnon: [
+      'Evolución II: Ráfaga Desenfrenada (+Cadencia masiva al apuntar a la cabeza)',
+      'Evolución III: Recarga Instantánea en movimiento',
+      'Evolución IV: Fiebre del Verdugo (Proyectiles rebotan automáticamente a 2 objetivos)'
+    ],
+    notes: 'Un solo disparo a la cabeza activa la cadencia frenética sin retroceso; en modo Incarnon cada bala rebota automáticamente entre enemigos eliminando hordas enteras pasivamente.'
+  },
+  {
+    name: 'Kuva Nukor',
+    slot: 'Secondary',
+    role: 'Rayo Cebador de Microondas Supremo (Para Condition Overload)',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/@eduiy16',
+    exilus: 'Ruinous Extension',
+    mods: ['Galvanized Diffusion', 'Galvanized Shot', 'Lethal Torrent', 'Pistol Pestilence', 'Frostbite', 'Scorch', 'Jolt', 'Pistol Elementalist'],
+    arcanes: ['Secondary Encumber'],
+    elements: 'Microondas Oculto + Radiación + Viral + Calor + Electricidad',
+    notes: 'Encadena hasta 4 objetivos aplicando el estado oculto Microondas (engrandece partes del enemigo) más 5 estados elementales distintos, multiplicando el daño cuerpo a cuerpo con Condition Overload.'
+  },
+  {
+    name: 'Akarius Prime',
+    slot: 'Secondary',
+    role: 'Misiles Teledirigidos Explosivos & Daño AoE Masivo',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/watch?v=AUZIYQGQ7C5nETgSx8OraXUFZL8BvNe0y3okLkPE3oBWQiHGiKe9bo4syT-QwVu2Nds3LUSWB-2mq4oTKJG-MzNgKtLLxMZD-Y3fS0tXdZKXv5CBe5tTgTUZ65baXDH_3JGGu7Zp',
+    exilus: 'Pistol Ammo Mutation',
+    mods: ['Galvanized Diffusion', 'Hornet Strike', 'Primed Pistol Gambit', 'Primed Target Cracker', 'Lethal Torrent', 'Pistol Pestilence', 'Frostbite', 'Pistol Elementalist'],
+    arcanes: ['Secondary Merciless'],
+    elements: 'Viral + Explosivo Guiado',
+    notes: 'Dispara cohetes inteligentes con aceleración y seguimiento teledirigido que barren grupos de enemigos sin necesidad de puntería precisa.'
+  },
+
+  // ==================== ARMAS MELEE ====================
+  {
+    name: 'Glaive Prime',
+    slot: 'Melee',
+    role: 'Ataque Pesado de Corte Forzado Millonario (Tier S+)',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/watch?v=AUZIYQHYJT_zcuUES0t1pNJjcZH_F0XfManPYVLUU13veWSG1f1CHV_a_UJ4mqEyXygxxx1P1BLACBrhOX_-2aM5aCD5DHJUHHKG9TebDSXkcysmMQR1j4D7pm_3oOPFbR8LOM8e',
+    stance: 'Gleaming Talon',
+    exilus: 'Melee Elementalist',
+    mods: ['Killing Blow', 'Corrupt Charge', 'Organ Shatter', 'Sacrificial Steel', 'Volatile Quick Return', 'Primed Pressure Point', 'Melee Elementalist', 'Gladiator Might'],
+    arcanes: ['Melee Duplicate', 'Arcane Strike'],
+    elements: 'Corte Puro 100% Forzado en Detonación Aérea',
+    notes: 'Lanza la guja y presiona el botón de ataque pesado en pleno vuelo para detonarla en el aire. Inflige cortes forzados de millones de daño por segundo que ignoran por completo la armadura enemiga.'
+  },
+  {
+    name: 'Kronen Prime',
+    slot: 'Melee',
+    role: 'Tonfas de Sangrado & Multiplicador de Combo 12x',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/@eduiy16',
+    stance: 'Sovereign Outcast',
+    exilus: 'Melee Elementalist',
+    mods: ['Condition Overload', 'Blood Rush', 'Weeping Wounds', 'Organ Shatter', 'Berserker Fury', 'Carnis Mandible', 'Primed Reach', 'Melee Elementalist'],
+    arcanes: ['Melee Duplicate', 'Arcane Strike'],
+    elements: 'Cortante Forzado de Postura + Viral',
+    notes: 'La postura Sovereign Outcast contiene golpes cortantes garantizados en sus combos neutrales y hacia adelante. Con Blood Rush y combo 12x conecta críticos rojos sin cesar.'
+  },
+  {
+    name: 'Broken War',
+    slot: 'Melee',
+    role: 'Espada de Crítico Brutal & Melee Influence SP',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/watch?v=AUZIYQEaN6z_cFv7nKGwTBAsh1KLbjqfrV7DQO4l74UHmXaU3aeg_4Xzh91imlDq_quO_klHeyGzx5urjjJXXpwxrqmMYK2V7Tsw3HTmR2i4Bo4Jo57F_a8cL5LKeLwhuzxoJRhN',
+    stance: 'Iron Phoenix',
+    exilus: 'Melee Elementalist',
+    mods: ['Condition Overload', 'Blood Rush', 'Weeping Wounds', 'Organ Shatter', 'Berserker Fury', 'Primed Reach', 'Virulent Scourge', 'Vicious Frost'],
+    arcanes: ['Melee Influence', 'Arcane Strike'],
+    elements: 'Viral + Electricidad en Cadena (Melee Influence)',
+    notes: 'Cuenta con un 35% de probabilidad crítica base sobresaliente. Al activar Melee Influence, propaga todo el daño elemental y de estado a todos los enemigos en un radio de 20 metros.'
+  },
+  {
+    name: 'Nikana Prime',
+    slot: 'Melee',
+    role: 'Katana Tradicional de Cortes Rápidos & Crítico',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/@eduiy16',
+    stance: 'Blind Justice',
+    exilus: 'Melee Elementalist',
+    mods: ['Condition Overload', 'Blood Rush', 'Weeping Wounds', 'Organ Shatter', 'Berserker Fury', 'Primed Reach', 'Carnis Mandible', 'Melee Elementalist'],
+    arcanes: ['Melee Duplicate', 'Arcane Strike'],
+    elements: 'Cortante Puro con Multiplicadores de Postura',
+    notes: 'Blind Justice tiene el combo de embestida hacia adelante más fluido y rápido de Warframe con cortes garantizados y multiplicadores de daño plano.'
+  }
 ];

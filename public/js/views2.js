@@ -1,7 +1,7 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, srcLine, modImg, debounce, norm, wikiLink, overframeSearch, t } from './util.js';
 import { openModal } from './ui.js';
 import { TIERS, TIER_COLORS } from './tiers.js';
-import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=12.0';
+import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=13.0';
 import { DARK_SECTOR_SURVIVALS, RESOURCE_GUIDE } from './darksector.js';
 import { TYPE_ES } from './lang.js';
 
@@ -136,6 +136,15 @@ function wfArcaneSlot(name) {
   `;
 }
 
+const SHARD_NAMES_ES = {
+  crimson: 'Carmesí',
+  amber: 'Ámbar',
+  azure: 'Celeste',
+  violet: 'Violeta',
+  emerald: 'Esmeralda',
+  topaz: 'Topacio',
+};
+
 export function builds(root) {
   const S = { tab: 'frames', q: '' };
   root.innerHTML = `<section class="page-head"><h1>🛠️ Top builds</h1>
@@ -156,19 +165,26 @@ export function builds(root) {
       const nameEs = t(x.name, x.name);
       const isPrimeAvail = D.cat[x.name + ' Prime'] ? x.name + ' Prime' : null;
       return bs.map((b) => {
-        // Shards HTML
+        // Shards HTML con imágenes oficiales del juego
         let shardsHtml = '';
         if (b.shards && b.shards.length) {
           shardsHtml = `
             <div class="wf-shards-wrapper">
-              <div class="wf-synergy-title">💎 Fragmentos de Arconte (Archon Shards):</div>
+              <div class="wf-synergy-title">💎 Fragmentos de Arconte recomendados (5 ranuras):</div>
               <div class="wf-shards-grid">
-                ${b.shards.map((s) => `
-                  <div class="shard-chip ${esc(s.type)}" title="${s.tau ? 'Tauforjado: ' : ''}${esc(s.stat)}">
-                    <span class="shard-gem ${esc(s.type)}">◆</span>
-                    <span class="shard-text">${s.tau ? '<span class="tau-star" title="Tauforjado">★</span> ' : ''}${esc(s.stat)}</span>
-                  </div>
-                `).join('')}
+                ${b.shards.map((s) => {
+                  const shardType = (s.type || 'crimson').toLowerCase();
+                  const shardImgSrc = `/img/shards/${s.tau ? 'tauforged_' : ''}${shardType}.png`;
+                  const shardLabel = SHARD_NAMES_ES[shardType] || shardType;
+                  return `
+                    <div class="shard-chip ${shardType}" title="${s.tau ? 'Tauforjado: ' : ''}${esc(s.stat)}">
+                      <img class="shard-img-icon" src="${shardImgSrc}" alt="${shardLabel}" loading="lazy" onerror="this.style.display='none'">
+                      <div class="shard-info-wrap">
+                        <span class="shard-type-title ${shardType}">${s.tau ? '<span class="tau-star" title="Tauforjado">★ TAUFORJADO</span> ' : ''}${shardLabel}</span>
+                        <span class="shard-text">${esc(s.stat)}</span>
+                      </div>
+                    </div>`;
+                }).join('')}
               </div>
             </div>`;
         }
@@ -196,11 +212,71 @@ export function builds(root) {
             </div>`;
         }
 
+        // Elementos & Incarnon HTML para Armas
+        let elementsHtml = '';
+        if (b.elements) {
+          elementsHtml = `
+            <div class="wf-synergy-row">
+              <div class="wf-synergy-chip elements">
+                <span class="chip-badge">🔥 Combinación Elemental & Estados</span>
+                <div class="chip-content">
+                  <span class="chip-ability">${esc(b.elements)}</span>
+                </div>
+              </div>
+            </div>`;
+        }
+
+        let incarnonHtml = '';
+        if (b.incarnon && b.incarnon.length) {
+          incarnonHtml = `
+            <div class="wf-incarnon-box">
+              <div class="wf-synergy-title">🧬 Evoluciones Incarnon recomendadas (eduiy16):</div>
+              <div class="wf-incarnon-grid">
+                ${b.incarnon.map((evo) => `
+                  <div class="incarnon-evo-pill">
+                    <span class="evo-diamond">◈</span>
+                    <span class="evo-text">${esc(evo)}</span>
+                  </div>`).join('')}
+              </div>
+            </div>`;
+        }
+
         // Video link / Eduiy credit
         const videoBtn = b.videoUrl ? `
           <a class="btn btn-eduiy" target="_blank" rel="noopener" href="${esc(b.videoUrl)}">
             <span class="yt-play-icon">▶</span> Guía en video por eduiy16 en YouTube ↗
           </a>` : '';
+
+        // Ranuras superiores según el tipo de equipamiento (Aura / Postura / Exilus)
+        let topSlotsHtml = '';
+        if (x.slot === 'Primary' || x.slot === 'Secondary') {
+          topSlotsHtml = `
+            <div class="wf-top-slots-row is-weapon-top">
+              <div class="wf-slot-container exilus-container">
+                ${wfModSlot(b.exilus || (x.slot === 'Primary' ? 'Vigilante Supplies' : 'Ruinous Extension'), 'exilus', false, true)}
+              </div>
+            </div>`;
+        } else if (x.slot === 'Melee') {
+          topSlotsHtml = `
+            <div class="wf-top-slots-row">
+              <div class="wf-slot-container aura-container">
+                ${wfModSlot(b.stance || 'Gleaming Talon', 'stance', false, false)}
+              </div>
+              <div class="wf-slot-container exilus-container">
+                ${wfModSlot(b.exilus || 'Melee Elementalist', 'exilus', false, true)}
+              </div>
+            </div>`;
+        } else {
+          topSlotsHtml = `
+            <div class="wf-top-slots-row">
+              <div class="wf-slot-container aura-container">
+                ${wfModSlot(b.aura || 'Brief Respite', 'aura', true, false)}
+              </div>
+              <div class="wf-slot-container exilus-container">
+                ${wfModSlot(b.exilus || 'Sure Footed', 'exilus', false, true)}
+              </div>
+            </div>`;
+        }
 
         return `<article class="card build build-showcase">
           <header class="build-hero">
@@ -223,16 +299,9 @@ export function builds(root) {
             <div class="build-section-label">⚡ Arsenal Oficial — Pasa el cursor sobre la carta de cualquier mod para ampliarla</div>
 
             <div class="wf-arsenal-board">
-              <!-- Clúster de Mods: Aura + Exilus arriba, 2 filas de 4 mods abajo -->
+              <!-- Clúster de Mods: Aura/Postura + Exilus arriba, 2 filas de 4 mods abajo -->
               <div class="wf-mods-cluster">
-                <div class="wf-top-slots-row">
-                  <div class="wf-slot-container aura-container">
-                    ${wfModSlot(b.aura || (x.slot === 'Melee' ? b.stance : 'Brief Respite'), !x.slot ? 'aura' : (x.slot === 'Melee' ? 'stance' : 'aura'), !x.slot, false)}
-                  </div>
-                  <div class="wf-slot-container exilus-container">
-                    ${wfModSlot(b.exilus || (x.slot ? 'Vigilante Supplies' : 'Sure Footed'), 'exilus', false, true)}
-                  </div>
-                </div>
+                ${topSlotsHtml}
 
                 <div class="wf-main-mods-grid">
                   ${b.mods.slice(0, 8).map((modName) => wfModSlot(modName, 'normal')).join('')}
@@ -242,19 +311,21 @@ export function builds(root) {
               <!-- Columna de Arcanos a la derecha -->
               <div class="wf-arcanes-column">
                 <span class="wf-arcanes-header-label">ARCANOS</span>
-                ${(b.arcanes && b.arcanes.length ? b.arcanes : ['Arcane Energize', 'Arcane Guardian']).slice(0, 2).map(wfArcaneSlot).join('')}
+                ${(b.arcanes && b.arcanes.length ? b.arcanes : ['Primary Merciless']).slice(0, 2).map(wfArcaneSlot).join('')}
               </div>
             </div>
 
-            <!-- Panel de Sinergias Avanzadas (Helminto, Enfoque y Fragmentos de Arconte) -->
-            ${(helminthFocusHtml || shardsHtml) ? `
+            <!-- Panel de Sinergias Avanzadas (Helminto, Enfoque, Elementos, Incarnon y Fragmentos) -->
+            ${(helminthFocusHtml || shardsHtml || elementsHtml || incarnonHtml) ? `
               <div class="wf-synergies-panel">
                 ${helminthFocusHtml}
+                ${elementsHtml}
+                ${incarnonHtml}
                 ${shardsHtml}
               </div>` : ''}
 
             <div class="build-strategy-box">
-              <h4>💡 Estrategia de Combate & Rotación Endgame (eduiy16)</h4>
+              <h4>💡 ${x.slot ? 'Guía de Disparo & Mecánicas (eduiy16)' : 'Estrategia de Combate & Rotación Endgame (eduiy16)'}</h4>
               <p>${esc(b.notes)}</p>
             </div>
           </div>

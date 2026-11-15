@@ -424,6 +424,8 @@ main:has(.builds-container){max-width:1440px}
 .wf-synergy-chip{flex:1;min-width:260px;display:flex;align-items:center;gap:12px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:9px 14px}
 .wf-synergy-chip.helminth{border-left:4px solid #10b981}
 .wf-synergy-chip.focus{border-left:4px solid #38bdf8}
+.wf-synergy-chip.elements{border-left:4px solid #f97316}
+.wf-synergy-chip.elements .chip-ability{color:#fdba74}
 .chip-badge{font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8}
 .chip-content{display:flex;flex-direction:column;gap:2px}
 .chip-ability{font-size:.95rem;font-weight:800;color:#6ee7b7}
@@ -431,26 +433,39 @@ main:has(.builds-container){max-width:1440px}
 .chip-replaces b{color:#fde047}
 .chip-focus-name{font-size:.95rem;font-weight:800;color:#7dd3fc}
 
+.wf-top-slots-row.is-weapon-top{justify-content:center}
+
 .wf-shards-wrapper{display:flex;flex-direction:column;gap:8px;margin-top:2px}
 .wf-synergy-title{font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--gold)}
-.wf-shards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
-.shard-chip{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:7px 10px;font-size:.82rem;color:#e2e8f0;transition:transform .15s ease}
-.shard-chip:hover{transform:translateY(-1px);background:rgba(255,255,255,.04)}
-.shard-gem{font-size:1.15rem;line-height:1}
+.wf-shards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}
+.shard-chip{display:flex;align-items:center;gap:12px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 12px;font-size:.82rem;color:#e2e8f0;transition:transform .15s ease}
+.shard-chip:hover{transform:translateY(-1px);background:rgba(255,255,255,.05)}
+.shard-img-icon{width:40px;height:40px;object-fit:contain;flex:none;filter:drop-shadow(0 2px 8px rgba(0,0,0,.95))}
+.shard-info-wrap{display:flex;flex-direction:column;gap:2px;min-width:0}
+.shard-type-title{font-size:.76rem;font-weight:900;text-transform:uppercase;letter-spacing:.5px}
+.shard-type-title.crimson{color:#ff4d6d}
+.shard-type-title.amber{color:#facc15}
+.shard-type-title.azure{color:#38bdf8}
+.shard-type-title.violet{color:#c084fc}
+.shard-type-title.emerald{color:#34d399}
+.shard-type-title.topaz{color:#fb923c}
+.shard-text{font-size:.81rem;color:#cbd5e1;line-height:1.25}
 .tau-star{color:#facc15;font-weight:900;text-shadow:0 0 6px #facc15;margin-right:2px}
 
 .shard-chip.crimson{border-color:rgba(255,77,109,.45);background:linear-gradient(135deg,rgba(255,77,109,.12),rgba(0,0,0,.45))}
-.shard-chip.crimson .shard-gem{color:#ff4d6d;text-shadow:0 0 8px #ff4d6d}
 .shard-chip.emerald{border-color:rgba(16,185,129,.45);background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(0,0,0,.45))}
-.shard-chip.emerald .shard-gem{color:#10b981;text-shadow:0 0 8px #10b981}
 .shard-chip.amber{border-color:rgba(250,204,21,.45);background:linear-gradient(135deg,rgba(250,204,21,.12),rgba(0,0,0,.45))}
-.shard-chip.amber .shard-gem{color:#facc15;text-shadow:0 0 8px #facc15}
 .shard-chip.violet{border-color:rgba(168,85,247,.45);background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(0,0,0,.45))}
-.shard-chip.violet .shard-gem{color:#a855f7;text-shadow:0 0 8px #a855f7}
 .shard-chip.topaz{border-color:rgba(249,115,22,.45);background:linear-gradient(135deg,rgba(249,115,22,.12),rgba(0,0,0,.45))}
-.shard-chip.topaz .shard-gem{color:#f97316;text-shadow:0 0 8px #f97316}
 .shard-chip.azure{border-color:rgba(56,189,248,.45);background:linear-gradient(135deg,rgba(56,189,248,.12),rgba(0,0,0,.45))}
-.shard-chip.azure .shard-gem{color:#38bdf8;text-shadow:0 0 8px #38bdf8}
+
+/* Estilos de Evoluciones Incarnon */
+.wf-incarnon-box{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.wf-incarnon-grid{display:flex;flex-direction:column;gap:6px}
+.incarnon-evo-pill{display:flex;align-items:flex-start;gap:8px;background:rgba(0,0,0,.4);border:1px solid rgba(56,189,248,.25);border-left:3px solid #38bdf8;border-radius:8px;padding:6px 12px;font-size:.84rem;color:#e2e8f0}
+.evo-diamond{color:#38bdf8;font-size:.9rem}
+.evo-text{line-height:1.3}
+
 
 
 
