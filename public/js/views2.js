@@ -35,11 +35,14 @@ export function tiers(root) {
 }
 
 // ========================= BUILDS =========================
-function wfModCapsule(name, slotType = 'normal', isAura = false, isExilus = false) {
+function wfModSlot(name, slotType = 'normal', isAura = false, isExilus = false) {
   if (!name) {
-    return `<div class="wf-mod-capsule empty">
-      <div class="capsule-frame-outer">
-        <span class="capsule-name muted">Ranura Vacía</span>
+    return `<div class="wf-mod-slot empty">
+      <div class="wf-slot-top-bar">
+        <span class="wf-slot-type-badge">${isAura ? '⚡ AURA' : isExilus ? '◈ EXILUS' : 'MOD'}</span>
+      </div>
+      <div class="wf-mod-img-wrap empty">
+        <span class="muted small">Vacío</span>
       </div>
     </div>`;
   }
@@ -77,52 +80,34 @@ function wfModCapsule(name, slotType = 'normal', isAura = false, isExilus = fals
     drain = 8;
   }
 
-  // Ícono superior central (Aura o Exilus)
-  let slotSymbol = '';
-  if (isAura) {
-    slotSymbol = `<div class="capsule-slot-symbol aura" title="Aura"><span>(A)</span></div>`;
-  } else if (isExilus) {
-    slotSymbol = `<div class="capsule-slot-symbol exilus" title="Exilus"><span>{A}</span></div>`;
-  }
+  // Ícono de ranura superior
+  let slotLabel = 'MOD';
+  if (isAura) slotLabel = '⚡ AURA';
+  else if (isExilus) slotLabel = '◈ EXILUS';
+  else if (slotType === 'stance') slotLabel = '⚔️ POSTURA';
 
   // Puntos de rango iluminados
   const maxRank = modData?.max || (isPrime || isUmbral || isArchon || /blind rage|narrow minded/i.test(name) ? 10 : 5);
-  const dotsHtml = `<div class="capsule-rank-dots">${Array(maxRank).fill('<span>•</span>').join('')}</div>`;
+  const dotsHtml = `<div class="wf-slot-rank-dots">${Array(maxRank).fill('<span>•</span>').join('')}</div>`;
 
   const drainBadge = isAura ? `^${drain} =` : `${drain} =`;
 
   return `
-    <div class="wf-mod-capsule ${frameClass} ${isExilus ? 'is-exilus' : ''}" style="${imgSrc ? `--mod-bg: url('${esc(imgSrc)}')` : ''}">
-      <div class="capsule-frame-outer">
-        <div class="capsule-top-row">
-          <div class="capsule-left-flag">
-            ${isAura ? '<span class="aura-icon-mini">⚡</span>' : isExilus ? '<span class="exilus-icon-mini">◈</span>' : ''}
-          </div>
-          ${slotSymbol}
-          <div class="capsule-drain matched" title="Drenaje con polaridad coincidente">${drainBadge}</div>
-        </div>
-
-        <div class="capsule-name-area">
-          <span class="capsule-name">${esc(nameEs)}</span>
-        </div>
-
-        <div class="capsule-bottom-row">
-          ${dotsHtml}
-        </div>
+    <div class="wf-mod-slot ${frameClass} ${isExilus ? 'is-exilus' : ''}" title="${esc(nameEs)} (${esc(name)})">
+      <div class="wf-slot-top-bar">
+        <span class="wf-slot-type-badge ${isAura ? 'aura' : isExilus ? 'exilus' : ''}">${slotLabel}</span>
+        <span class="wf-slot-drain matched" title="Drenaje con polaridad">${drainBadge}</span>
       </div>
 
-      <!-- Popover de carta completa en HD al pasar el cursor -->
-      <div class="mod-card-popover">
-        <div class="popover-inner">
-          <div class="popover-img-wrap">
-            ${img(imgSrc, 'popover-card-img', name)}
-          </div>
-          <div class="popover-info">
-            <b class="popover-title">${esc(nameEs)}</b>
-            <span class="popover-en">(${esc(name)})</span>
-            ${itemPrice != null ? `<span class="popover-price">🪙 ${fmt(itemPrice)}p</span>` : ''}
-          </div>
-        </div>
+      <!-- El MOD visible en todo su esplendor (carta completa en alta resolución) -->
+      <div class="wf-mod-img-wrap">
+        ${img(imgSrc, 'wf-slot-mod-img', name)}
+      </div>
+
+      <div class="wf-slot-bottom-info">
+        <span class="wf-slot-name">${esc(nameEs)}</span>
+        ${dotsHtml}
+        ${itemPrice != null ? `<span class="wf-slot-price">${fmt(itemPrice)}p</span>` : ''}
       </div>
     </div>
   `;
@@ -146,19 +131,7 @@ function wfArcaneSlot(name) {
       <div class="arcane-rank-diamonds" title="Rango 5 (Máximo)">
         <span>◆</span><span>◆</span><span>◆</span><span>◆</span><span>◆</span>
       </div>
-
-      <!-- Popover con información del Arcano al pasar el cursor -->
-      <div class="arcane-popover-card">
-        <div class="popover-inner">
-          ${imgSrc ? `<div class="popover-img-wrap">${img(imgSrc, 'popover-arcane-img', name)}</div>` : ''}
-          <div class="popover-info">
-            <b class="popover-title">${esc(nameEs)}</b>
-            <span class="popover-en">(${esc(name)})</span>
-            ${arcData?.effect ? `<p class="popover-effect">${esc(arcData.effect)}</p>` : ''}
-            ${itemPrice != null ? `<span class="popover-price">🪙 ${fmt(itemPrice)}p (R0)</span>` : ''}
-          </div>
-        </div>
-      </div>
+      ${itemPrice != null ? `<span class="arcane-slot-price">${fmt(itemPrice)}p</span>` : ''}
     </div>
   `;
 }
@@ -166,7 +139,7 @@ function wfArcaneSlot(name) {
 export function builds(root) {
   const S = { tab: 'frames', q: '' };
   root.innerHTML = `<section class="page-head"><h1>🛠️ Top builds</h1>
-    <p>Builds de referencia con el formato oficial del Arsenal de Warframe. Incluye ranuras de Aura, Exilus, 8 mods principales en 2 filas y Arcanos. Pasa el cursor por cualquier mod o arcano para ver su carta en alta resolución.</p></section>
+    <p>Distribución oficial del Arsenal de Warframe. Cada ranura muestra la carta del mod en alta resolución con su arte, estadísticas y polaridad. Pasa el cursor por cualquier mod para ampliarlo en gran tamaño.</p></section>
     <div class="toolbar"><div class="seg"><button data-v="frames" class="on">Warframes</button><button data-v="weapons">Armas</button></div>
     <input type="search" placeholder="Buscar Warframe o arma en español…" data-k="q"></div><div class="results"></div>`;
 
@@ -199,24 +172,22 @@ export function builds(root) {
         </header>
 
         <div class="build-body">
-          <div class="build-section-label">⚡ Distribución de Ranuras (Arsenal Oficial) — Pasa el cursor sobre cada mod o arcano para ampliar</div>
+          <div class="build-section-label">⚡ Arsenal Oficial — Pasa el cursor sobre la carta de cualquier mod para ampliarla</div>
 
           <div class="wf-arsenal-board">
             <!-- Clúster de Mods: Aura + Exilus arriba, 2 filas de 4 mods abajo -->
             <div class="wf-mods-cluster">
               <div class="wf-top-slots-row">
-                <div class="wf-slot-wrap">
-                  <span class="wf-slot-badge-label">${x.slot ? (x.slot === 'Melee' ? 'POSTURA' : 'EXILUS') : 'AURA'}</span>
-                  ${wfModCapsule(b.aura || (x.slot === 'Melee' ? b.stance : 'Brief Respite'), 'aura', !x.slot, false)}
+                <div class="wf-slot-container aura-container">
+                  ${wfModSlot(b.aura || (x.slot === 'Melee' ? b.stance : 'Brief Respite'), !x.slot ? 'aura' : (x.slot === 'Melee' ? 'stance' : 'aura'), !x.slot, false)}
                 </div>
-                <div class="wf-slot-wrap">
-                  <span class="wf-slot-badge-label">EXILUS</span>
-                  ${wfModCapsule(b.exilus || (x.slot ? 'Vigilante Supplies' : 'Sure Footed'), 'exilus', false, true)}
+                <div class="wf-slot-container exilus-container">
+                  ${wfModSlot(b.exilus || (x.slot ? 'Vigilante Supplies' : 'Sure Footed'), 'exilus', false, true)}
                 </div>
               </div>
 
               <div class="wf-main-mods-grid">
-                ${b.mods.slice(0, 8).map((modName) => wfModCapsule(modName, 'normal')).join('')}
+                ${b.mods.slice(0, 8).map((modName) => wfModSlot(modName, 'normal')).join('')}
               </div>
             </div>
 
