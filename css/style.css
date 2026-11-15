@@ -413,5 +413,45 @@ main:has(.builds-container){max-width:1440px}
 .arbit-node-title{font-size:1.45rem;font-weight:900;margin:6px 0 2px;color:var(--gold);letter-spacing:.3px}
 .arbit-main-info{background:#0004;padding:10px 14px;border-radius:10px;margin:6px 0}
 
+/* Estilos de Sinergias Avanzadas eduiy16 (Fragmentos de Arconte, Helminto, Enfoque) */
+.eduiy-badge{background:rgba(229,9,20,.18);border:1px solid #ff4d6d88;color:#ff8da1;font-weight:800}
+.btn-eduiy{background:linear-gradient(135deg,#c4302b 0%,#8b1111 100%) !important;color:#fff !important;border:1px solid #ff4d6d !important;font-weight:700;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(196,48,43,.4);transition:all .2s ease}
+.btn-eduiy:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,77,109,.6);color:#fff}
+.yt-play-icon{display:inline-flex;width:18px;height:18px;background:#fff;color:#c4302b;border-radius:4px;font-size:.65rem;align-items:center;justify-content:center;font-weight:900}
+
+.wf-synergies-panel{display:flex;flex-direction:column;gap:12px;background:linear-gradient(160deg,#121929,#0c101c);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 16px;margin-top:14px}
+.wf-synergy-row{display:flex;gap:12px;flex-wrap:wrap}
+.wf-synergy-chip{flex:1;min-width:260px;display:flex;align-items:center;gap:12px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:9px 14px}
+.wf-synergy-chip.helminth{border-left:4px solid #10b981}
+.wf-synergy-chip.focus{border-left:4px solid #38bdf8}
+.chip-badge{font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8}
+.chip-content{display:flex;flex-direction:column;gap:2px}
+.chip-ability{font-size:.95rem;font-weight:800;color:#6ee7b7}
+.chip-replaces{font-size:.8rem;color:#cbd5e1}
+.chip-replaces b{color:#fde047}
+.chip-focus-name{font-size:.95rem;font-weight:800;color:#7dd3fc}
+
+.wf-shards-wrapper{display:flex;flex-direction:column;gap:8px;margin-top:2px}
+.wf-synergy-title{font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--gold)}
+.wf-shards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.shard-chip{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:7px 10px;font-size:.82rem;color:#e2e8f0;transition:transform .15s ease}
+.shard-chip:hover{transform:translateY(-1px);background:rgba(255,255,255,.04)}
+.shard-gem{font-size:1.15rem;line-height:1}
+.tau-star{color:#facc15;font-weight:900;text-shadow:0 0 6px #facc15;margin-right:2px}
+
+.shard-chip.crimson{border-color:rgba(255,77,109,.45);background:linear-gradient(135deg,rgba(255,77,109,.12),rgba(0,0,0,.45))}
+.shard-chip.crimson .shard-gem{color:#ff4d6d;text-shadow:0 0 8px #ff4d6d}
+.shard-chip.emerald{border-color:rgba(16,185,129,.45);background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(0,0,0,.45))}
+.shard-chip.emerald .shard-gem{color:#10b981;text-shadow:0 0 8px #10b981}
+.shard-chip.amber{border-color:rgba(250,204,21,.45);background:linear-gradient(135deg,rgba(250,204,21,.12),rgba(0,0,0,.45))}
+.shard-chip.amber .shard-gem{color:#facc15;text-shadow:0 0 8px #facc15}
+.shard-chip.violet{border-color:rgba(168,85,247,.45);background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(0,0,0,.45))}
+.shard-chip.violet .shard-gem{color:#a855f7;text-shadow:0 0 8px #a855f7}
+.shard-chip.topaz{border-color:rgba(249,115,22,.45);background:linear-gradient(135deg,rgba(249,115,22,.12),rgba(0,0,0,.45))}
+.shard-chip.topaz .shard-gem{color:#f97316;text-shadow:0 0 8px #f97316}
+.shard-chip.azure{border-color:rgba(56,189,248,.45);background:linear-gradient(135deg,rgba(56,189,248,.12),rgba(0,0,0,.45))}
+.shard-chip.azure .shard-gem{color:#38bdf8;text-shadow:0 0 8px #38bdf8}
+
+
 
 

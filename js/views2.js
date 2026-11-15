@@ -1,7 +1,7 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, srcLine, modImg, debounce, norm, wikiLink, overframeSearch, t } from './util.js';
 import { openModal } from './ui.js';
 import { TIERS, TIER_COLORS } from './tiers.js';
-import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js';
+import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=12.0';
 import { DARK_SECTOR_SURVIVALS, RESOURCE_GUIDE } from './darksector.js';
 import { TYPE_ES } from './lang.js';
 
@@ -155,60 +155,117 @@ export function builds(root) {
       const bs = x.builds || [x];
       const nameEs = t(x.name, x.name);
       const isPrimeAvail = D.cat[x.name + ' Prime'] ? x.name + ' Prime' : null;
-      return bs.map((b) => `<article class="card build build-showcase">
-        <header class="build-hero">
-          <div class="build-avatar-box">
-            ${img(catImg(x.name) || catImg(x.name + ' Prime'), 'build-avatar-img', x.name)}
-          </div>
-          <div class="build-title-area">
-            <div class="meta">
-              <span class="badge ${x.slot ? 'type' : 'ok'}">${x.slot ? esc(TYPE_ES[x.slot] || x.slot) : '⭐ Warframe Meta'}</span>
-              ${isPrimeAvail ? `<span class="badge vault">Versión Prime disponible</span>` : ''}
-              <span class="badge ok">${esc(b.role)}</span>
+      return bs.map((b) => {
+        // Shards HTML
+        let shardsHtml = '';
+        if (b.shards && b.shards.length) {
+          shardsHtml = `
+            <div class="wf-shards-wrapper">
+              <div class="wf-synergy-title">💎 Fragmentos de Arconte (Archon Shards):</div>
+              <div class="wf-shards-grid">
+                ${b.shards.map((s) => `
+                  <div class="shard-chip ${esc(s.type)}" title="${s.tau ? 'Tauforjado: ' : ''}${esc(s.stat)}">
+                    <span class="shard-gem ${esc(s.type)}">◆</span>
+                    <span class="shard-text">${s.tau ? '<span class="tau-star" title="Tauforjado">★</span> ' : ''}${esc(s.stat)}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>`;
+        }
+
+        // Helminth & Focus HTML
+        let helminthFocusHtml = '';
+        if (b.helminth || b.focus) {
+          helminthFocusHtml = `
+            <div class="wf-synergy-row">
+              ${b.helminth ? `
+                <div class="wf-synergy-chip helminth">
+                  <span class="chip-badge">🧬 Helminto</span>
+                  <div class="chip-content">
+                    <span class="chip-ability">${esc(b.helminth.ability)}</span>
+                    <span class="chip-replaces">Reemplaza: <b>${esc(b.helminth.replaces)}</b></span>
+                  </div>
+                </div>` : ''}
+              ${b.focus ? `
+                <div class="wf-synergy-chip focus">
+                  <span class="chip-badge">🌀 Escuela de Enfoque</span>
+                  <div class="chip-content">
+                    <span class="chip-focus-name">${esc(b.focus)}</span>
+                  </div>
+                </div>` : ''}
+            </div>`;
+        }
+
+        // Video link / Eduiy credit
+        const videoBtn = b.videoUrl ? `
+          <a class="btn btn-eduiy" target="_blank" rel="noopener" href="${esc(b.videoUrl)}">
+            <span class="yt-play-icon">▶</span> Guía en video por eduiy16 en YouTube ↗
+          </a>` : '';
+
+        return `<article class="card build build-showcase">
+          <header class="build-hero">
+            <div class="build-avatar-box">
+              ${img(catImg(x.name) || catImg(x.name + ' Prime'), 'build-avatar-img', x.name)}
             </div>
-            <h2>${esc(nameEs)}</h2>
-            <h4 class="build-name-tag">Configuración: <span>${esc(b.name)}</span></h4>
-          </div>
-        </header>
+            <div class="build-title-area">
+              <div class="meta">
+                <span class="badge ${x.slot ? 'type' : 'ok'}">${x.slot ? esc(TYPE_ES[x.slot] || x.slot) : '⭐ Warframe Meta'}</span>
+                ${isPrimeAvail ? `<span class="badge vault">Versión Prime disponible</span>` : ''}
+                <span class="badge ok">${esc(b.role)}</span>
+                ${b.author ? `<span class="badge eduiy-badge">Guía por ${esc(b.author)}</span>` : ''}
+              </div>
+              <h2>${esc(nameEs)}</h2>
+              <h4 class="build-name-tag">Configuración: <span>${esc(b.name)}</span></h4>
+            </div>
+          </header>
 
-        <div class="build-body">
-          <div class="build-section-label">⚡ Arsenal Oficial — Pasa el cursor sobre la carta de cualquier mod para ampliarla</div>
+          <div class="build-body">
+            <div class="build-section-label">⚡ Arsenal Oficial — Pasa el cursor sobre la carta de cualquier mod para ampliarla</div>
 
-          <div class="wf-arsenal-board">
-            <!-- Clúster de Mods: Aura + Exilus arriba, 2 filas de 4 mods abajo -->
-            <div class="wf-mods-cluster">
-              <div class="wf-top-slots-row">
-                <div class="wf-slot-container aura-container">
-                  ${wfModSlot(b.aura || (x.slot === 'Melee' ? b.stance : 'Brief Respite'), !x.slot ? 'aura' : (x.slot === 'Melee' ? 'stance' : 'aura'), !x.slot, false)}
+            <div class="wf-arsenal-board">
+              <!-- Clúster de Mods: Aura + Exilus arriba, 2 filas de 4 mods abajo -->
+              <div class="wf-mods-cluster">
+                <div class="wf-top-slots-row">
+                  <div class="wf-slot-container aura-container">
+                    ${wfModSlot(b.aura || (x.slot === 'Melee' ? b.stance : 'Brief Respite'), !x.slot ? 'aura' : (x.slot === 'Melee' ? 'stance' : 'aura'), !x.slot, false)}
+                  </div>
+                  <div class="wf-slot-container exilus-container">
+                    ${wfModSlot(b.exilus || (x.slot ? 'Vigilante Supplies' : 'Sure Footed'), 'exilus', false, true)}
+                  </div>
                 </div>
-                <div class="wf-slot-container exilus-container">
-                  ${wfModSlot(b.exilus || (x.slot ? 'Vigilante Supplies' : 'Sure Footed'), 'exilus', false, true)}
+
+                <div class="wf-main-mods-grid">
+                  ${b.mods.slice(0, 8).map((modName) => wfModSlot(modName, 'normal')).join('')}
                 </div>
               </div>
 
-              <div class="wf-main-mods-grid">
-                ${b.mods.slice(0, 8).map((modName) => wfModSlot(modName, 'normal')).join('')}
+              <!-- Columna de Arcanos a la derecha -->
+              <div class="wf-arcanes-column">
+                <span class="wf-arcanes-header-label">ARCANOS</span>
+                ${(b.arcanes && b.arcanes.length ? b.arcanes : ['Arcane Energize', 'Arcane Guardian']).slice(0, 2).map(wfArcaneSlot).join('')}
               </div>
             </div>
 
-            <!-- Columna de Arcanos a la derecha -->
-            <div class="wf-arcanes-column">
-              <span class="wf-arcanes-header-label">ARCANOS</span>
-              ${(b.arcanes && b.arcanes.length ? b.arcanes : ['Arcane Energize', 'Arcane Guardian']).slice(0, 2).map(wfArcaneSlot).join('')}
+            <!-- Panel de Sinergias Avanzadas (Helminto, Enfoque y Fragmentos de Arconte) -->
+            ${(helminthFocusHtml || shardsHtml) ? `
+              <div class="wf-synergies-panel">
+                ${helminthFocusHtml}
+                ${shardsHtml}
+              </div>` : ''}
+
+            <div class="build-strategy-box">
+              <h4>💡 Estrategia de Combate & Rotación Endgame (eduiy16)</h4>
+              <p>${esc(b.notes)}</p>
             </div>
           </div>
 
-          <div class="build-strategy-box">
-            <h4>💡 Estrategia de Combate & Estilo de Juego</h4>
-            <p>${esc(b.notes)}</p>
-          </div>
-        </div>
-
-        <footer>
-          <a class="btn" target="_blank" rel="noopener" href="${overframeSearch(x.name)}">Ver más variantes en Overframe ↗</a>
-          <a class="btn ghost" target="_blank" rel="noopener" href="${esc(wikiLink(x.name))}">Wiki Oficial ↗</a>
-        </footer>
-      </article>`).join('');
+          <footer>
+            ${videoBtn}
+            <a class="btn ghost" target="_blank" rel="noopener" href="${overframeSearch(x.name)}">Ver más variantes en Overframe ↗</a>
+            <a class="btn ghost" target="_blank" rel="noopener" href="${esc(wikiLink(x.name))}">Wiki Oficial ↗</a>
+          </footer>
+        </article>`;
+      }).join('');
     }).join('');
 
     const extra = q && !list.length ? `<div class="notice">No hay build curada para “${esc(S.q)}”. <a target="_blank" rel="noopener" href="${overframeSearch(S.q)}">Buscar en Overframe ↗</a></div>` : '';
