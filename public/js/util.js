@@ -1,5 +1,5 @@
 // Utilidades compartidas con soporte i18n español
-import { PLANET_ES, MODE_ES as MODES, RARITY_ES as RARITIES, TYPE_ES, translatePart, translateNode } from './lang.js';
+import { PLANET_ES, MODE_ES as MODES, RARITY_ES as RARITIES, TYPE_ES, translatePart, translateNode, formatMissionSource } from './lang.js';
 
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 export const $ = (sel, root = document) => root.querySelector(sel);
@@ -64,10 +64,9 @@ export function chance(c) {
 }
 
 export function srcLine(s) {
-  const mode = s.mode ? ` (${MODES[s.mode] || s.mode}${s.rot ? ' · rot. ' + s.rot : ''})` : s.rot ? ` · rot. ${s.rot}` : '';
   const kind = { M: '🎯', T: '🎯', S: '🏆', K: '🗝️', B: '📜', E: '☠️', V: '🏛️' }[s.t] || '•';
-  const nodeName = translateNode(s.w);
-  return `<li><span class="k">${kind}</span><span class="w">${esc(nodeName)}${esc(mode)}${s.q ? ` <em>×${esc(s.q)}</em>` : ''}${s.x ? ` <small>${esc(s.x)}</small>` : ''}</span><span class="c">${chance(s.c)}</span></li>`;
+  const formattedHtml = formatMissionSource(s);
+  return `<li><span class="k">${kind}</span><span class="w">${formattedHtml}</span><span class="c">${chance(s.c)}</span></li>`;
 }
 export const srcList = (list) => (list?.length ? `<ul class="srcs">${list.map(srcLine).join('')}</ul>` : '');
 

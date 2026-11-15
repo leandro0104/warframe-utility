@@ -1,7 +1,7 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, srcLine, modImg, debounce, norm, wikiLink, overframeSearch, t } from './util.js';
 import { openModal } from './ui.js';
 import { TIERS, TIER_COLORS } from './tiers.js';
-import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=14.0';
+import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=15.0';
 import { DARK_SECTOR_SURVIVALS, RESOURCE_GUIDE } from './darksector.js';
 import { TYPE_ES } from './lang.js';
 
@@ -394,7 +394,8 @@ export function farm(root) {
       res.innerHTML = `
         <div class="reslist">${(Array.isArray(D.res) ? D.res : []).map((r) => {
           const rEs = t(r.name, r.name);
-          return `<button class="resbtn ${r === cur ? 'on' : ''}" data-r="${esc(r.name)}">${img(r.mi ? imgM(r.mi) : imgC(r.img), 'ri', r.name)}<span>${esc(rEs)}</span></button>`;
+          const rImg = r.localImg || (r.mi ? imgM(r.mi) : imgC(r.img));
+          return `<button class="resbtn ${r === cur ? 'on' : ''}" data-r="${esc(r.name)}">${img(rImg, 'ri', r.name)}<span>${esc(rEs)}</span></button>`;
         }).join('')}</div>
 
         ${guide ? `
@@ -418,7 +419,7 @@ export function farm(root) {
         </article>` : ''}
 
         <article class="card wide">
-          <header>${img(cur.mi ? imgM(cur.mi) : imgC(cur.img), 'big-img', cur.name)}<div><h3>${esc(resNameEs)} (${esc(cur.name)})</h3><p class="muted small">Otras fuentes según datos de drops oficiales</p></div></header>
+          <header>${img(cur.localImg || (cur.mi ? imgM(cur.mi) : imgC(cur.img)), 'big-img', cur.name)}<div><h3>${esc(resNameEs)} (${esc(cur.name)})</h3><p class="muted small">Otras fuentes según datos de drops oficiales</p></div></header>
           <div class="two">
             <div><h4>🎯 Misiones y alijos</h4>${(cur.missions || []).length ? srcList(cur.missions) : '<p class="muted small">Sin misiones en tablas de drops.</p>'}</div>
             <div><h4>☠️ Enemigos y contenedores</h4>${(cur.enemies || []).length ? srcList(cur.enemies) : '<p class="muted small">Sin enemigos en tablas de drops.</p>'}</div>
