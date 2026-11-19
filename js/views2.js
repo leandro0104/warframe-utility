@@ -1,9 +1,9 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, srcLine, modImg, debounce, norm, wikiLink, overframeSearch, t } from './util.js';
 import { openModal } from './ui.js';
 import { TIERS, TIER_COLORS } from './tiers.js';
-import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=18.0';
+import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=19.0';
 import { DARK_SECTOR_SURVIVALS, RESOURCE_GUIDE } from './darksector.js';
-import { PLAT_CATEGORIES, PLAT_ROUTES, PRIME_JUNK_RATES, PLAT_TIPS } from './platData.js?v=18.0';
+import { PLAT_CATEGORIES, PLAT_ROUTES, PRIME_JUNK_RATES, PLAT_TIPS } from './platData.js?v=19.0';
 import { TYPE_ES } from './lang.js';
 
 const catImg = (name) => (D.cat[name] ? imgC(D.cat[name].img) : '');
@@ -321,7 +321,7 @@ function getDynamicWeaponBuild(name, catItem) {
     slot: slot,
     role: `Build Meta Optimizada (${catItem.type || slot} · ${statCrit}% Crítico / ${statStatus}% Estado)`,
     author: 'Comunidad Warframe (Overframe Meta)',
-    videoUrl: `https://www.youtube.com/results?search_query=warframe+${encodeURIComponent(name)}+build`,
+    videoUrl: null,
     exilus: exilus,
     stance: stance,
     mods: mods,
@@ -453,10 +453,11 @@ export function builds(root) {
             </div>`;
         }
 
-        // Video link / Eduiy credit
-        const videoBtn = b.videoUrl ? `
+        // Video link / Creator credit (solo si es un video real verificado de YouTube)
+        const isRealVideo = b.videoUrl && (b.videoUrl.includes('watch?v=') || b.videoUrl.includes('youtu.be/'));
+        const videoBtn = isRealVideo ? `
           <a class="btn btn-eduiy" target="_blank" rel="noopener" href="${esc(b.videoUrl)}">
-            <span class="yt-play-icon">▶</span> Guía en video por eduiy16 en YouTube ↗
+            <span class="yt-play-icon">▶</span> Guía en video por ${esc(b.author || 'eduiy16')} en YouTube ↗
           </a>` : '';
 
         // Ranuras superiores según el tipo de equipamiento (Aura / Postura / Exilus)
