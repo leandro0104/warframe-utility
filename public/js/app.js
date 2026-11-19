@@ -1,13 +1,16 @@
 import { $, D, P } from './util.js';
 import './ui.js';
-import * as V1 from './views1.js?v=20.0';
-import * as V2 from './views2.js?v=20.0';
-import { worldStateView } from './viewStatus.js?v=20.0';
+import * as V1 from './views1.js?v=21.0';
+import * as V2 from './views2.js?v=21.0';
+import { worldStateView, fetchWorldState } from './viewStatus.js?v=21.0';
+import { tennoToolsMainView, initGlobalSearch, checkBackgroundNotifications } from './tennoTools.js?v=21.0';
 
 const ROUTES = {
   '': V1.home,
   primes: V1.primes,
   status: worldStateView,
+  tools: tennoToolsMainView,
+  mastery: (root) => tennoToolsMainView(root, 'mastery'),
   arcanes: V1.arcanes,
   mods: V1.mods,
   tiers: V2.tiers,
@@ -64,9 +67,12 @@ async function loadPrices() {
 }
 
 function route() {
-  const h = (location.hash.replace(/^#\/?/, '') || '').split('/')[0];
+  const h = (location.hash.replace(/^#\/?/, '') || '').split('/')[0].split('?')[0];
   const fn = ROUTES[h] || ROUTES[''];
-  document.querySelectorAll('nav a').forEach((a) => a.classList.toggle('active', a.getAttribute('href') === `#/${h}`));
+  document.querySelectorAll('nav a').forEach((a) => {
+    const href = a.getAttribute('href');
+    a.classList.toggle('active', href === `#/${h}` || href?.startsWith(`#/${h}?`));
+  });
   const el = document.createElement('div');
   view.replaceChildren(el);
   refresh = fn(el) || null;
@@ -80,8 +86,16 @@ async function boot() {
     view.innerHTML = `<div class="notice">No se pudieron cargar los datos (${e.message}). Ejecuta <code>npm run build-data</code> y reinicia el servidor.</div>`;
     return;
   }
+  initGlobalSearch();
   route();
   addEventListener('hashchange', route);
+
+  // Monitoreo de notificaciones en tiempo real en segundo plano
+  fetchWorldState().then(ws => checkBackgroundNotifications(ws)).catch(() => {});
+  setInterval(() => {
+    fetchWorldState().then(ws => checkBackgroundNotifications(ws)).catch(() => {});
+  }, 60000);
+
   setInterval(async () => {
     if (document.hidden || document.querySelector('.modal-back')) return;
     const before = P.progress.done;

@@ -1,6 +1,6 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, modImg, debounce, norm, t } from './util.js';
 import { TYPE_ES, translateLocation } from './lang.js';
-import { formatCountdown, fetchWorldState, translateStreamTitle, getTwitchStreamAlerts } from './viewStatus.js?v=20.0';
+import { formatCountdown, fetchWorldState, translateStreamTitle, getTwitchStreamAlerts } from './viewStatus.js?v=21.0';
 
 const relicChip = (r) => `<button class="chip relic ${r.rar?.toLowerCase()}" data-act="relic" data-relic="${esc(r.id)}" title="${esc(r.id)} · ${esc(r.rar)} · ${chance(r.ch)}${r.av ? '' : ' · vaulted'}">${esc(r.id)}<small>${chance(r.ch)}</small></button>`;
 
@@ -341,9 +341,14 @@ export function drawHomeTwitchDrops(el, ws) {
 
 export function home(root) {
   const cards = [
+    ['#/tools?tab=relics', '⚡', 'Selector de Fisuras', 'Decide qué recompensa elegir en 15 segundos'],
     ['#/primes', '💎', 'Partes Prime', 'Nombres en español, reliquias y precios'],
     ['#/status', '⚡', 'Estado en Vivo', 'Fisuras, Baro Ki\'Teer, ciclos y camino de acero'],
     ['#/farm', '📍', 'Dónde farmear', 'Células Orokin (+35% Gabii) y Sectores Oscuros'],
+    ['#/tools?tab=ducats', '🪙', 'Ducados vs Platino', 'Optimiza tus ventas de Baro Ki\'Teer'],
+    ['#/tools?tab=mastery', '📋', 'Rastreador de Maestría', 'Calcula tu MR y armas fáciles de craftear'],
+    ['#/plat', '💰', 'Platino Rápido', 'Rutas de farmeo y venta de piezas'],
+    ['#/tools?tab=trade', '💬', 'Generador /trade', 'Mensajes con corchetes oficiales para el chat'],
     ['#/tiers', '🏆', 'Tier lists', 'Warframes Prime, Cedo Prime, Bassocyst, etc.'],
     ['#/arcanes', '🔮', 'Arcanos', 'Drops, jefes y valor en platino'],
     ['#/mods', '🪙', 'Mods valiosos', 'Los mods más cotizados del mercado'],
