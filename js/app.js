@@ -1,32 +1,15 @@
 import { $, D, P } from './util.js';
 import './ui.js';
-import * as V1 from './views1.js?v=23.0';
-import * as V2 from './views2.js?v=23.0';
-import { worldStateView, fetchWorldState } from './viewStatus.js?v=23.0';
-import { tennoToolsMainView, initGlobalSearch, checkBackgroundNotifications } from './tennoTools.js?v=23.0';
+import * as V1 from './views1.js?v=24.0';
+import * as V2 from './views2.js?v=24.0';
+import { worldStateView, fetchWorldState } from './viewStatus.js?v=24.0';
+import { tennoToolsMainView, initGlobalSearch, checkBackgroundNotifications } from './tennoTools.js?v=24.0';
 
-// Gestión del Tema Claro / Oscuro
-function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  const btn = $('#theme-toggle-btn');
-  if (btn) {
-    btn.innerHTML = theme === 'light' ? '🌙 Modo Oscuro' : '☀️ Modo Claro';
-  }
-}
-
-function initTheme() {
-  const saved = localStorage.getItem('wf_theme') || 'light';
-  applyTheme(saved);
-
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('#theme-toggle-btn')) {
-      const current = document.documentElement.getAttribute('data-theme') || 'dark';
-      const next = current === 'light' ? 'dark' : 'light';
-      applyTheme(next);
-      localStorage.setItem('wf_theme', next);
-    }
-  });
-}
+// Limpieza de caché de tema previo
+try {
+  localStorage.removeItem('wf_theme');
+  document.documentElement.removeAttribute('data-theme');
+} catch (e) {}
 
 const ROUTES = {
   '': V1.home,
@@ -109,7 +92,6 @@ async function boot() {
     view.innerHTML = `<div class="notice">No se pudieron cargar los datos (${e.message}). Ejecuta <code>npm run build-data</code> y reinicia el servidor.</div>`;
     return;
   }
-  initTheme();
   initGlobalSearch();
   route();
   addEventListener('hashchange', route);
