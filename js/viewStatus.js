@@ -15,6 +15,35 @@ export function formatCountdown(expiryIso) {
   return `${m}m ${s}s`;
 }
 
+export function translateStreamTitle(msg) {
+  if (!msg) return 'Transmisión Oficial de Warframe';
+  let es = msg;
+  es = es.replace(/Community Stream & Twitch Drop Schedule/i, 'Calendario de Directos Comunitarios y Twitch Drops');
+  es = es.replace(/Community Stream Schedule/i, 'Calendario de Directos Comunitarios');
+  es = es.replace(/Twitch Drop Schedule/i, 'Calendario de Recompensas de Twitch');
+  es = es.replace(/Coming Soon:\s*/i, 'Próximamente: ');
+  es = es.replace(/Devstream/i, 'Devstream');
+  es = es.replace(/Prime Time/i, 'Prime Time');
+  es = es.replace(/Tau Part Two/i, 'Tau (Parte 2)');
+  es = es.replace(/Tau Part One/i, 'Tau (Parte 1)');
+  es = es.replace(/Warframe: Tau Coming in December/i, 'Warframe: Tau llega en diciembre');
+  return es;
+}
+
+export function getTwitchStreamAlerts(state) {
+  if (!state || !state.news) return [];
+  const now = Date.now();
+  return (state.news || []).filter((n) => {
+    const isStream = n.stream === true ||
+      /stream|twitch|drop|devstream|prime time/i.test(n.message || '') ||
+      /stream|twitch|drop/i.test(n.link || '');
+    if (!isStream) return false;
+    if (n.expiry) return new Date(n.expiry).getTime() > now;
+    const pubDate = n.date ? new Date(n.date).getTime() : 0;
+    return pubDate > 0 && (now - pubDate) < 7 * 86400000;
+  });
+}
+
 export function resolveClientArbitration(data) {
   if (!data) return data;
   if (!data.arbitration || data.arbitration.node === 'SolNode000' || data.arbitration.expired) {
@@ -89,10 +118,14 @@ export function worldStateView(root) {
     <!-- ALERTA DESTACADA: REGALO DE LOTUS / ALERTAS ESPECIALES -->
     <div id="lotus-highlight-box"></div>
 
+    <!-- ALERTA DESTACADA: TRANSMISIONES Y TWITCH DROPS OFICIALES -->
+    <div id="twitch-highlight-box"></div>
+
     <div class="toolbar">
       <div class="seg wrap" id="statusseg">
         <button data-v="fissures" class="on">🔥 Fisuras del Vacío</button>
         <button data-v="alerts">🎁 Alertas & Eventos</button>
+        <button data-v="streams">🟣 Twitch Drops & Directos</button>
         <button data-v="cycles">🌍 Ciclos de Mundo</button>
         <button data-v="trader">🪙 Baro Ki'Teer</button>
         <button data-v="steelpath">⚔️ Camino de Acero & Caza de Arcontes</button>
@@ -198,9 +231,10 @@ export function worldStateView(root) {
   function drawBanners() {
     let cascadeBox = $('#cascade-highlight-box', root);
     let lotusBox = $('#lotus-highlight-box', root);
+    let twitchBox = $('#twitch-highlight-box', root);
 
     // Failsafe: Si no existen en root, los inyectamos automáticamente antes de toolbar
-    if (!cascadeBox || !lotusBox) {
+    if (!cascadeBox || !lotusBox || !twitchBox) {
       const toolbar = $('.toolbar', root);
       if (toolbar && toolbar.parentNode) {
         if (!cascadeBox) {
@@ -212,6 +246,11 @@ export function worldStateView(root) {
           lotusBox = document.createElement('div');
           lotusBox.id = 'lotus-highlight-box';
           toolbar.parentNode.insertBefore(lotusBox, toolbar);
+        }
+        if (!twitchBox) {
+          twitchBox = document.createElement('div');
+          twitchBox.id = 'twitch-highlight-box';
+          toolbar.parentNode.insertBefore(twitchBox, toolbar);
         }
       }
     }
@@ -311,6 +350,71 @@ export function worldStateView(root) {
       `;
     } else {
       lotusBox.innerHTML = '';
+    }
+
+    // 3. Transmisiones y Twitch Drops oficiales (activo o programado)
+    twitchBox = $('#twitch-highlight-box', root) || twitchBox;
+    const streamAlerts = getTwitchStreamAlerts(state);
+
+    if (streamAlerts.length > 0 && twitchBox) {
+      const primaryStream = streamAlerts[0];
+      const otherStreams = streamAlerts.slice(1);
+      const streamTitle = primaryStream.translations?.es || translateStreamTitle(primaryStream.message);
+
+      twitchBox.innerHTML = `
+        <div class="featured-mission-card twitch-drops-highlight">
+          <div class="sb-icon">🟣</div>
+          <div class="sb-info">
+            <div class="sb-tag-row">
+              <span class="badge vault pulse-badge" style="background:#9146ff; color:#fff; border-color:#c084fc;">🟣 ¡TWITCH DROPS ACTIVOS / PROGRAMADOS!</span>
+              <span class="badge" style="border-color:#a855f7; color:#e9d5ff;">📺 Transmisión Oficial Warframe</span>
+              ${primaryStream.stream ? '<span class="badge ok">🔴 STREAM CON DROPS</span>' : ''}
+            </div>
+            <h2>${esc(streamTitle)}</h2>
+            <p><b>Recompensas:</b> Drops exclusivos para tu cuenta de Warframe (Bolsas de la comunidad con recursos, reliquias, adaptadores exilus o cosméticos).</p>
+            <p class="small muted">${esc(primaryStream.message)} · Conéctate a las transmisiones oficiales de Twitch con tu cuenta vinculada para ganar recompensas gratuitas.</p>
+            
+            ${otherStreams.length > 0 ? `
+              <div class="lotus-items-list" style="margin-top:6px; margin-bottom:8px;">
+                ${otherStreams.map((s) => `
+                  <div class="lotus-item-pill" style="border-color:#a855f766;">
+                    <span><b>📅 También anunciado:</b> ${esc(s.translations?.es || translateStreamTitle(s.message))}</span>
+                    ${s.expiry ? `<span class="countdown-badge" data-expiry="${esc(s.expiry)}">${formatCountdown(s.expiry)}</span>` : ''}
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+
+            <div class="twitch-btn-group">
+              <a href="https://www.twitch.tv/warframeinternational" target="_blank" rel="noopener" class="btn-twitch">
+                🟣 Twitch Español (Emisión) ↗
+              </a>
+              <a href="https://www.twitch.tv/warframe" target="_blank" rel="noopener" class="btn-twitch">
+                🟣 Twitch Oficial (Prime Time / Devstream) ↗
+              </a>
+              ${primaryStream.link ? `
+                <a href="${esc(primaryStream.link)}" target="_blank" rel="noopener" class="btn-twitch-secondary">
+                  📋 Ver Recompensas en el Foro Oficial ↗
+                </a>
+              ` : ''}
+              <a href="https://www.warframe.com/twitch/link" target="_blank" rel="noopener" class="btn-twitch-secondary">
+                ⚙️ Vincular Cuenta Warframe ↗
+              </a>
+              <a href="https://www.twitch.tv/drops/inventory" target="_blank" rel="noopener" class="btn-twitch-secondary">
+                🎁 Inventario de Drops ↗
+              </a>
+            </div>
+          </div>
+          ${primaryStream.expiry ? `
+            <div class="sb-timer-box">
+              <span class="small muted">Campaña activa hasta:</span>
+              <span class="countdown-large" data-expiry="${esc(primaryStream.expiry)}">${formatCountdown(primaryStream.expiry)}</span>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    } else if (twitchBox) {
+      twitchBox.innerHTML = '';
     }
   }
 
@@ -602,6 +706,179 @@ export function worldStateView(root) {
               </div>
             </article>
           </div>
+        </div>
+      `;
+    } else if (tab === 'streams') {
+      const streamAlerts = getTwitchStreamAlerts(state);
+
+      content.innerHTML = `
+        <div class="column-gap">
+          <!-- SECCIÓN: CAMPAÑAS Y ANUNCIOS ACTIVOS DE LA API -->
+          <article class="card wide">
+            <header>
+              <div>
+                <h3>🟣 Campañas Activas y Transmisiones de Twitch (${streamAlerts.length})</h3>
+                <p class="muted">Sincronizado automáticamente en tiempo real desde los servidores de Warframe.</p>
+              </div>
+            </header>
+            ${streamAlerts.length > 0 ? `
+              <div class="alert-list">
+                ${streamAlerts.map((s) => {
+                  const sTitle = s.translations?.es || translateStreamTitle(s.message);
+                  return `
+                    <div class="alert-item-box" style="border-color:#a855f7; background:linear-gradient(135deg, rgba(145,70,255,0.12), rgba(16,21,36,0.9));">
+                      <div class="alert-item-h">
+                        <div>
+                          <span class="badge vault" style="background:#9146ff; color:#fff; border-color:#c084fc;">🟣 TWITCH DROP OFICIAL</span>
+                          ${s.stream ? '<span class="badge ok">🔴 STREAM CON DROPS</span>' : ''}
+                          <h4 style="margin:6px 0 2px 0; font-size:1.15rem; color:#f3e8ff;">${esc(sTitle)}</h4>
+                          <span class="muted small">${esc(s.message)}</span>
+                        </div>
+                        ${s.expiry ? `
+                          <div style="text-align:right;">
+                            <span class="small muted">Finaliza en:</span><br>
+                            <span class="countdown-badge expiring-soon" data-expiry="${esc(s.expiry)}">${formatCountdown(s.expiry)}</span>
+                          </div>
+                        ` : ''}
+                      </div>
+                      <div class="twitch-btn-group" style="margin-top:8px;">
+                        <a href="https://www.twitch.tv/warframeinternational" target="_blank" rel="noopener" class="btn-twitch">
+                          🟣 Ver en Twitch Español ↗
+                        </a>
+                        <a href="https://www.twitch.tv/warframe" target="_blank" rel="noopener" class="btn-twitch">
+                          🟣 Ver en Twitch Oficial ↗
+                        </a>
+                        ${s.link ? `
+                          <a href="${esc(s.link)}" target="_blank" rel="noopener" class="btn-twitch-secondary">
+                            📋 Recompensas y Horarios en el Foro Oficial ↗
+                          </a>
+                        ` : ''}
+                        <a href="https://www.warframe.com/twitch/link" target="_blank" rel="noopener" class="btn-twitch-secondary">
+                          ⚙️ Vincular Cuenta Warframe ↗
+                        </a>
+                        <a href="https://www.twitch.tv/drops/inventory" target="_blank" rel="noopener" class="btn-twitch-secondary">
+                          🎁 Inventario de Drops ↗
+                        </a>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            ` : `
+              <div class="notice">
+                <p>No hay una campaña especial anunciada en este momento en la API. Revisa el horario semanal habitual a continuación para no perderte las emisiones fijas de los Miércoles y Jueves.</p>
+              </div>
+            `}
+          </article>
+
+          <!-- SECCIÓN: HORARIO SEMANAL FIJO DE DIRECTOS CON DROPS -->
+          <article class="card wide">
+            <header>
+              <div>
+                <h3>📅 Horario Semanal Fijo de Transmisiones Oficiales</h3>
+                <p class="muted">Directos programados regularmente por Digital Extremes con recompensas de Twitch aseguradas.</p>
+              </div>
+            </header>
+            <div class="twitch-schedule-grid">
+              <!-- EMISIÓN EN ESPAÑOL -->
+              <div class="twitch-schedule-card featured">
+                <div class="twitch-schedule-h">
+                  <h4>🟣 Emisión en Español (WarframeInternational)</h4>
+                  <span class="twitch-schedule-time">Miércoles · 3:00 PM ET</span>
+                </div>
+                <p class="small muted">Canal oficial de la comunidad hispanohablante con Fernanda y el equipo Tenno.</p>
+                <div class="twitch-schedule-reward">
+                  <b>🎁 Recompensa habitual:</b> 1x Bolsa de Regalos de la Comunidad (recursos raros, reliquias, adaptadores exilus o cosméticos) por ver 45 minutos.
+                </div>
+                <div class="small" style="color:#cbd5e1; line-height:1.4;">
+                  ⏰ <b>Horarios locales aproximados:</b><br>
+                  • Chile / Argentina / Uruguay: 17:00 hs<br>
+                  • Colombia / Perú / Ecuador: 15:00 hs<br>
+                  • México (CDMX): 14:00 hs<br>
+                  • España (Península): 21:00 hs
+                </div>
+                <a href="https://www.twitch.tv/warframeinternational" target="_blank" rel="noopener" class="btn-twitch" style="margin-top:auto;">
+                  Ir al canal de Twitch en Español ↗
+                </a>
+              </div>
+
+              <!-- PRIME TIME -->
+              <div class="twitch-schedule-card">
+                <div class="twitch-schedule-h">
+                  <h4>🟣 Prime Time (Inglés)</h4>
+                  <span class="twitch-schedule-time">Jueves · 6:00 PM ET</span>
+                </div>
+                <p class="small muted">Directo estelar con Megan Everett, gameplay de la comunidad y fan-arts.</p>
+                <div class="twitch-schedule-reward">
+                  <b>🎁 Recompensas habituales:</b> 2x Drops de la Comunidad por ver 45 minutos cada uno (hasta 90 minutos de visualización total).
+                </div>
+                <div class="small" style="color:#cbd5e1; line-height:1.4;">
+                  ⏰ <b>Horarios locales aproximados:</b><br>
+                  • Chile / Argentina / Uruguay: 20:00 hs<br>
+                  • Colombia / Perú / Ecuador: 18:00 hs<br>
+                  • México (CDMX): 17:00 hs<br>
+                  • España (Península): 00:00 hs (medianoche)
+                </div>
+                <a href="https://www.twitch.tv/warframe" target="_blank" rel="noopener" class="btn-twitch" style="margin-top:auto;">
+                  Ir al canal oficial de Warframe ↗
+                </a>
+              </div>
+
+              <!-- DEVSTREAM -->
+              <div class="twitch-schedule-card featured">
+                <div class="twitch-schedule-h">
+                  <h4>🟣 Devstream Oficial (Desarrolladores)</h4>
+                  <span class="twitch-schedule-time">Último Viernes de Mes · 2:00 PM ET</span>
+                </div>
+                <p class="small muted">Directo con Rebecca Ford y los directores principales mostrando futuros Warframes, expansiones y actualizaciones.</p>
+                <div class="twitch-schedule-reward">
+                  <b>🎁 Recompensas top:</b> ¡Forma Umbra, Catalizadores/Reactores Orokin, Riven Mods velados o Warframes completos garantizados!
+                </div>
+                <div class="small" style="color:#cbd5e1; line-height:1.4;">
+                  ⏰ <b>Horarios locales aproximados:</b><br>
+                  • Chile / Argentina / Uruguay: 16:00 hs<br>
+                  • Colombia / Perú / Ecuador: 14:00 hs<br>
+                  • México (CDMX): 13:00 hs<br>
+                  • España (Península): 20:00 hs
+                </div>
+                <a href="https://www.twitch.tv/warframe" target="_blank" rel="noopener" class="btn-twitch" style="margin-top:auto;">
+                  Ir al canal oficial para Devstream ↗
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- SECCIÓN: CÓMO RECLAMAR LOS DROPS PASO A PASO -->
+          <article class="card wide">
+            <header>
+              <div>
+                <h3>💡 Guía Tenno: Cómo Recibir tus Twitch Drops sin fallas</h3>
+                <p class="muted">Sigue estos sencillos pasos para que los premios lleguen directamente a tu inventario.</p>
+              </div>
+            </header>
+            <div class="twitch-guide-steps">
+              <div class="twitch-step">
+                <b>1. Vincula tu Cuenta</b>
+                Entra a <a href="https://www.warframe.com/twitch/link" target="_blank" rel="noopener" style="color:#c084fc;">warframe.com/twitch/link</a> e inicia sesión con tu cuenta de Warframe (PC, PlayStation, Xbox, Switch o iOS) y tu cuenta de Twitch.
+              </div>
+              <div class="twitch-step">
+                <b>2. Mira la Transmisión</b>
+                Abre el directo en Twitch. Comprueba que encima del chat aparezca el mensaje: <i>"Gana recompensas viendo este canal"</i>.
+              </div>
+              <div class="twitch-step">
+                <b>3. Acumula el Tiempo</b>
+                Visualiza el directo durante el tiempo requerido (normalmente 45 minutos para 1 drop). Puedes revisar tu progreso en la barra de Drops de tu perfil de Twitch.
+              </div>
+              <div class="twitch-step">
+                <b>4. Reclama en tu Inventario</b>
+                Cuando llegue al 100%, haz clic en el botón <b>"Reclamar"</b> en <a href="https://www.twitch.tv/drops/inventory" target="_blank" rel="noopener" style="color:#c084fc;">twitch.tv/drops/inventory</a> dentro de las 24 horas siguientes.
+              </div>
+              <div class="twitch-step">
+                <b>5. Abre tu Buzón en el Juego</b>
+                Inicia sesión en Warframe y recibirás un mensaje en la bandeja de entrada de tu Orbitador con todas las recompensas entregadas al instante.
+              </div>
+            </div>
+          </article>
         </div>
       `;
     } else if (tab === 'cycles') {

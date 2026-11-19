@@ -1,6 +1,6 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, modImg, debounce, norm, t } from './util.js';
 import { TYPE_ES, translateLocation } from './lang.js';
-import { formatCountdown, fetchWorldState } from './viewStatus.js';
+import { formatCountdown, fetchWorldState, translateStreamTitle, getTwitchStreamAlerts } from './viewStatus.js?v=20.0';
 
 const relicChip = (r) => `<button class="chip relic ${r.rar?.toLowerCase()}" data-act="relic" data-relic="${esc(r.id)}" title="${esc(r.id)} · ${esc(r.rar)} · ${chance(r.ch)}${r.av ? '' : ' · vaulted'}">${esc(r.id)}<small>${chance(r.ch)}</small></button>`;
 
@@ -287,6 +287,58 @@ function drawHomeCascade(el, ws) {
   }
 }
 
+export function drawHomeTwitchDrops(el, ws) {
+  if (!ws) return;
+  const streamAlerts = getTwitchStreamAlerts(ws);
+  if (streamAlerts.length > 0) {
+    const primary = streamAlerts[0];
+    const otherCount = streamAlerts.length - 1;
+    const sTitle = primary.translations?.es || translateStreamTitle(primary.message);
+
+    el.innerHTML = `
+      <div class="featured-mission-card twitch-drops-highlight" style="display:flex; margin-bottom:18px;">
+        <div class="sb-icon">🟣</div>
+        <div class="sb-info">
+          <div class="sb-tag-row">
+            <span class="badge vault pulse-badge" style="background:#9146ff; color:#fff; border-color:#c084fc;">🟣 ¡TWITCH DROPS ACTIVOS!</span>
+            <span class="badge" style="border-color:#a855f7; color:#e9d5ff;">📺 Transmisión Oficial Warframe</span>
+            ${otherCount > 0 ? `<span class="badge" style="border-color:#c084fc; color:#d8b4fe;">+${otherCount} Directos más</span>` : ''}
+          </div>
+          <h2>${esc(sTitle)}</h2>
+          <p><b>Recompensas:</b> Drops exclusivos para tu cuenta de Warframe (Bolsas de la comunidad con recursos raros, reliquias o cosméticos). Conéctate a los directos oficiales para reclamarlos.</p>
+          <div class="twitch-btn-group">
+            <a href="https://www.twitch.tv/warframeinternational" target="_blank" rel="noopener" class="btn-twitch">
+              🟣 Twitch Español (Emisión) ↗
+            </a>
+            <a href="https://www.twitch.tv/warframe" target="_blank" rel="noopener" class="btn-twitch">
+              🟣 Twitch Oficial ↗
+            </a>
+            ${primary.link ? `
+              <a href="${esc(primary.link)}" target="_blank" rel="noopener" class="btn-twitch-secondary">
+                📋 Ver Recompensas en el Foro ↗
+              </a>
+            ` : ''}
+            <a href="#/status" class="btn-twitch-secondary">
+              ⚡ Horarios en Estado del Mundo →
+            </a>
+            <a href="https://www.warframe.com/twitch/link" target="_blank" rel="noopener" class="btn-twitch-secondary">
+              ⚙️ Vincular Cuenta ↗
+            </a>
+          </div>
+        </div>
+        ${primary.expiry ? `
+          <div class="sb-timer-box">
+            <span class="small muted">Campaña activa hasta:</span>
+            <span class="countdown-large" data-expiry="${esc(primary.expiry)}">${formatCountdown(primary.expiry)}</span>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  } else {
+    el.innerHTML = '';
+  }
+}
+
 export function home(root) {
   const cards = [
     ['#/primes', '💎', 'Partes Prime', 'Nombres en español, reliquias y precios'],
@@ -313,6 +365,9 @@ export function home(root) {
       </div>
     </div>
 
+    <!-- ALERTA DESTACADA DE TWITCH DROPS EN EL INICIO -->
+    <div id="home-twitch-highlight"></div>
+
     <div class="status"></div>
     <div class="grid tiles">${cards.map(([h, i, tTitle, d]) => `<a class="tile" href="${h}"><span class="ico">${i}</span><b>${tTitle}</b><small>${d}</small></a>`).join('')}</div>
     <div class="results"></div>`;
@@ -320,6 +375,8 @@ export function home(root) {
   fetchWorldState().then((ws) => {
     const box = $('#home-cascade-highlight', root);
     if (box && ws) drawHomeCascade(box, ws);
+    const twitchBox = $('#home-twitch-highlight', root);
+    if (twitchBox && ws) drawHomeTwitchDrops(twitchBox, ws);
   }).catch(() => {});
 
   const homeTimer = setInterval(() => {
