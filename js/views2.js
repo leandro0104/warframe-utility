@@ -1,9 +1,9 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, srcLine, modImg, debounce, norm, wikiLink, overframeSearch, t } from './util.js';
 import { openModal } from './ui.js';
 import { TIERS, TIER_COLORS } from './tiers.js';
-import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=17.0';
+import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=18.0';
 import { DARK_SECTOR_SURVIVALS, RESOURCE_GUIDE } from './darksector.js';
-import { PLAT_CATEGORIES, PLAT_ROUTES, PRIME_JUNK_RATES, PLAT_TIPS } from './platData.js?v=17.0';
+import { PLAT_CATEGORIES, PLAT_ROUTES, PRIME_JUNK_RATES, PLAT_TIPS } from './platData.js?v=18.0';
 import { TYPE_ES } from './lang.js';
 
 const catImg = (name) => (D.cat[name] ? imgC(D.cat[name].img) : '');
@@ -258,6 +258,79 @@ function renderGearArsenalBoard(gear, parentNameEs) {
   `;
 }
 
+function getDynamicWeaponBuild(name, catItem) {
+  const isShotgun = catItem.type === 'Shotgun';
+  const isSecondary = catItem.cat === 'Secondary';
+  const isMelee = catItem.cat === 'Melee';
+  const cc = catItem.cc || 0.15;
+  const sc = catItem.sc || 0.15;
+  const isCrit = cc >= 0.18;
+
+  let mods = [];
+  let exilus = '';
+  let stance = '';
+  let elements = 'Viral + Cortante';
+  let arcanes = ['Primary Merciless'];
+  let slot = catItem.cat || 'Primary';
+
+  if (isShotgun) {
+    exilus = 'Fatal Acceleration';
+    arcanes = ['Primary Merciless'];
+    if (isCrit) {
+      mods = ['Galvanized Hell', 'Galvanized Savvy', 'Critical Deceleration', 'Primed Ravage', 'Hunter Munitions', 'Toxic Barrage', 'Frigid Blast', 'Shotgun Elementalist'];
+    } else {
+      mods = ['Galvanized Hell', 'Galvanized Savvy', 'Primed Point Blank', 'Scattering Virulence', 'Toxic Barrage', 'Frigid Blast', 'Blaze', 'Shotgun Elementalist'];
+      elements = 'Viral + Fuego';
+    }
+  } else if (isSecondary) {
+    exilus = 'Lethal Momentum';
+    arcanes = ['Secondary Merciless', 'Secondary Fortifier'];
+    if (isCrit) {
+      mods = ['Galvanized Diffusion', 'Galvanized Shot', 'Lethal Torrent', 'Primed Target Cracker', 'Primed Pistol Gambit', 'Pistol Pestilence', 'Frostbite', 'Pistol Elementalist'];
+    } else {
+      mods = ['Galvanized Diffusion', 'Galvanized Shot', 'Lethal Torrent', 'Pistol Pestilence', 'Scorch', 'Frostbite', 'Jolt', 'Pistol Elementalist'];
+      elements = 'Corrosivo + Fuego + Frío';
+    }
+  } else if (isMelee) {
+    exilus = 'Melee Elementalist';
+    stance = 'Crushing Ruin';
+    arcanes = ['Melee Influence', 'Melee Exposure'];
+    if (isCrit) {
+      mods = ['Blood Rush', 'Weeping Wounds', 'Organ Shatter', 'Condition Overload', 'Gladiator Might', 'Primed Fever Strike', 'North Wind', 'Primed Reach'];
+    } else {
+      mods = ['Condition Overload', 'Weeping Wounds', 'Primed Fever Strike', 'Shocking Touch', 'Carnis Mandible', 'Gladiator Might', 'Primed Reach', 'Volcanic Edge'];
+      elements = 'Corrosivo + Electricidad (Melee Influence)';
+    }
+  } else {
+    // Primary Rifle / Bow / Sniper / Launcher
+    exilus = 'Vigilante Supplies';
+    arcanes = ['Primary Deadhead', 'Primary Merciless'];
+    if (isCrit) {
+      mods = ['Galvanized Chamber', 'Galvanized Aptitude', 'Critical Delay', 'Vital Sense', 'Hunter Munitions', 'Malignant Force', 'Rime Rounds', 'Rifle Elementalist'];
+    } else {
+      mods = ['Galvanized Chamber', 'Galvanized Aptitude', 'Serration', 'Malignant Force', 'High Voltage', 'Rime Rounds', 'Primed Shred', 'Rifle Elementalist'];
+      elements = 'Corrosivo + Frío + Estados';
+    }
+  }
+
+  const statCrit = Math.round(cc * 100);
+  const statStatus = Math.round(sc * 100);
+
+  return {
+    name: name,
+    slot: slot,
+    role: `Build Meta Optimizada (${catItem.type || slot} · ${statCrit}% Crítico / ${statStatus}% Estado)`,
+    author: 'Comunidad Warframe (Overframe Meta)',
+    videoUrl: `https://www.youtube.com/results?search_query=warframe+${encodeURIComponent(name)}+build`,
+    exilus: exilus,
+    stance: stance,
+    mods: mods,
+    arcanes: arcanes,
+    elements: elements,
+    notes: `Configuración competitiva estándar de la comunidad calculada según las estadísticas base de ${catItem.type || slot} de ${name} (${statCrit}% Prob. Crítica, ${catItem.cm ? catItem.cm.toFixed(1) + 'x' : '2.0x'} Multiplicador, ${statStatus}% Estado). Optimizada con mods Galvanizados y Elementalistas vigentes.`
+  };
+}
+
 export function builds(root) {
   const S = { tab: 'frames', q: '' };
   root.innerHTML = `<section class="page-head"><h1>🛠️ Top builds</h1>
@@ -267,7 +340,7 @@ export function builds(root) {
 
   function draw() {
     const q = norm(S.q);
-    const list = (S.tab === 'frames' ? FRAME_BUILDS : WEAPON_BUILDS).filter((x) => {
+    let list = (S.tab === 'frames' ? FRAME_BUILDS : WEAPON_BUILDS).filter((x) => {
       if (!q) return true;
       const esName = norm(t(x.name, x.name));
       const matchMain = esName.includes(q) || norm(x.name).includes(q);
@@ -282,6 +355,21 @@ export function builds(root) {
       }
       return false;
     });
+
+    if (S.tab === 'weapons' && q) {
+      const knownNames = new Set(list.map((w) => w.name.toLowerCase()));
+      const catMatches = Object.keys(D.cat || {}).filter((k) => {
+        const item = D.cat[k];
+        if (!item || (item.cat !== 'Primary' && item.cat !== 'Secondary' && item.cat !== 'Melee')) return false;
+        const normKey = norm(k);
+        const normEs = norm(t(k, k));
+        return (normKey.includes(q) || normEs.includes(q)) && !knownNames.has(k.toLowerCase());
+      });
+
+      catMatches.slice(0, 16).forEach((k) => {
+        list.push(getDynamicWeaponBuild(k, D.cat[k]));
+      });
+    }
 
     const cards = list.map((x) => {
       const bs = x.builds || [x];
@@ -517,8 +605,13 @@ export function builds(root) {
       }).join('');
     }).join('');
 
-    const extra = q && !list.length ? `<div class="notice">No hay build curada para “${esc(S.q)}”. <a target="_blank" rel="noopener" href="${overframeSearch(S.q)}">Buscar en Overframe ↗</a></div>` : '';
-    $('.results', root).innerHTML = extra + `<div class="builds-container">${cards}</div>`;
+    const extraInfo = S.tab === 'weapons' && !q ? `
+      <div class="notice" style="margin-bottom:18px">
+        💡 <b>Catálogo ampliado de Armas:</b> Mostrando las 30 armas meta más utilizadas con guías de <b>eduiy16</b> y <b>Helter hxz</b>. Puedes buscar cualquiera de las más de 600 armas de Warframe (como <i>Astilla</i>, <i>Nataruk</i>, <i>Tigris</i>, <i>Corinth</i>, <i>Fulmin</i>, etc.) en el buscador superior para ver su build meta optimizada al instante.
+      </div>` : '';
+
+    const extra = q && !list.length ? `<div class="notice">No se encontró ningún arma o Warframe para “${esc(S.q)}”. <a target="_blank" rel="noopener" href="${overframeSearch(S.q)}">Buscar en Overframe ↗</a></div>` : '';
+    $('.results', root).innerHTML = extraInfo + extra + `<div class="builds-container">${cards}</div>`;
   }
 
   root.addEventListener('input', debounce((e) => { if (e.target.dataset.k) { S.q = e.target.value; draw(); } }, 150));

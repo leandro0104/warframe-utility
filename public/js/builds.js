@@ -1204,5 +1204,216 @@ export const WEAPON_BUILDS = [
     arcanes: ['Melee Duplicate', 'Arcane Strike'],
     elements: 'Cortante Puro con Multiplicadores de Postura',
     notes: 'Blind Justice tiene el combo de embestida hacia adelante más fluido y rápido de Warframe con cortes garantizados y multiplicadores de daño plano.'
+  },
+  {
+    name: 'Astilla Prime',
+    slot: 'Primary',
+    role: 'Proyectiles de Cristal Explosivo & Sangrado Slash Masivo',
+    author: 'Helter hxz',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+astilla+prime+helter+hxz',
+    exilus: 'Fatal Acceleration',
+    mods: ['Galvanized Hell', 'Galvanized Savvy', 'Critical Deceleration', 'Primed Ravage', 'Hunter Munitions', 'Toxic Barrage', 'Frigid Blast', 'Shotgun Elementalist'],
+    arcanes: ['Primary Merciless'],
+    elements: 'Viral + Cortante (Slugs de cristal explosivo)',
+    notes: 'Los proyectiles de cristal estallan al impactar generando una nube de esquirlas cortantes en área. Con Galvanized Hell y Savvy cada slug aplica cortes letales forzados por Hunter Munitions amplificados por Shotgun Elementalist (+90% daño de estados).'
+  },
+  {
+    name: 'Nataruk',
+    slot: 'Primary',
+    role: 'Disparos Perfectos Infinitos & Críticos Rojos Devastadores',
+    author: 'Helter hxz',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+nataruk+helter+hxz',
+    exilus: 'Vigilante Supplies',
+    mods: ['Galvanized Chamber', 'Galvanized Aptitude', 'Critical Delay', 'Vital Sense', 'Hunter Munitions', 'Malignant Force', 'Rime Rounds', 'Rifle Elementalist'],
+    arcanes: ['Primary Deadhead', 'Primary Merciless'],
+    elements: 'Viral + Perforación + Sangrado (Disparo Perfecto)',
+    notes: 'El arco regalado en La Nueva Guerra con munición infinita. Al soltar la flecha en la marca amarilla del retículo (Disparo Perfecto), el crítico base sube a 60% con multiplicador 2.4x y atraviesa a todos los enemigos en línea recta.'
+  },
+  {
+    name: 'Felarx',
+    slot: 'Primary',
+    role: 'Escopeta Incarnon Anti-Críticos (+2000% Daño Devastador)',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+felarx+eduiy16',
+    exilus: 'Fatal Acceleration',
+    mods: ['Galvanized Hell', 'Galvanized Savvy', 'Primed Point Blank', 'Scattering Virulence', 'Toxic Barrage', 'Frigid Blast', 'Blaze', 'Shotgun Elementalist'],
+    arcanes: ['Primary Deadhead'],
+    elements: 'Viral + Fuego + Radiación (No-Crítico x2000%)',
+    incarnon: [
+      'Evolución II: Furia de Escopeta (+Velocidad de recarga)',
+      'Evolución III: Montaje Rápido (+Capacidad de cargador)',
+      'Evolución IV: Desgaste Devastador (50% prob. de infligir +2000% daño en impactos no-críticos)'
+    ],
+    notes: 'La reina de matar jefes y acólitos sin depender del azar crítico. Al NO equipar mods de probabilidad crítica, el 50% de los perdigones activan Devastating Attrition para aniquilar cualquier objetivo en un solo cartucho.'
+  },
+  {
+    name: 'Phenmor',
+    slot: 'Primary',
+    role: 'Ametralladora Pesada Incarnon de Radiación (+2000% Daño)',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+phenmor+eduiy16',
+    exilus: 'Vigilante Supplies',
+    mods: ['Galvanized Chamber', 'Galvanized Aptitude', 'Serration', 'Malignant Force', 'High Voltage', 'Primed Shred', 'Primed Cryo Rounds', 'Rifle Elementalist'],
+    arcanes: ['Primary Deadhead'],
+    elements: 'Corrosivo + Frío + Radiación Incarnon',
+    incarnon: [
+      'Evolución II: Recarga Rápida (+Velocidad)',
+      'Evolución III: Munición Cinética (+Capacidad Incarnon)',
+      'Evolución IV: Desgaste Devastador (+2000% de daño en tiros no-críticos)'
+    ],
+    notes: 'Al cargar tiros a la cabeza se transforma en una ametralladora Gatling de plasma con más de 400 proyectiles en el cargador que pulveriza salas enteras de Camino de Acero.'
+  },
+  {
+    name: 'Ignis Wraith',
+    slot: 'Primary',
+    role: 'Lanzallamas Viral + Calor de Limpieza Continua',
+    author: 'Helter hxz',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+ignis+wraith+helter+hxz',
+    exilus: 'Vigilante Supplies',
+    mods: ['Galvanized Chamber', 'Galvanized Aptitude', 'Critical Delay', 'Vital Sense', 'Hunter Munitions', 'Malignant Force', 'Rime Rounds', 'Rifle Elementalist'],
+    arcanes: ['Primary Merciless'],
+    elements: 'Fuego Nato + Viral + Sangrado Slash',
+    notes: 'El lanzallamas más popular del juego. Baña pasillos enteros con calor continuo para despojar 50% de armadura mientras Hunter Munitions detona sangrados masivos sin necesidad de apuntar.'
+  },
+  {
+    name: 'Acceltra Prime',
+    slot: 'Primary',
+    role: 'Lanza-micromisiles Automático de Aceleración Máxima',
+    author: 'Helter hxz',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+acceltra+prime+helter+hxz',
+    exilus: 'Vigilante Supplies',
+    mods: ['Galvanized Chamber', 'Critical Delay', 'Vital Sense', 'Serration', 'Hunter Munitions', 'Malignant Force', 'Rime Rounds', 'Rifle Elementalist'],
+    arcanes: ['Primary Deadhead', 'Primary Merciless'],
+    elements: 'Viral + Explosión de Micro-misiles + Sangrado',
+    notes: 'Arma distintiva de Gauss Prime. Dispara proyectiles cohete de salva rápida que detonan a más de 7 metros. Vital Sense y Critical Delay disparan los críticos al 100% permanente.'
+  },
+  {
+    name: 'Epitaph Prime',
+    slot: 'Secondary',
+    role: 'Cebador de Estados en Área & Nuke de Disparo Cargado',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+epitaph+prime+eduiy16',
+    exilus: 'Lethal Momentum',
+    mods: ['Galvanized Diffusion', 'Galvanized Shot', 'Lethal Torrent', 'Primed Target Cracker', 'Primed Pistol Gambit', 'Pistol Pestilence', 'Frostbite', 'Pistol Elementalist'],
+    arcanes: ['Secondary Encumber', 'Secondary Fortifier'],
+    elements: 'Frío Nato en Área (Cebador) / Daño Crítico Puro (Disparo Cargado)',
+    notes: 'Disparo rápido: Nube en área que aplica Frío forzado (ralentiza 70%) más 5 estados adicionales para activar Galvanized Shot y Condition Overload. Disparo cargado: Proyectil de cientos de miles de daño con 48% de crítico base.'
+  },
+  {
+    name: 'Kuva Hek',
+    slot: 'Primary',
+    role: 'Disparo Simultáneo de 4 Cañones para One-Shot en Archon Hunts',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+kuva+hek+eduiy16',
+    exilus: 'Fatal Acceleration',
+    mods: ['Galvanized Hell', 'Galvanized Savvy', 'Critical Deceleration', 'Primed Ravage', 'Primed Point Blank', 'Toxic Barrage', 'Frigid Blast', 'Shotgun Elementalist'],
+    arcanes: ['Primary Deadhead'],
+    elements: 'Viral + Radiación (Disparo Cuádruple Secundario)',
+    notes: 'El disparo secundario descarga los 4 cartuchos al unísono. Con bonificación de radiación y multiplicador de cabeza, es el arma estándar utilizada para borrar al instante las barras de salud de los Arcontes.'
+  },
+  {
+    name: 'Strun Prime',
+    slot: 'Primary',
+    role: 'Cañón de Plasma Incarnon con 100% de Probabilidad de Estado',
+    author: 'Helter hxz',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+strun+prime+incarnon+helter+hxz',
+    exilus: 'Fatal Acceleration',
+    mods: ['Galvanized Hell', 'Galvanized Savvy', 'Critical Deceleration', 'Primed Ravage', 'Hunter Munitions', 'Toxic Barrage', 'Frigid Blast', 'Shotgun Elementalist'],
+    arcanes: ['Primary Merciless'],
+    elements: 'Viral + Calor + Cortante en Esfera Incarnon',
+    incarnon: [
+      'Evolución II: Acelerador Espacial (+Daño y velocidad de proyectil)',
+      'Evolución III: Recarga Rápida (+Velocidad de recarga por cartucho)',
+      'Evolución IV: Furia Elemental (+Probabilidad crítica y de estado)'
+    ],
+    notes: 'En forma Incarnon dispara proyectiles gigantescos de plasma con daño en área que saturan con decenas de estados elementales y sangrados por disparo.'
+  },
+  {
+    name: 'Boar Prime',
+    slot: 'Primary',
+    role: 'Rayo Triple Incarnon que Rebota entre Hordas',
+    author: 'Helter hxz',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+boar+prime+incarnon+helter+hxz',
+    exilus: 'Fatal Acceleration',
+    mods: ['Galvanized Hell', 'Galvanized Savvy', 'Critical Deceleration', 'Primed Ravage', 'Toxic Barrage', 'Frigid Blast', 'Blaze', 'Shotgun Elementalist'],
+    arcanes: ['Primary Merciless'],
+    elements: 'Viral + Fuego + Rayo Eléctrico Encadenado',
+    incarnon: [
+      'Evolución II: Ráfaga Carmesí (+Daño)',
+      'Evolución III: Capacidad Extendida',
+      'Evolución IV: Fatalidad Cuántica (+Crítico y Estado)'
+    ],
+    notes: 'Se transforma en un rayo triple continuo similar a la Amprex o Nukor que se encadena entre enemigos calcinando escuadrones enteros en un segundo.'
+  },
+  {
+    name: 'Lex Prime',
+    slot: 'Secondary',
+    role: 'Cañón Arca Plasmor de Bolsillo con Críticos Rojos',
+    author: 'Helter hxz',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+lex+prime+incarnon+helter+hxz',
+    exilus: 'Lethal Momentum',
+    mods: ['Galvanized Diffusion', 'Galvanized Crosshairs', 'Primed Target Cracker', 'Primed Pistol Gambit', 'Primed Heated Charge', 'Pistol Pestilence', 'Frostbite', 'Pistol Elementalist'],
+    arcanes: ['Secondary Outburst', 'Secondary Deadhead'],
+    elements: 'Viral + Calor + Ondas Expansivas de Plasma',
+    incarnon: [
+      'Evolución II: Agarre Firme (+Daño)',
+      'Evolución III: Recarga Mejorada',
+      'Evolución IV: Ímpetu Crítico (+Probabilidad crítica astronómica)'
+    ],
+    notes: 'La clásica pistola se transforma en un cañón de ondas de plasma colosales con 80%+ de probabilidad crítica base que atraviesan pasillos completos dejando montañas de bajas.'
+  },
+  {
+    name: 'Praedos',
+    slot: 'Melee',
+    role: 'Tonfas Incarnon de Velocidad de Parkour & Descuartizamiento',
+    author: 'Helter hxz',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+praedos+helter+hxz',
+    stance: 'Sovereign Outcast',
+    exilus: 'Melee Elementalist',
+    mods: ['Blood Rush', 'Weeping Wounds', 'Organ Shatter', 'Condition Overload', 'Gladiator Might', 'Primed Fever Strike', 'North Wind', 'Primed Reach'],
+    arcanes: ['Melee Influence', 'Melee Exposure'],
+    elements: 'Viral + Cortante (Alcance y Movilidad +20%)',
+    incarnon: [
+      'Evolución II: Impulso de Movilidad (+20% velocidad de sprint y salto de bala pasivo)',
+      'Evolución III: Alcance Drástico (+Alcance Melee)',
+      'Evolución IV: Vórtice Asesino (+Velocidad de ataque)'
+    ],
+    notes: 'Las mejores tonfas de movilidad pasiva del juego. Otorga bonificaciones de parkour pasivas incluso guardada en la espalda, y al desatarlas golpea a velocidad ultrasónica.'
+  },
+  {
+    name: 'Ocucor',
+    slot: 'Secondary',
+    role: 'Láser con Sentient Surge: Tentáculos Automáticos Infinitos',
+    author: 'eduiy16',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+ocucor+sentient+surge+eduiy16',
+    exilus: 'Ruinous Extension',
+    mods: ['Galvanized Diffusion', 'Galvanized Shot', 'Sentient Surge', 'Lethal Torrent', 'Primed Target Cracker', 'Primed Pistol Gambit', 'Pistol Pestilence', 'Frostbite'],
+    arcanes: ['Secondary Encumber', 'Secondary Fortifier'],
+    elements: 'Viral + Radiación + 4 Tentáculos Guiados',
+    notes: 'Con el mod Sentient Surge, cada baja genera un tentáculo de energía adicional que busca enemigos automáticamente y recarga munición al cargador. Nunca tienes que recargar ni apuntar.'
+  },
+  {
+    name: 'Phantasma Prime',
+    slot: 'Primary',
+    role: 'Rayo de Radiación & Fuego con 100+ Stacks de Calor por Segundo',
+    author: 'Helter hxz',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+phantasma+prime+helter+hxz',
+    exilus: 'Fatal Acceleration',
+    mods: ['Galvanized Hell', 'Galvanized Savvy', 'Toxic Barrage', 'Frigid Blast', 'Scattering Virulence', 'Blaze', 'Shotgun Elementalist', 'Primed Cleanse Grineer'],
+    arcanes: ['Primary Merciless'],
+    elements: 'Radiación + Viral + Fuego (30+ stacks por segundo)',
+    notes: 'La escopeta de rayo con mayor cadencia de estados del juego. Aplica cientos de acumulaciones de calor en 2 segundos, derritiendo la armadura y la barra de vida de cualquier enemigo en Camino de Acero.'
+  },
+  {
+    name: 'Corinth Prime',
+    slot: 'Primary',
+    role: 'Escopeta de Bomba Pesada & Granada de Detonación Aérea',
+    author: 'Helter hxz',
+    videoUrl: 'https://www.youtube.com/results?search_query=warframe+corinth+prime+helter+hxz',
+    exilus: 'Fatal Acceleration',
+    mods: ['Galvanized Hell', 'Galvanized Savvy', 'Critical Deceleration', 'Primed Ravage', 'Hunter Munitions', 'Toxic Barrage', 'Frigid Blast', 'Shotgun Elementalist'],
+    arcanes: ['Primary Deadhead', 'Primary Merciless'],
+    elements: 'Viral + Sangrado Slash + Granadas Aéreas en Área',
+    notes: 'Disparo primario de impacto crítico colosal para objetivos individuales y disparo secundario detonable a distancia que barre grupos en el aire.'
   }
 ];
