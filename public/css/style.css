@@ -690,6 +690,123 @@ main:has(.builds-container){max-width:1440px}
 ::-webkit-scrollbar-thumb{background:rgba(56,189,248,.3);border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:rgba(56,189,248,.6)}
 
+/* ==========================================================================
+   ESTRATEGIAS Y CALCULADORA GOD ROLL DE AGRIETADOS (RIVENS)
+   ========================================================================== */
+.riven-quick-pills-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 6px}
+.quick-pill-label{font-size:.84rem;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:.6px}
+.pill.active-pill{border-color:#38bdf8 !important;background:rgba(56,189,248,.18) !important;color:#f0f9ff !important;box-shadow:0 0 12px rgba(56,189,248,.35)}
+
+.riven-weapon-hero{background:linear-gradient(170deg,rgba(16,28,58,.9) 0%,rgba(9,16,36,.96) 100%);border:1px solid rgba(56,189,248,.35);box-shadow:0 8px 30px rgba(0,0,0,.6),0 0 20px rgba(56,189,248,.1);backdrop-filter:blur(12px)}
+.riven-hero-grid{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.riven-hero-left{display:flex;align-items:center;gap:18px;min-width:260px}
+.riven-avatar-box{width:84px;height:84px;border-radius:16px;background:radial-gradient(circle,rgba(56,189,248,.2) 0%,rgba(9,17,36,.9) 100%);border:2px solid rgba(56,189,248,.5);display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(56,189,248,.25);flex:none}
+.riven-avatar-img{width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 4px 10px #000)}
+.riven-hero-details h2{margin:0;font-size:1.8rem;color:#f0f9ff;text-shadow:0 0 16px rgba(56,189,248,.35)}
+
+.pricing-badge-row{display:flex;gap:12px;flex-wrap:wrap}
+.pricing-pill{background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;gap:3px;min-width:140px;backdrop-filter:blur(8px)}
+.pricing-pill.unrolled{border-color:rgba(56,189,248,.3);background:linear-gradient(135deg,rgba(56,189,248,.1),rgba(0,0,0,.5))}
+.pricing-pill.decent{border-color:rgba(74,222,128,.35);background:linear-gradient(135deg,rgba(74,222,128,.1),rgba(0,0,0,.5))}
+.pricing-pill.godroll{border-color:rgba(251,191,36,.5);background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(0,0,0,.55));box-shadow:0 0 16px rgba(251,191,36,.18)}
+.pill-title{font-size:.72rem;font-weight:800;text-transform:uppercase;color:#94a3b8;letter-spacing:.5px}
+.pricing-pill.godroll .pill-title{color:var(--gold)}
+.pill-price{font-size:1.05rem;color:#f0f9ff;display:flex;align-items:center;gap:4px}
+.pricing-pill.godroll .pill-price{color:var(--gold)}
+.pricing-pill small{font-size:.7rem;color:#93c5fd}
+
+.riven-strategy-card{position:relative;background:linear-gradient(165deg,rgba(14,25,52,.85) 0%,rgba(8,15,34,.95) 100%);border:1px solid rgba(56,189,248,.28);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.step-num-badge{position:absolute;top:14px;right:16px;background:linear-gradient(135deg,rgba(56,189,248,.2),rgba(2,132,199,.3));border:1px solid #38bdf8;color:#38bdf8;font-size:.72rem;font-weight:900;padding:2px 8px;border-radius:6px;letter-spacing:.8px}
+
+.strategy-alert-box{padding:10px 14px;border-radius:10px;margin:6px 0;font-size:.86rem;line-height:1.4}
+.strategy-alert-box.warning{background:rgba(245,158,11,.1);border-left:4px solid #f59e0b;color:#fde68a}
+.strategy-alert-box.info{background:rgba(56,189,248,.1);border-left:4px solid #38bdf8;color:#bae6fd}
+.strategy-alert-box.success{background:rgba(74,222,128,.1);border-left:4px solid #4ade80;color:#bbf7d0}
+.strategy-alert-box b{display:block;margin-bottom:2px;font-size:.9rem}
+.strategy-alert-box p{margin:0}
+
+.strategy-check-list{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:.85rem}
+.strategy-check-list li{display:flex;align-items:flex-start;gap:8px;color:#cbd5e1;line-height:1.4}
+.strategy-check-list li::before{content:'💠';color:#38bdf8;font-size:.8rem;line-height:1.4;flex:none}
+.strategy-check-list li b{color:#f0f9ff}
+
+.godroll-comparison-box{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.godroll-row{background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.godroll-row.highlight{border-color:rgba(251,191,36,.5);background:linear-gradient(135deg,rgba(251,191,36,.12),rgba(0,0,0,.45));box-shadow:0 0 14px rgba(251,191,36,.12)}
+.combo-tag{font-size:.82rem;font-weight:900;letter-spacing:.5px}
+.combo-tag.s-tier{color:var(--gold)}
+.combo-tag.a-tier{color:#38bdf8}
+.combo-tag.c-tier{color:#94a3b8}
+.combo-desc{font-size:.82rem;color:#cbd5e1}
+
+.stat-category-panel{display:flex;flex-direction:column;gap:10px}
+.stat-pills-list{display:flex;flex-direction:column;gap:8px}
+.stat-meta-item{display:flex;flex-direction:column;gap:3px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px}
+.stat-meta-item.fatal{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.06)}
+.stat-note{font-size:.8rem;color:#94a3b8;line-height:1.35}
+
+/* Calculadora */
+.calc-controls-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:14px}
+.calc-input-group{display:flex;flex-direction:column;gap:6px}
+.calc-input-group label{font-size:.84rem;font-weight:700;color:#93c5fd}
+.calc-select,.calc-num-input{background:rgba(8,15,32,.9);border:1px solid rgba(56,189,248,.35);border-radius:10px;padding:10px 14px;color:#f0f9ff;font:inherit;outline:none;transition:border-color .15s}
+.calc-select:focus,.calc-num-input:focus{border-color:#38bdf8;box-shadow:0 0 14px rgba(56,189,248,.4)}
+.calc-num-input{width:140px;font-size:1.1rem;font-weight:800}
+
+.calc-results-card{background:linear-gradient(165deg,rgba(16,28,58,.95) 0%,rgba(8,15,34,.98) 100%);border:1px solid rgba(56,189,248,.35);border-radius:16px;padding:20px;box-shadow:0 8px 30px rgba(0,0,0,.6)}
+.calc-results-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.calc-stat-title h4{margin:0 0 4px;font-size:1.3rem;color:#f0f9ff}
+.calc-verdict-badge{font-size:.78rem;font-weight:900;padding:4px 12px;border-radius:99px;letter-spacing:.6px}
+.calc-verdict-badge.verdict-god{background:rgba(251,191,36,.2);border:1.5px solid var(--gold);color:var(--gold);box-shadow:0 0 14px rgba(251,191,36,.3)}
+.calc-verdict-badge.verdict-great{background:rgba(56,189,248,.2);border:1.5px solid #38bdf8;color:#38bdf8}
+.calc-verdict-badge.verdict-mid{background:rgba(148,163,184,.2);border:1.5px solid #94a3b8;color:#cbd5e1}
+.calc-verdict-badge.verdict-low{background:rgba(239,68,68,.2);border:1.5px solid #ef4444;color:#fca5a5}
+
+.stat-gauge-wrapper{margin:18px 0 14px;display:flex;flex-direction:column;gap:8px}
+.gauge-labels-row{display:flex;justify-content:space-between;font-size:.82rem;color:#94a3b8;flex-wrap:wrap;gap:6px}
+.gauge-labels-row b{color:#f0f9ff}
+.stat-gauge-track{position:relative;height:14px;background:rgba(0,0,0,.6);border:1px solid rgba(56,189,248,.25);border-radius:99px;overflow:visible}
+.stat-gauge-fill{height:100%;border-radius:99px;transition:width .4s ease}
+.stat-gauge-fill.verdict-god{background:linear-gradient(90deg,#f59e0b,#fbbf24);box-shadow:0 0 12px rgba(251,191,36,.6)}
+.stat-gauge-fill.verdict-great{background:linear-gradient(90deg,#0284c7,#38bdf8);box-shadow:0 0 12px rgba(56,189,248,.6)}
+.stat-gauge-fill.verdict-mid{background:linear-gradient(90deg,#64748b,#94a3b8)}
+.stat-gauge-fill.verdict-low{background:linear-gradient(90deg,#b91c1c,#ef4444)}
+.stat-gauge-marker{position:absolute;top:-28px;transform:translateX(-50%);white-space:nowrap}
+.marker-bubble{background:#070c18;border:1px solid #38bdf8;color:#38bdf8;font-size:.72rem;font-weight:900;padding:2px 8px;border-radius:6px;box-shadow:0 0 10px rgba(56,189,248,.4)}
+
+.calc-verdict-box{display:flex;gap:14px;align-items:flex-start;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 16px;margin-top:10px}
+.calc-verdict-box.verdict-god{border-color:rgba(251,191,36,.4);background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(0,0,0,.5))}
+.calc-verdict-box.verdict-great{border-color:rgba(56,189,248,.4);background:linear-gradient(135deg,rgba(56,189,248,.1),rgba(0,0,0,.5))}
+.calc-verdict-box.verdict-low{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.08)}
+.verdict-icon-symbol{font-size:1.6rem;line-height:1;flex:none}
+.verdict-text-content p{margin:0;font-size:.9rem;color:#e0f2fe;line-height:1.45}
+
+/* Inspector / Builder */
+.builder-split-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-top:14px;align-items:start}
+.builder-controls-panel{display:flex;flex-direction:column;gap:14px}
+.builder-preview-panel{display:flex;flex-direction:column;align-items:center;gap:16px}
+
+/* Carta Holográfica Riven de Warframe */
+.hologram-riven-card{width:100%;max-width:320px;background:radial-gradient(ellipse at 50% 20%,#3b185f 0%,#1c0c32 60%,#0e0618 100%);border:2px solid #a855f7;border-radius:18px;padding:16px;position:relative;box-shadow:0 0 35px rgba(168,85,247,.35),0 12px 30px rgba(0,0,0,.8);overflow:hidden;backdrop-filter:blur(10px)}
+.riven-card-glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(192,132,252,.25),transparent 70%);pointer-events:none}
+.riven-card-inner{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+.riven-card-top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(168,85,247,.3);padding-bottom:10px}
+.riven-icon-symbol{font-size:1.4rem}
+.riven-card-title{font-size:1.05rem;font-weight:900;color:#f3e8ff;letter-spacing:.5px;text-align:center;text-shadow:0 0 10px rgba(168,85,247,.6);flex:1}
+.riven-card-pol{font-size:1.1rem;color:#c084fc;font-weight:900}
+.riven-card-stats-list{display:flex;flex-direction:column;gap:8px;padding:6px 0}
+.riven-card-stat-line{font-size:.95rem;font-weight:700;line-height:1.25}
+.riven-card-stat-line.pos{color:#67e8f9;text-shadow:0 0 8px rgba(103,232,249,.4)}
+.riven-card-stat-line.neg{color:#f87171}
+.riven-card-stat-line.fatal-line{color:#ef4444;font-style:italic}
+.riven-card-bottom{display:flex;justify-content:space-between;border-top:1px solid rgba(168,85,247,.3);padding-top:10px;font-size:.76rem;color:#d8b4fe;font-weight:700}
+
+.builder-verdict-summary{width:100%;max-width:320px;background:rgba(0,0,0,.45);border:1px solid rgba(56,189,248,.3);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;text-align:center}
+.verdict-tier-badge{font-size:.9rem;font-weight:900;padding:6px 14px;border:1.5px solid;border-radius:8px;letter-spacing:.8px}
+.verdict-price-row{display:flex;flex-direction:column;gap:2px}
+.verdict-price-value{font-size:1.25rem;font-weight:900;color:var(--gold)}
+.builder-advice-text{font-size:.82rem;color:#cbd5e1;line-height:1.4;margin:0}
+
 
 
 

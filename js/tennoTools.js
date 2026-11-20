@@ -1,5 +1,6 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, modImg, debounce, norm, t } from './util.js';
 import { formatCountdown, fetchWorldState } from './viewStatus.js';
+import { renderRivenStrategyView } from './rivenStrategy.js?v=25.0';
 
 // ============================================================================
 // 1. SISTEMA DE NOTIFICACIONES WEB (CASCADA SP, LOTUS, TWITCH, BARO)
@@ -360,6 +361,19 @@ export function initGlobalSearch() {
         });
       }
     });
+
+    // 5. Agrietados / Rivens / Estrategia
+    if ('agrietados'.includes(nq) || 'rivens'.includes(nq) || 'god roll'.includes(nq) || 'kuva'.includes(nq)) {
+      matches.push({
+        type: 'Herramienta',
+        badge: '🌀 AGRIETADOS',
+        title: 'Estrategia God Roll & Calculadora Riven',
+        desc: 'Topes máximos, economía de Kuva, empalme/transmutador y mejores estadísticas',
+        img: '',
+        url: '#/rivens',
+        meta: 'Calculadora Riven'
+      });
+    }
 
     // Limitar a los mejores 12 resultados
     const top = matches.slice(0, 12);
@@ -1200,6 +1214,7 @@ export function tennoToolsMainView(root, defaultTab = 'relics') {
       <div class="seg wrap" id="tools-seg">
         <button data-t="relics" class="${urlTab === 'relics' ? 'on' : ''}">⚡ Selector de Fisuras (15s)</button>
         <button data-t="ducats" class="${urlTab === 'ducats' ? 'on' : ''}">🪙 Ducados vs Platino</button>
+        <button data-t="riven" class="${urlTab === 'riven' ? 'on' : ''}">🌀 Estrategia God Roll</button>
         <button data-t="mastery" class="${urlTab === 'mastery' ? 'on' : ''}">📋 Tracker de Maestría (MR)</button>
         <button data-t="trade" class="${urlTab === 'trade' ? 'on' : ''}">💬 Generador /trade</button>
         <button data-t="alerts" class="${urlTab === 'alerts' ? 'on' : ''}">🔔 Alertas del Sistema</button>
@@ -1215,6 +1230,7 @@ export function tennoToolsMainView(root, defaultTab = 'relics') {
   function renderCurrentSubTab() {
     if (currentTab === 'relics') renderRelicHelper(area);
     else if (currentTab === 'ducats') renderDucatsOptimizer(area);
+    else if (currentTab === 'riven') renderRivenStrategyView(area, 'torid');
     else if (currentTab === 'mastery') renderMasteryTracker(area);
     else if (currentTab === 'trade') renderTradeGenerator(area);
     else if (currentTab === 'alerts') renderNotificationSettings(area);

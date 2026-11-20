@@ -1,9 +1,10 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, srcLine, modImg, debounce, norm, wikiLink, overframeSearch, t } from './util.js';
 import { openModal } from './ui.js';
 import { TIERS, TIER_COLORS } from './tiers.js';
-import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=24.0';
+import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=25.0';
 import { DARK_SECTOR_SURVIVALS, RESOURCE_GUIDE } from './darksector.js';
-import { PLAT_CATEGORIES, PLAT_ROUTES, PRIME_JUNK_RATES, PLAT_TIPS } from './platData.js?v=24.0';
+import { PLAT_CATEGORIES, PLAT_ROUTES, PRIME_JUNK_RATES, PLAT_TIPS } from './platData.js?v=25.0';
+import { renderRivenStrategyView } from './rivenStrategy.js?v=25.0';
 import { TYPE_ES } from './lang.js';
 
 const catImg = (name) => (D.cat[name] ? imgC(D.cat[name].img) : '');
@@ -854,78 +855,7 @@ function attrVal(a) {
 const attrChip = (a) => `<span class="attr ${a.pos ? 'pos' : 'neg'}">${esc(attrName(a.u))} <b>${esc(attrVal(a))}</b></span>`;
 
 export function rivens(root) {
-  let sel = null;
-  const weapons = D.rivens.weapons;
-  root.innerHTML = `<section class="page-head"><h1>🌀 Rivens (Agrietados)</h1>
-    <p>Selecciona un arma para ver los Rivens a la venta en vivo, las combinaciones de estadísticas más buscadas, sus precios y cuáles son los mejores atributos positivos y negativos.</p></section>
-    <div class="toolbar"><input type="search" id="rq" placeholder="Buscar arma en español o inglés (ej. Cedo, Soma, Bramma, Torid…)" autocomplete="off"><select id="rg"><option value="all">Todas las categorías</option>${[...new Set(weapons.map((w) => w.rt))].sort().map((groupKey) => `<option value="${esc(groupKey)}">${esc(TYPE_ES[groupKey] || groupKey)}</option>`).join('')}</select></div>
-    <div class="weaponlist"></div><div class="results"></div>`;
-  const wl = $('.weaponlist', root);
-
-  function list() {
-    const q = norm($('#rq', root).value), g = $('#rg', root).value;
-    const l = weapons.filter((w) => {
-      if (g !== 'all' && w.rt !== g) return false;
-      if (!q) return true;
-      const wEs = norm(t(w.n, w.n));
-      return wEs.includes(q) || norm(w.n).includes(q);
-    }).sort((a, b) => b.dis - a.dis).slice(0, q || g !== 'all' ? 60 : 36);
-
-    wl.innerHTML = l.map((w) => {
-      const wNameEs = t(w.n, w.n);
-      return `<button class="wbtn ${sel?.slug === w.slug ? 'on' : ''}" data-w="${w.slug}">${img(imgM(w.i), 'ri', w.n)}<span>${esc(wNameEs)}</span><small>${'●'.repeat(Math.round(w.dis))}${'○'.repeat(5 - Math.round(w.dis))} ${w.dis.toFixed(2)}</small></button>`;
-    }).join('') || '<p class="muted">Sin armas coincidentes</p>';
-  }
-
-  async function pick(slug) {
-    sel = weapons.find((w) => w.slug === slug);
-    list();
-    const res = $('.results', root);
-    const weaponNameEs = t(sel.n, sel.n);
-    res.innerHTML = `<div class="notice">Consultando subastas activas de Rivens para ${esc(weaponNameEs)}…</div>`;
-    const guide = RIVEN_GUIDE[sel.rt] || RIVEN_GUIDE.rifle;
-    let auctions = [];
-    try {
-      const r = await fetch(`/api/riven/${slug}`);
-      if (!r.ok) throw new Error(r.status);
-      auctions = await r.json();
-    } catch (e) {
-      res.innerHTML = `<div class="notice">No se pudo consultar warframe.market (${esc(e.message)}). Reintenta en unos instantes.</div>`;
-      return;
-    }
-
-    const combos = new Map();
-    for (const a of auctions) {
-      const pos = a.a.filter((x) => x.pos).map((x) => x.u).sort();
-      const neg = a.a.filter((x) => !x.pos).map((x) => x.u);
-      const k = pos.join('+') + '|' + neg.join('+');
-      const c = combos.get(k) || { pos, neg, prices: [] };
-      c.prices.push(a.p);
-      combos.set(k, c);
-    }
-    const rows = [...combos.values()].map((c) => ({
-      ...c,
-      n: c.prices.length,
-      min: Math.min(...c.prices),
-      med: c.prices.sort((a, b) => a - b)[Math.floor(c.prices.length / 2)]
-    })).sort((a, b) => b.n - a.n || b.med - a.med).slice(0, 10);
-
-    const w = sel;
-    res.innerHTML = `<article class="card wide"><header>${img(imgM(w.i), 'big-img', w.n)}<div><h3>${esc(weaponNameEs)} (${esc(w.n)})</h3><div class="meta"><span class="badge type">${esc(TYPE_ES[w.rt] || w.rt)}</span><span class="badge">Maestría ${w.mr}</span><span class="badge ok">Disposición ${w.dis.toFixed(2)} / 5</span></div></div>
-      <div class="price-col"><small>Riven más barato</small>${plat(auctions[0]?.p ?? null)}</div></header>
-      <div class="two"><div><h4>✅ Mejores atributos positivos</h4><div class="chips">${guide.pos.map((p) => `<span class="attr pos">${p}</span>`).join('')}</div></div>
-      <div><h4>🛑 Negativos ideales (los que menos penalizan)</h4><div class="chips">${guide.neg.map((p) => `<span class="attr neg">${p}</span>`).join('')}</div></div></div>
-      ${guide.note ? `<p class="effect">${esc(guide.note)}</p>` : ''}
-      <p class="muted small">Configuración perfecta: 2 a 3 positivos meta + 1 negativo inocuo (Zoom, Retroceso o daño contra facción que no uses), lo cual potencia el valor de los positivos.</p></article>
-      <h3>Combinaciones con más ofertas en el mercado ahora mismo</h3>
-      <table class="tbl"><thead><tr><th>Positivos</th><th>Negativo</th><th>Ofertas</th><th>Precio Mín.</th><th>Precio Mediano</th></tr></thead><tbody>${rows.map((r) => `<tr><td>${r.pos.map((u) => `<span class="attr pos">${esc(attrName(u))}</span>`).join('')}</td><td>${r.neg.map((u) => `<span class="attr neg">${esc(attrName(u))}</span>`).join('') || '<span class="muted">—</span>'}</td><td>${r.n}</td><td>${plat(r.min)}</td><td>${plat(r.med)}</td></tr>`).join('') || '<tr><td colspan=5>Sin ofertas activas</td></tr>'}</tbody></table>
-      <h3>Rivens a la venta (en vivo)</h3>
-      <div class="rivlist">${auctions.slice(0, 24).map((a) => `<div class="riv"><div class="riv-h"><b>${esc(weaponNameEs)} ${esc(a.name)}</b><span>${plat(a.p)}</span></div><div class="riv-b">${a.a.map((x) => attrChip({ u: x.u, v: x.v, pos: x.pos })).join('')}</div><div class="riv-f"><small><span class="dot ${esc(a.st)}"></span>${esc(a.o)} · MR ${a.mr} · ${esc(a.pol)} · ${a.rr} rerolls</small><button class="mini" data-act="copy" data-text="${esc(`/w ${a.o} Hi! I want to buy: ${w.n} ${a.name} riven mod for ${a.p} platinum. (warframe.market)`)}">Copiar /w</button></div></div>`).join('') || '<p class="muted">No hay Rivens listados actualmente.</p>'}</div>`;
-  }
-
-  root.addEventListener('input', debounce((e) => { if (e.target.id === 'rq' || e.target.id === 'rg') list(); }, 150));
-  root.addEventListener('click', (e) => { const b = e.target.closest('[data-w]'); if (b) pick(b.dataset.w); });
-  list();
+  renderRivenStrategyView(root, 'torid');
 }
 
 // ========================= PLAT GUIDE (CONSEGUIR PLATINO RÁPIDO) =========================
