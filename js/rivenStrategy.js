@@ -601,27 +601,27 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
         return `
           <div class="calc-slot-card ${isLocked ? 'is-locked' : ''}" id="slot-card-${idx}">
             <div class="calc-slot-top-bar">
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <div class="calc-slot-title-wrap">
                 <span class="calc-slot-badge ${isNeg ? 'neg' : 'pos'}">
                   ${isNeg ? '🛡️ NEGATIVO (INOCUO)' : `+ POSITIVO #${idx + 1}`}
                 </span>
-                <h4 style="margin:0;font-size:1.15rem;color:#f0f9ff;text-transform:uppercase;">
+                <h4 style="margin:0;font-size:1.15rem;color:#f0f9ff;text-transform:uppercase;letter-spacing:0.5px;">
                   ${range.name} en ${esc(weaponNameEs)}
                 </h4>
                 ${isLocked ? '<span class="badge" style="border-color:#fde047;color:#fde047;font-weight:700;">🔒 CANDADO ACTIVO</span>' : ''}
               </div>
 
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                <button class="slot-lock-label ${isLocked ? 'active' : ''}" data-slot-lock="${idx}" type="button">
-                  ${isLocked ? '🔒 Bloqueado (7.000 Kuva)' : '🔓 Bloquear Atributo'}
+              <div class="calc-slot-actions">
+                <button type="button" class="btn-riven-lock ${isLocked ? 'locked' : ''}" data-slot-lock="${idx}">
+                  <span>${isLocked ? '🔒 Bloqueado (7.000 Kuva)' : '🔓 Bloquear Atributo'}</span>
                 </button>
                 <div class="calc-verdict-badge ${verdictClass}">${verdictBadge}</div>
               </div>
             </div>
 
             <div class="calc-slot-controls-row">
-              <div class="calc-input-group">
-                <label>Estadística en esta casilla:</label>
+              <div class="calc-field-col">
+                <label class="calc-mini-label">Estadística en esta casilla:</label>
                 <select class="calc-select calc-slot-stat" data-slot-idx="${idx}">
                   ${(isNeg ? negKeys : posKeys).map(k => `
                     <option value="${k}" ${k === slot.stat ? 'selected' : ''}>
@@ -631,26 +631,21 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
                 </select>
               </div>
 
-              <div class="calc-input-group">
-                <label>Introduce el porcentaje de tu Riven:</label>
-                <div style="display:flex;align-items:center;gap:8px;">
+              <div class="calc-field-col">
+                <label class="calc-mini-label">Introduce el porcentaje de tu Riven:</label>
+                <div class="calc-input-addon">
                   <input type="number" class="calc-num-input calc-slot-val" data-slot-idx="${idx}" value="${slot.val}" step="0.1">
-                  <span style="font-weight:700;color:var(--cyan);font-size:1.15rem;">${range.unit}</span>
+                  <span class="calc-addon-unit">${range.unit}</span>
                 </div>
-              </div>
-
-              <div class="calc-input-group" style="text-align:right;">
-                <span class="small muted">Mín: <b>${range.min.toFixed(1)}${range.unit}</b> · Prom: <b>${range.avg.toFixed(1)}${range.unit}</b></span>
-                <span class="small" style="color:#4ade80;font-weight:700;">Tope Máx: ${range.max.toFixed(1)}${range.unit}</span>
               </div>
             </div>
 
-            <!-- MEDIDOR VISUAL HOLOGRÁFICO -->
-            <div class="stat-gauge-wrapper" style="margin:12px 0 8px;">
+            <!-- MEDIDOR VISUAL HOLOGRÁFICO CON ESPACIO DESPEJADO -->
+            <div class="stat-gauge-wrapper">
               <div class="gauge-labels-row">
                 <span>Mínimo: <b>${range.min.toFixed(1)}${range.unit}</b></span>
-                <span>Promedio: <b>${range.avg.toFixed(1)}${range.unit}</b></span>
-                <span style="color:#4ade80;">Tope Máximo Teórico: <b>${range.max.toFixed(1)}${range.unit}</b></span>
+                <span>Promedio: <b style="color:#38bdf8;">${range.avg.toFixed(1)}${range.unit}</b></span>
+                <span>Tope Máximo Teórico: <b style="color:#4ade80;">${range.max.toFixed(1)}${range.unit}</b></span>
               </div>
 
               <div class="stat-gauge-track">
@@ -661,10 +656,10 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
               </div>
             </div>
 
-            <div class="calc-verdict-box ${verdictClass}" style="margin-top:4px;padding:10px 14px;">
-              <div class="verdict-icon-symbol" style="font-size:1.25rem;">${isLocked ? '🔒' : '💠'}</div>
+            <div class="calc-verdict-box ${verdictClass}">
+              <div class="verdict-icon-symbol">${isLocked ? '🔒' : '💠'}</div>
               <div class="verdict-text-content">
-                <p style="font-size:0.86rem;line-height:1.4;">${adviceText}</p>
+                <p>${adviceText}</p>
               </div>
             </div>
           </div>
