@@ -181,3 +181,4 @@ export const PLAT_TIPS = [
     body: 'Cientos de jugadores nuevos llegan al punto de la aventura "La Nueva Guerra" y se topan con el requisito obligatorio de tener un Necramech Voidrig. Para no farmear minería en Deimos durante semanas, compran el set de Voidrig por 70 a 90 pl. Fabricar sets de Voidrig es una fuente constante de platino.'
   }
 ];
+

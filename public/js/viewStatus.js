@@ -70,7 +70,7 @@ export async function fetchWorldState() {
     const res = await fetch('/api/worldstate');
     if (res.ok) {
       const data = await res.json();
-      if (data && (data.fissures || data.alerts)) {
+      if (data && (data.fissures || data.alerts || data.maintenance)) {
         return resolveClientArbitration(data);
       }
     }
@@ -78,7 +78,7 @@ export async function fetchWorldState() {
     console.warn('Backend worldstate fallo, intentando llamada directa...', e);
   }
 
-  // 2. Fallback infalible: llamada directa con CORS desde el navegador del usuario
+  // 2. Fallback infalible: llamada directa con CORS desde el navegador del usuario si backend falló
   try {
     const r1 = await fetch('https://api.warframestat.us/pc?language=es', { mode: 'cors' });
     if (r1.ok) {
@@ -86,15 +86,26 @@ export async function fetchWorldState() {
       return resolveClientArbitration(j);
     }
   } catch (e) {
-    console.warn('Direct fetch fallo en es, probando sin language...', e);
+    // Falla directa esperada si api.warframestat.us está fuera de línea
   }
 
-  const r2 = await fetch('https://api.warframestat.us/pc', { mode: 'cors' });
-  if (r2.ok) {
-    const j = await r2.json();
-    return resolveClientArbitration(j);
-  }
-  throw new Error('No se pudo conectar a la API de Warframe');
+  try {
+    const r2 = await fetch('https://api.warframestat.us/pc', { mode: 'cors' });
+    if (r2.ok) {
+      const j = await r2.json();
+      return resolveClientArbitration(j);
+    }
+  } catch (e) {}
+
+  // 3. Fallback seguro sin lanzar excepciones que interrumpan la UI
+  return resolveClientArbitration({
+    fissures: [],
+    alerts: [],
+    events: [],
+    voidTrader: { active: false },
+    arbitration: {},
+    maintenance: true
+  });
 }
 
 export function worldStateView(root) {
@@ -199,7 +210,7 @@ export function worldStateView(root) {
     }
     try {
       state = await fetchWorldState();
-      $('#sync-time', root).textContent = `Actualizado: ${new Date().toLocaleTimeString('es-AR')}`;
+      $('#sync-time', root).textContent = state.maintenance ? 'Reconectando con Warframe Status…' : `Actualizado: ${new Date().toLocaleTimeString('es-AR')}`;
       drawBanners();
       draw();
     } catch (e) {
@@ -527,9 +538,9 @@ export function worldStateView(root) {
 
           ${filteredFissures.length === 0 ? `
             <div class="notice center" style="padding: 34px 20px; margin: 15px 0;">
-              <h3>No hay fisuras que coincidan con estos filtros</h3>
-              <p class="muted">Prueba seleccionando otra era de reliquia o quitando los filtros activos para ver todas las disponibles.</p>
-              <button class="btn small" id="reset-fissure-filters-empty" style="margin-top: 10px;">↺ Ver todas las fisuras activas</button>
+              <h3>${state.maintenance ? '⚠️ Servidores de datos de Warframe en mantenimiento temporal' : 'No hay fisuras que coincidan con estos filtros'}</h3>
+              <p class="muted">${state.maintenance ? 'El servicio público de Warframe Status API está reiniciando sincronización. El sistema reconectará automáticamente.' : 'Prueba seleccionando otra era de reliquia o quitando los filtros activos para ver todas las disponibles.'}</p>
+              ${state.maintenance ? '<button class="btn small" id="ref-status" style="margin-top: 10px;">🔄 Reintentar sincronización ahora</button>' : '<button class="btn small" id="reset-fissure-filters-empty" style="margin-top: 10px;">↺ Ver todas las fisuras activas</button>'}
             </div>
           ` : `
             <div class="fissure-grid">

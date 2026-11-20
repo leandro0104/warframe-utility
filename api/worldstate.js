@@ -1,3 +1,5 @@
+let lastCachedWorldState = null;
+
 export default async function handler(req, res) {
   try {
     const r = await fetch('https://api.warframestat.us/pc?language=es', {
@@ -6,12 +8,27 @@ export default async function handler(req, res) {
         'Accept': 'application/json'
       }
     });
-    if (!r.ok) throw new Error('Status API: ' + r.status);
-    const data = await r.json();
+    if (r.ok) {
+      const data = await r.json();
+      lastCachedWorldState = data;
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      return res.status(200).json(data);
+    }
+  } catch (e) {}
+
+  if (lastCachedWorldState) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    return res.status(200).json(data);
-  } catch (e) {
-    return res.status(502).json({ error: e.message });
+    return res.status(200).json({ ...lastCachedWorldState, _cached: true });
   }
+
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  return res.status(200).json({
+    fissures: [],
+    alerts: [],
+    events: [],
+    voidTrader: {},
+    arbitration: {},
+    maintenance: true
+  });
 }
 

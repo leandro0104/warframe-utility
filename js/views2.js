@@ -1,10 +1,10 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, srcLine, modImg, debounce, norm, wikiLink, overframeSearch, t } from './util.js';
 import { openModal } from './ui.js';
 import { TIERS, TIER_COLORS } from './tiers.js';
-import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=25.0';
+import { FRAME_BUILDS, WEAPON_BUILDS } from './builds.js?v=25.1';
 import { DARK_SECTOR_SURVIVALS, RESOURCE_GUIDE } from './darksector.js';
-import { PLAT_CATEGORIES, PLAT_ROUTES, PRIME_JUNK_RATES, PLAT_TIPS } from './platData.js?v=25.0';
-import { renderRivenStrategyView } from './rivenStrategy.js?v=25.0';
+import { PLAT_CATEGORIES, PLAT_ROUTES, PRIME_JUNK_RATES, PLAT_TIPS } from './platData.js?v=25.1';
+import { renderRivenStrategyView } from './rivenStrategy.js?v=25.1';
 import { TYPE_ES } from './lang.js';
 
 const catImg = (name) => (D.cat[name] ? imgC(D.cat[name].img) : '');

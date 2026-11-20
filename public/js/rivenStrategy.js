@@ -341,6 +341,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
   // ==========================================================================
   function renderStrategyTab(container) {
     const w = currentWeapon;
+    const weaponNameEs = t(w.n, w.n);
     const catKey = getWeaponCategoryKey(w.rt);
     const table = BASE_RIVEN_STATS[catKey] || BASE_RIVEN_STATS.rifle;
 
@@ -350,19 +351,20 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
 
     container.innerHTML = `
       <div class="grid cards" style="grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px;">
-        <!-- PASO 1: EL MITO DE BLOQUEAR STATS -->
+        <!-- PASO 1: BLOQUEO DE STAT (TRAIT LOCKING) & COSTE DE KUVA -->
         <div class="card riven-strategy-card">
           <div class="step-num-badge">PASO 1</div>
-          <h3>⚠️ El Mito de "Bloquear Stats" vs Estrategia Real</h3>
-          <p class="muted small">Muchos Tenno preguntan cómo congelar un stat bueno mientras rolean el resto con Kuva.</p>
-          <div class="strategy-alert-box warning">
-            <b>Mecánica Oficial de Warframe:</b>
-            <p>En Warframe <b>NO es posible bloquear ni congelar estadísticas individuales</b>. Al usar Kuva se vuelve a tirar la carta por completo (eligiendo entre el resultado viejo y el nuevo).</p>
+          <h3>🔒 Bloqueo de Atributo (Trait Locking) & Kuva</h3>
+          <p class="muted small">Cómo congelar tu mejor estadística mientras buscas el resto con Kuva.</p>
+          <div class="strategy-alert-box info">
+            <b>Mecánica Oficial de Bloqueo (Riven Trait Locking):</b>
+            <p>En el menú de mods de Warframe <b>SÍ es posible bloquear 1 atributo</b> haciendo clic en el candado junto al stat. Ese atributo conservará tanto su tipo de efecto como su valor numérico exacto.</p>
           </div>
           <ul class="strategy-check-list">
-            <li><b>Límite de Kuva:</b> El coste por tirada inicia en 900 y sube hasta toparse en <b>3.500 Kuva por reroll a partir de la tirada #9</b>.</li>
-            <li><b>La Regla del "Unrolled":</b> Si tu arma es muy popular (como Torid o Latron), un Riven con 0 rerolls vale hasta 500-700p. ¡Rolear 20 veces sin sacar nada devalúa el Riven si no consigues algo extraordinario!</li>
-            <li><b>Regla de Oro:</b> Si te sale una tirada jugable intermedia (ej. Daño + Fuego), es mejor <b>venderla por 350-500p</b> y comprar otro Riven sin rollear para volver a probar con Kuva fresca.</li>
+            <li><b>Coste de Kuva Duplicado:</b> Al tener 1 stat bloqueado, cada reroll cuesta <b>el doble de Kuva</b>. Si tu Riven ya alcanzó el tope de 3.500 Kuva, <b>rolear con stat bloqueado costará 7.000 Kuva por tirada</b>.</li>
+            <li><b>Estructura Congelada:</b> Bloquear un stat también congela la estructura de la carta (por ejemplo, si ya tiene negativo, se preservará la disposición con negativo).</li>
+            <li><b>¿Cuándo usar el Bloqueo?:</b> Si te sale un stat S+ (como Multidisparo >135% o Daño Crítico alto con negativo inocuo), <b>bloquéalo</b> para buscar el segundo positivo sin arriesgarte a perder el stat estrella.</li>
+            <li><b>¡Atención al Menú!:</b> El bloqueo es por sesión en la interfaz. Si sales por completo del menú de mods, verifica que el candado siga activo antes de volver a tirar para no perder tu stat por error.</li>
           </ul>
         </div>
 
@@ -474,6 +476,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
   // ==========================================================================
   function renderCalculatorTab(container) {
     const w = currentWeapon;
+    const weaponNameEs = t(w.n, w.n);
     const catKey = getWeaponCategoryKey(w.rt);
     const table = BASE_RIVEN_STATS[catKey] || BASE_RIVEN_STATS.rifle;
     const statKeys = Object.keys(table);
@@ -482,7 +485,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       <article class="card wide">
         <header>
           <div>
-            <h3>🧮 Calculadora de Rangos y Tope Máximo para ${esc(w.n)}</h3>
+            <h3>🧮 Calculadora de Rangos y Tope Máximo para ${esc(weaponNameEs)}</h3>
             <p class="muted small">Comprueba si el porcentaje que obtuviste está cerca del límite absoluto del juego o si se puede superar con más rerrolls.</p>
           </div>
         </header>
@@ -512,6 +515,14 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
               <span id="calc-unit-display" style="font-weight:700;color:var(--cyan);font-size:1.1rem;">%</span>
             </div>
           </div>
+
+          <div class="calc-input-group" style="justify-content:center;">
+            <label style="cursor:pointer;display:inline-flex;align-items:center;gap:8px;margin-top:6px;">
+              <input type="checkbox" id="calc-lock-toggle" style="width:18px;height:18px;accent-color:#38bdf8;cursor:pointer;">
+              <span style="color:#f0f9ff;font-weight:700;">🔒 Bloquear Atributo (Trait Lock)</span>
+            </label>
+            <span class="small muted" id="kuva-cost-hint">Coste estándar: 3.500 Kuva / tirada</span>
+          </div>
         </div>
 
         <!-- RESULTADOS Y MEDIDOR VISUAL -->
@@ -523,10 +534,18 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       const cfg = $('#calc-cfg-select', container).value;
       const statKey = $('#calc-stat-select', container).value;
       const userVal = parseFloat($('#calc-user-val', container).value) || 0;
+      const isLocked = $('#calc-lock-toggle', container)?.checked;
 
       const statData = calculateRivenStatRange(catKey, w.dis, statKey, cfg);
       const unit = statData.unit;
       $('#calc-unit-display', container).textContent = unit;
+
+      const kuvaHint = $('#kuva-cost-hint', container);
+      if (kuvaHint) {
+        kuvaHint.innerHTML = isLocked
+          ? '<b style="color:var(--gold);">🔒 Stat Congelado: Coste duplicado = 7.000 Kuva / ciclo</b>'
+          : 'Coste estándar sin bloqueo: 3.500 Kuva / tirada (a partir de la tirada #9)';
+      }
 
       const resultsBox = $('#calc-results-box', container);
       const pctOfMax = statData.max > 0 ? Math.min(100, Math.max(0, (userVal / statData.max) * 100)) : 0;
@@ -544,7 +563,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       } else if (pctOfMax >= 82) {
         verdictClass = 'verdict-great';
         verdictBadge = '🔥 EXCELENTE (RANGO S / A+)';
-        verdictText = `Tu valor de <b>${userVal}${unit}</b> es muy alto (representa el <b>${pctOfMax.toFixed(1)}% del tope</b>). Aunque el límite teórico es <b>${statData.max.toFixed(1)}${unit}</b>, este Riven ya destruye cualquier enemigo en Camino de Acero. Intentar subir ese 10-15% restante te costará decenas de miles de Kuva con un 96% de riesgo de sacar algo peor.`;
+        verdictText = `Tu valor de <b>${userVal}${unit}</b> es muy alto (representa el <b>${pctOfMax.toFixed(1)}% del tope</b>). Aunque el límite teórico es <b>${statData.max.toFixed(1)}${unit}</b>, este Riven ya destruye cualquier enemigo en Camino de Acero. Intentar subir ese 10-15% restante te costará decenas de miles de Kuva con un 96% de riesgo de sacar algo peor. ${isLocked ? '<b>Al tenerlo bloqueado (7.000 Kuva/tirada)</b>, conservarás este stat intacto mientras buscas el segundo.' : 'Si decides seguir buscando el segundo stat meta, <b>puedes bloquear este stat (Trait Locking) pagando 7.000 Kuva por tirada</b> para asegurar que no se pierda.'}`;
       } else if (pctOfMax >= 68) {
         verdictClass = 'verdict-mid';
         verdictBadge = '⚖️ RANGO MEDIO / JUGABLE';
@@ -558,9 +577,10 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       resultsBox.innerHTML = `
         <div class="calc-results-header">
           <div class="calc-stat-title">
-            <h4>${statData.name} en ${esc(w.n)}</h4>
+            <h4>${statData.name} en ${esc(weaponNameEs)}</h4>
             <span class="badge ok">Disposición ${statData.disp.toFixed(2)}x</span>
             <span class="badge type">${cfg === '2pos_1neg' ? 'Bono 2+1- (+25%)' : cfg}</span>
+            ${isLocked ? '<span class="badge" style="border-color:var(--gold);color:var(--gold);">🔒 Stat Bloqueado (7.000 Kuva)</span>' : ''}
           </div>
           <div class="calc-verdict-badge ${verdictClass}">${verdictBadge}</div>
         </div>
@@ -583,16 +603,22 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
 
         <!-- CAJA DE VEREDICTO EXPERTO -->
         <div class="calc-verdict-box ${verdictClass}">
-          <div class="verdict-icon-symbol">💠</div>
+          <div class="verdict-icon-symbol">${isLocked ? '🔒' : '💠'}</div>
           <div class="verdict-text-content">
             <p>${verdictText}</p>
+            ${isLocked ? `
+              <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1);font-size:.82rem;color:#cbd5e1;">
+                <b>💰 Estimación de Kuva con Bloqueo:</b>
+                5 tiradas = 35.000 Kuva · 10 tiradas = 70.000 Kuva · 20 tiradas = 140.000 Kuva.
+              </div>
+            ` : ''}
           </div>
         </div>
       `;
     }
 
     container.addEventListener('change', (e) => {
-      if (e.target.matches('#calc-cfg-select, #calc-stat-select')) updateCalculator();
+      if (e.target.matches('#calc-cfg-select, #calc-stat-select, #calc-lock-toggle')) updateCalculator();
     });
     container.addEventListener('input', (e) => {
       if (e.target.id === 'calc-user-val') updateCalculator();
@@ -606,6 +632,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
   // ==========================================================================
   function renderBuilderTab(container) {
     const w = currentWeapon;
+    const weaponNameEs = t(w.n, w.n);
     const catKey = getWeaponCategoryKey(w.rt);
     const table = BASE_RIVEN_STATS[catKey] || BASE_RIVEN_STATS.rifle;
     const statKeys = Object.keys(table);
@@ -617,8 +644,8 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       <article class="card wide">
         <header>
           <div>
-            <h3>🔬 Inspector y Calificador de Tirada para ${esc(w.n)}</h3>
-            <p class="muted small">Selecciona los atributos de tu Riven para generar su carta visual holográfica, calcular su puntuación de Tier y estimar su precio en platino.</p>
+            <h3>🔬 Inspector y Calificador de Tirada para ${esc(weaponNameEs)}</h3>
+            <p class="muted small">Selecciona los atributos de tu Riven para generar su carta visual holográfica, calcular su puntuación de Tier, simular bloqueo con candado (7.000 Kuva) y estimar su precio en platino.</p>
           </div>
         </header>
 
@@ -662,6 +689,23 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
                 </optgroup>
               </select>
             </div>
+
+            <div class="calc-input-group" style="background:rgba(234, 179, 8, 0.08); border:1px solid rgba(234, 179, 8, 0.25); border-radius:8px; padding:12px; margin-top:10px;">
+              <label style="color:#fde047; font-weight:700; display:flex; align-items:center; justify-content:space-between;">
+                <span>🔒 Candado de Atributo:</span>
+                <span style="font-size:0.75rem; color:#fde047; font-weight:600;">Coste: 7.000 Kuva / Roll</span>
+              </label>
+              <select id="builder-lock-select" class="calc-select" style="margin-top:6px;">
+                <option value="none">🔓 Sin candado (Coste estándar: 3.500 Kuva)</option>
+                <option value="pos1">🔒 Bloquear Primer Positivo (+)</option>
+                <option value="pos2">🔒 Bloquear Segundo Positivo (+)</option>
+                <option value="pos3">🔒 Bloquear Tercer Positivo (+)</option>
+                <option value="neg">🔒 Bloquear Negativo (-)</option>
+              </select>
+              <p class="small muted" style="margin-top:6px; margin-bottom:0; font-size:0.8rem; line-height:1.4;">
+                Fija la estadística exacta para que no cambie al rollear. Duplica el coste de Kuva a <b>7.000 por intento</b>.
+              </p>
+            </div>
           </div>
 
           <!-- PANEL DERECHO: TARJETA VISUAL HOLOGRÁFICA & ESTIMADOR -->
@@ -675,6 +719,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       const pos2 = $('#builder-pos2', container).value;
       const pos3 = $('#builder-pos3', container).value;
       const neg = $('#builder-neg', container).value;
+      const lock = $('#builder-lock-select', container)?.value || 'none';
 
       const hasPos3 = pos3 !== 'none';
       const hasNeg = neg !== 'none';
@@ -741,6 +786,12 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
         }
       }
 
+      const isP1Locked = lock === 'pos1';
+      const isP2Locked = lock === 'pos2';
+      const isP3Locked = lock === 'pos3' && hasPos3;
+      const isNegLocked = lock === 'neg' && hasNeg;
+      const anyLocked = isP1Locked || isP2Locked || isP3Locked || isNegLocked;
+
       const outBox = $('#builder-output-box', container);
       outBox.innerHTML = `
         <!-- CARTA VISUAL DE AGRIETADO -->
@@ -754,17 +805,27 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
             </div>
 
             <div class="riven-card-stats-list">
-              <div class="riven-card-stat-line pos">+${p1Range.avg.toFixed(1)}${p1Range.unit} ${p1Range.name}</div>
-              <div class="riven-card-stat-line pos">+${p2Range.avg.toFixed(1)}${p2Range.unit} ${p2Range.name}</div>
-              ${hasPos3 ? `<div class="riven-card-stat-line pos">+${p3Range.avg.toFixed(1)}${p3Range.unit} ${p3Range.name}</div>` : ''}
-              ${hasNeg && !isFatalNeg ? `<div class="riven-card-stat-line neg">-${negRange.avg.toFixed(1)}${negRange.unit} ${negRange.name.replace(/ \(.*\)/, '')}</div>` : ''}
+              <div class="riven-card-stat-line pos ${isP1Locked ? 'is-locked-stat' : ''}">
+                ${isP1Locked ? '<span class="lock-indicator" title="Atributo Bloqueado">🔒</span> ' : ''}+${p1Range.avg.toFixed(1)}${p1Range.unit} ${p1Range.name}
+              </div>
+              <div class="riven-card-stat-line pos ${isP2Locked ? 'is-locked-stat' : ''}">
+                ${isP2Locked ? '<span class="lock-indicator" title="Atributo Bloqueado">🔒</span> ' : ''}+${p2Range.avg.toFixed(1)}${p2Range.unit} ${p2Range.name}
+              </div>
+              ${hasPos3 ? `
+                <div class="riven-card-stat-line pos ${isP3Locked ? 'is-locked-stat' : ''}">
+                  ${isP3Locked ? '<span class="lock-indicator" title="Atributo Bloqueado">🔒</span> ' : ''}+${p3Range.avg.toFixed(1)}${p3Range.unit} ${p3Range.name}
+                </div>` : ''}
+              ${hasNeg && !isFatalNeg ? `
+                <div class="riven-card-stat-line neg ${isNegLocked ? 'is-locked-stat' : ''}">
+                  ${isNegLocked ? '<span class="lock-indicator" title="Atributo Bloqueado">🔒</span> ' : ''}-${negRange.avg.toFixed(1)}${negRange.unit} ${negRange.name.replace(/ \(.*\)/, '')}
+                </div>` : ''}
               ${isFatalNeg ? `<div class="riven-card-stat-line neg fatal-line">-50% Penalización Crítica/Daño Fatal</div>` : ''}
             </div>
 
             <div class="riven-card-bottom">
               <span>MR ${w.mr}</span>
               <span>●●●●○</span>
-              <span>Rerolls: 0</span>
+              <span>${anyLocked ? '🔒 7.000 Kuva / ciclo' : '3.500 Kuva / ciclo'}</span>
             </div>
           </div>
         </div>
@@ -779,12 +840,18 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
             <span class="verdict-price-value">${priceEst}</span>
           </div>
           <p class="builder-advice-text">${verdictAdvice}</p>
+
+          ${anyLocked ? `
+            <div style="margin-top:10px; padding:10px 12px; background:rgba(234, 179, 8, 0.12); border-left:3px solid #eab308; border-radius:6px; font-size:0.85rem; color:#fef08a; line-height:1.4;">
+              <b>🔒 Atributo Asegurado con Candado:</b> El atributo marcado queda fijado en cada tirada. El coste por ciclo en el banco de mods aumenta a <b>7.000 Kuva</b> (el doble del estándar).
+            </div>
+          ` : ''}
         </div>
       `;
     }
 
     container.addEventListener('change', (e) => {
-      if (e.target.matches('#builder-pos1, #builder-pos2, #builder-pos3, #builder-neg')) {
+      if (e.target.matches('#builder-pos1, #builder-pos2, #builder-pos3, #builder-neg, #builder-lock-select')) {
         updateBuilder();
       }
     });

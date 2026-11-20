@@ -1,9 +1,9 @@
 import { $, D, P } from './util.js';
 import './ui.js';
-import * as V1 from './views1.js?v=25.0';
-import * as V2 from './views2.js?v=25.0';
-import { worldStateView, fetchWorldState } from './viewStatus.js?v=25.0';
-import { tennoToolsMainView, initGlobalSearch, checkBackgroundNotifications } from './tennoTools.js?v=25.0';
+import * as V1 from './views1.js?v=25.1';
+import * as V2 from './views2.js?v=25.1';
+import { worldStateView, fetchWorldState } from './viewStatus.js?v=25.1';
+import { tennoToolsMainView, initGlobalSearch, checkBackgroundNotifications } from './tennoTools.js?v=25.1';
 
 // Limpieza de caché de tema previo
 try {
