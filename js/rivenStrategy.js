@@ -472,7 +472,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
   }
 
   // ==========================================================================
-  // PESTAÑA 2: CALCULADORA DE TOPES Y RANGOS (¿139% o 150%?)
+  // PESTAÑA 2: CALCULADORA DE TOPES Y RANGOS MULTI-ESTADÍSTICA
   // ==========================================================================
   function renderCalculatorTab(container) {
     const w = currentWeapon;
@@ -480,151 +480,281 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
     const catKey = getWeaponCategoryKey(w.rt);
     const table = BASE_RIVEN_STATS[catKey] || BASE_RIVEN_STATS.rifle;
     const statKeys = Object.keys(table);
+    const posKeys = statKeys.filter(k => !table[k].isHarmlessNeg);
+    const negKeys = statKeys.filter(k => table[k].isHarmlessNeg);
+
+    let currentCfg = '3pos_1neg';
+    let lockedSlotIdx = -1; // -1 = sin candado
+
+    // Slots iniciales
+    let slots = [
+      { id: 0, type: 'pos', stat: 'multishot', val: null },
+      { id: 1, type: 'pos', stat: 'critical_damage', val: null },
+      { id: 2, type: 'pos', stat: 'critical_chance', val: null },
+      { id: 3, type: 'neg', stat: 'zoom', val: null }
+    ];
+
+    function syncSlotsForCfg(cfg) {
+      if (cfg === '2pos_1neg') {
+        slots = [
+          slots[0] || { id: 0, type: 'pos', stat: 'multishot', val: null },
+          slots[1] || { id: 1, type: 'pos', stat: 'critical_damage', val: null },
+          slots.find(s => s.type === 'neg') || { id: 2, type: 'neg', stat: 'zoom', val: null }
+        ];
+      } else if (cfg === '3pos_1neg') {
+        const p1 = slots[0] || { id: 0, type: 'pos', stat: 'multishot', val: null };
+        const p2 = slots[1] || { id: 1, type: 'pos', stat: 'critical_damage', val: null };
+        const p3 = slots[2] && slots[2].type === 'pos' ? slots[2] : { id: 2, type: 'pos', stat: 'damage', val: null };
+        const n1 = slots.find(s => s.type === 'neg') || { id: 3, type: 'neg', stat: 'zoom', val: null };
+        slots = [p1, p2, p3, n1];
+      } else if (cfg === '2pos_0neg') {
+        slots = [
+          slots[0] || { id: 0, type: 'pos', stat: 'multishot', val: null },
+          slots[1] || { id: 1, type: 'pos', stat: 'critical_damage', val: null }
+        ];
+      } else if (cfg === '3pos_0neg') {
+        slots = [
+          slots[0] || { id: 0, type: 'pos', stat: 'multishot', val: null },
+          slots[1] || { id: 1, type: 'pos', stat: 'critical_damage', val: null },
+          slots[2] && slots[2].type === 'pos' ? slots[2] : { id: 2, type: 'pos', stat: 'damage', val: null }
+        ];
+      }
+      if (lockedSlotIdx >= slots.length) lockedSlotIdx = -1;
+    }
 
     container.innerHTML = `
       <article class="card wide">
         <header>
           <div>
-            <h3>🧮 Calculadora de Rangos y Tope Máximo para ${esc(weaponNameEs)}</h3>
-            <p class="muted small">Comprueba si el porcentaje que obtuviste está cerca del límite absoluto del juego o si se puede superar con más rerrolls.</p>
+            <h3>🧮 Calculadora de Rangos y Topes Máximos para ${esc(weaponNameEs)}</h3>
+            <p class="muted small">Evalúa todas las estadísticas de tu Riven simultáneamente hacia abajo. Comprueba si cada porcentaje está cerca del límite teórico del juego o si vale la pena rollear más.</p>
           </div>
         </header>
 
-        <div class="calc-controls-grid">
+        <div class="calc-controls-grid" style="grid-template-columns:1fr auto;align-items:center;">
           <div class="calc-input-group">
-            <label>1. Tipo de Tirada en el Riven:</label>
-            <select id="calc-cfg-select" class="calc-select">
-              <option value="2pos_1neg" selected>👑 2 Positivos + 1 Negativo (God Roll - Bono +25%)</option>
-              <option value="3pos_1neg">⚔️ 3 Positivos + 1 Negativo (Bono +20%)</option>
-              <option value="2pos_0neg">⚖️ 2 Positivos sin Negativo (Estándar)</option>
-              <option value="3pos_0neg">📉 3 Positivos sin Negativo (Valores Bajos)</option>
+            <label>1. Tipo de Tirada en el Riven (Estructura de Atributos):</label>
+            <select id="calc-cfg-select" class="calc-select" style="font-size:1rem;font-weight:700;">
+              <option value="3pos_1neg" ${currentCfg === '3pos_1neg' ? 'selected' : ''}>⚔️ 3 Positivos + 1 Negativo (Bono +20% - 4 Estadísticas)</option>
+              <option value="2pos_1neg" ${currentCfg === '2pos_1neg' ? 'selected' : ''}>👑 2 Positivos + 1 Negativo (God Roll Puro - Bono +25% - 3 Estadísticas)</option>
+              <option value="2pos_0neg" ${currentCfg === '2pos_0neg' ? 'selected' : ''}>⚖️ 2 Positivos sin Negativo (Estándar - 2 Estadísticas)</option>
+              <option value="3pos_0neg" ${currentCfg === '3pos_0neg' ? 'selected' : ''}>📉 3 Positivos sin Negativo (Valores Bajos - 3 Estadísticas)</option>
             </select>
           </div>
 
-          <div class="calc-input-group">
-            <label>2. Estadística que deseas evaluar:</label>
-            <select id="calc-stat-select" class="calc-select">
-              ${statKeys.map(k => `<option value="${k}" ${k === 'multishot' ? 'selected' : ''}>${table[k].name}</option>`).join('')}
-            </select>
-          </div>
-
-          <div class="calc-input-group">
-            <label>3. Introduce el porcentaje de tu Riven:</label>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <input type="number" id="calc-user-val" placeholder="Ej. 139" value="139" step="0.1" class="calc-num-input">
-              <span id="calc-unit-display" style="font-weight:700;color:var(--cyan);font-size:1.1rem;">%</span>
-            </div>
-          </div>
-
-          <div class="calc-input-group" style="justify-content:center;">
-            <label style="cursor:pointer;display:inline-flex;align-items:center;gap:8px;margin-top:6px;">
-              <input type="checkbox" id="calc-lock-toggle" style="width:18px;height:18px;accent-color:#38bdf8;cursor:pointer;">
-              <span style="color:#f0f9ff;font-weight:700;">🔒 Bloquear Atributo (Trait Lock)</span>
-            </label>
-            <span class="small muted" id="kuva-cost-hint">Coste estándar: 3.500 Kuva / tirada</span>
+          <div class="calc-input-group" style="text-align:right;">
+            <label style="color:#94a3b8;">Disposición del Arma:</label>
+            <span class="badge ok" style="font-size:0.95rem;padding:6px 12px;">Disposición ${w.dis.toFixed(2)}x</span>
           </div>
         </div>
 
-        <!-- RESULTADOS Y MEDIDOR VISUAL -->
-        <div class="calc-results-card" id="calc-results-box" style="margin-top:20px;"></div>
+        <!-- CONTENEDOR DE SLOTS APILADOS HACIA ABAJO -->
+        <div id="calc-slots-wrapper" class="calc-slots-container"></div>
+
+        <!-- PANEL DE RESUMEN GLOBAL DEL RIVEN -->
+        <div id="calc-global-summary-box"></div>
       </article>
     `;
 
-    function updateCalculator() {
-      const cfg = $('#calc-cfg-select', container).value;
-      const statKey = $('#calc-stat-select', container).value;
-      const userVal = parseFloat($('#calc-user-val', container).value) || 0;
-      const isLocked = $('#calc-lock-toggle', container)?.checked;
+    function renderSlots() {
+      syncSlotsForCfg(currentCfg);
+      const wrapper = $('#calc-slots-wrapper', container);
+      if (!wrapper) return;
 
-      const statData = calculateRivenStatRange(catKey, w.dis, statKey, cfg);
-      const unit = statData.unit;
-      $('#calc-unit-display', container).textContent = unit;
+      let totalPct = 0;
+      let slotCount = slots.length;
 
-      const kuvaHint = $('#kuva-cost-hint', container);
-      if (kuvaHint) {
-        kuvaHint.innerHTML = isLocked
-          ? '<b style="color:var(--gold);">🔒 Stat Congelado: Coste duplicado = 7.000 Kuva / ciclo</b>'
-          : 'Coste estándar sin bloqueo: 3.500 Kuva / tirada (a partir de la tirada #9)';
-      }
+      wrapper.innerHTML = slots.map((slot, idx) => {
+        const isNeg = slot.type === 'neg';
+        const range = calculateRivenStatRange(catKey, w.dis, slot.stat, currentCfg, isNeg);
 
-      const resultsBox = $('#calc-results-box', container);
-      const pctOfMax = statData.max > 0 ? Math.min(100, Math.max(0, (userVal / statData.max) * 100)) : 0;
+        if (slot.val === null || isNaN(slot.val)) {
+          slot.val = Math.round(range.avg * 10) / 10;
+        }
 
-      let verdictClass = 'verdict-mid';
-      let verdictBadge = 'ROLL DECENTE (RANGO B)';
-      let verdictText = '';
+        const isLocked = lockedSlotIdx === idx;
+        const pctOfMax = range.max > 0 ? Math.min(100, Math.max(0, (slot.val / range.max) * 100)) : 0;
+        totalPct += pctOfMax;
 
-      if (userVal <= 0) {
-        verdictText = 'Introduce un valor para ver la evaluación de tu estadística.';
-      } else if (pctOfMax >= 93) {
-        verdictClass = 'verdict-god';
-        verdictBadge = '🌟 TIRO PERFECTO DE FÁBRICA (PERCENTIL 95%+)';
-        verdictText = `¡Increíble! Tu <b>${userVal}${unit}</b> está prácticamente en el tope matemático absoluto de <b>${statData.max.toFixed(1)}${unit}</b>. La probabilidad de obtener una tirada más alta es inferior al 1.5%. <b>RECOMENDACIÓN: ¡NO VUELVAS A ROLLEAR ESTE RIVEN!</b>`;
-      } else if (pctOfMax >= 82) {
-        verdictClass = 'verdict-great';
-        verdictBadge = '🔥 EXCELENTE (RANGO S / A+)';
-        verdictText = `Tu valor de <b>${userVal}${unit}</b> es muy alto (representa el <b>${pctOfMax.toFixed(1)}% del tope</b>). Aunque el límite teórico es <b>${statData.max.toFixed(1)}${unit}</b>, este Riven ya destruye cualquier enemigo en Camino de Acero. Intentar subir ese 10-15% restante te costará decenas de miles de Kuva con un 96% de riesgo de sacar algo peor. ${isLocked ? '<b>Al tenerlo bloqueado (7.000 Kuva/tirada)</b>, conservarás este stat intacto mientras buscas el segundo.' : 'Si decides seguir buscando el segundo stat meta, <b>puedes bloquear este stat (Trait Locking) pagando 7.000 Kuva por tirada</b> para asegurar que no se pierda.'}`;
-      } else if (pctOfMax >= 68) {
-        verdictClass = 'verdict-mid';
-        verdictBadge = '⚖️ RANGO MEDIO / JUGABLE';
-        verdictText = `Tu valor de <b>${userVal}${unit}</b> es aceptable pero está lejos del tope de <b>${statData.max.toFixed(1)}${unit}</b>. Si el arma es tu favorita y tienes Kuva de sobra, puedes buscar un roll más cercano a ${statData.avg.toFixed(1)}${unit} - ${statData.max.toFixed(1)}${unit}.`;
-      } else {
-        verdictClass = 'verdict-low';
-        verdictBadge = '📉 ROLL BAJO O SIN NEGATIVO';
-        verdictText = `Tu valor de <b>${userVal}${unit}</b> es muy bajo comparado con el potencial de <b>${statData.max.toFixed(1)}${unit}</b>. Esto suele ocurrir cuando el Riven no tiene negativo (lo que penaliza los positivos) o la tirada tuvo varianza baja (90%).`;
-      }
+        let verdictClass = 'verdict-mid';
+        let verdictBadge = 'RANGO MEDIO / JUGABLE';
+        let adviceText = '';
 
-      resultsBox.innerHTML = `
-        <div class="calc-results-header">
-          <div class="calc-stat-title">
-            <h4>${statData.name} en ${esc(weaponNameEs)}</h4>
-            <span class="badge ok">Disposición ${statData.disp.toFixed(2)}x</span>
-            <span class="badge type">${cfg === '2pos_1neg' ? 'Bono 2+1- (+25%)' : cfg}</span>
-            ${isLocked ? '<span class="badge" style="border-color:var(--gold);color:var(--gold);">🔒 Stat Bloqueado (7.000 Kuva)</span>' : ''}
-          </div>
-          <div class="calc-verdict-badge ${verdictClass}">${verdictBadge}</div>
-        </div>
+        if (pctOfMax >= 93) {
+          verdictClass = 'verdict-god';
+          verdictBadge = '🌟 TIRO PERFECTO DE FÁBRICA (95%+)';
+          adviceText = `¡Tirada perfecta! Tu <b>${slot.val}${range.unit}</b> roza el tope absoluto teórico de <b>${range.max.toFixed(1)}${range.unit}</b>. La probabilidad de mejorar este stat con más rerolls es menor al 1.5%.`;
+        } else if (pctOfMax >= 82) {
+          verdictClass = 'verdict-great';
+          verdictBadge = '🔥 EXCELENTE (RANGO S / A+)';
+          adviceText = `Muy alto: tienes el <b>${pctOfMax.toFixed(1)}% del tope teórico</b> (máximo: ${range.max.toFixed(1)}${range.unit}). Rendimiento formidable en Camino de Acero.`;
+        } else if (pctOfMax >= 68) {
+          verdictClass = 'verdict-mid';
+          verdictBadge = '⚖️ RANGO MEDIO / JUGABLE';
+          adviceText = `Tu valor de <b>${slot.val}${range.unit}</b> es aceptable pero está algo lejos del tope de <b>${range.max.toFixed(1)}${range.unit}</b>. Si tienes Kuva de sobra, puedes buscar un valor más cercano al promedio de ${range.avg.toFixed(1)}${range.unit}.`;
+        } else {
+          verdictClass = 'verdict-low';
+          verdictBadge = '📉 ROLL BAJO O RESTRINGIDO';
+          adviceText = `Tu valor de <b>${slot.val}${range.unit}</b> está en la franja baja (tope potencial: ${range.max.toFixed(1)}${range.unit}). Conviene rollear si buscas potenciar el arma al máximo.`;
+        }
 
-        <!-- MEDIDOR DE PERFECCIÓN HOLOGRÁFICO -->
-        <div class="stat-gauge-wrapper">
-          <div class="gauge-labels-row">
-            <span>Mínimo: <b>${statData.min.toFixed(1)}${unit}</b></span>
-            <span>Promedio: <b>${statData.avg.toFixed(1)}${unit}</b></span>
-            <span style="color:#4ade80;">Tope Máximo Teórico: <b>${statData.max.toFixed(1)}${unit}</b></span>
-          </div>
+        return `
+          <div class="calc-slot-card ${isLocked ? 'is-locked' : ''}" id="slot-card-${idx}">
+            <div class="calc-slot-top-bar">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span class="calc-slot-badge ${isNeg ? 'neg' : 'pos'}">
+                  ${isNeg ? '🛡️ NEGATIVO (INOCUO)' : `+ POSITIVO #${idx + 1}`}
+                </span>
+                <h4 style="margin:0;font-size:1.15rem;color:#f0f9ff;text-transform:uppercase;">
+                  ${range.name} en ${esc(weaponNameEs)}
+                </h4>
+                ${isLocked ? '<span class="badge" style="border-color:#fde047;color:#fde047;font-weight:700;">🔒 CANDADO ACTIVO</span>' : ''}
+              </div>
 
-          <div class="stat-gauge-track">
-            <div class="stat-gauge-fill ${verdictClass}" style="width:${pctOfMax.toFixed(1)}%;"></div>
-            <div class="stat-gauge-marker" style="left:${pctOfMax.toFixed(1)}%;">
-              <span class="marker-bubble">${userVal}${unit} (${pctOfMax.toFixed(1)}%)</span>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <button class="slot-lock-label ${isLocked ? 'active' : ''}" data-slot-lock="${idx}" type="button">
+                  ${isLocked ? '🔒 Bloqueado (7.000 Kuva)' : '🔓 Bloquear Atributo'}
+                </button>
+                <div class="calc-verdict-badge ${verdictClass}">${verdictBadge}</div>
+              </div>
+            </div>
+
+            <div class="calc-slot-controls-row">
+              <div class="calc-input-group">
+                <label>Estadística en esta casilla:</label>
+                <select class="calc-select calc-slot-stat" data-slot-idx="${idx}">
+                  ${(isNeg ? negKeys : posKeys).map(k => `
+                    <option value="${k}" ${k === slot.stat ? 'selected' : ''}>
+                      ${isNeg ? '- ' : '+ '}${table[k].name}
+                    </option>
+                  `).join('')}
+                </select>
+              </div>
+
+              <div class="calc-input-group">
+                <label>Introduce el porcentaje de tu Riven:</label>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <input type="number" class="calc-num-input calc-slot-val" data-slot-idx="${idx}" value="${slot.val}" step="0.1">
+                  <span style="font-weight:700;color:var(--cyan);font-size:1.15rem;">${range.unit}</span>
+                </div>
+              </div>
+
+              <div class="calc-input-group" style="text-align:right;">
+                <span class="small muted">Mín: <b>${range.min.toFixed(1)}${range.unit}</b> · Prom: <b>${range.avg.toFixed(1)}${range.unit}</b></span>
+                <span class="small" style="color:#4ade80;font-weight:700;">Tope Máx: ${range.max.toFixed(1)}${range.unit}</span>
+              </div>
+            </div>
+
+            <!-- MEDIDOR VISUAL HOLOGRÁFICO -->
+            <div class="stat-gauge-wrapper" style="margin:12px 0 8px;">
+              <div class="gauge-labels-row">
+                <span>Mínimo: <b>${range.min.toFixed(1)}${range.unit}</b></span>
+                <span>Promedio: <b>${range.avg.toFixed(1)}${range.unit}</b></span>
+                <span style="color:#4ade80;">Tope Máximo Teórico: <b>${range.max.toFixed(1)}${range.unit}</b></span>
+              </div>
+
+              <div class="stat-gauge-track">
+                <div class="stat-gauge-fill ${verdictClass}" style="width:${pctOfMax.toFixed(1)}%;"></div>
+                <div class="stat-gauge-marker" style="left:${pctOfMax.toFixed(1)}%;">
+                  <span class="marker-bubble">${slot.val}${range.unit} (${pctOfMax.toFixed(1)}%)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="calc-verdict-box ${verdictClass}" style="margin-top:4px;padding:10px 14px;">
+              <div class="verdict-icon-symbol" style="font-size:1.25rem;">${isLocked ? '🔒' : '💠'}</div>
+              <div class="verdict-text-content">
+                <p style="font-size:0.86rem;line-height:1.4;">${adviceText}</p>
+              </div>
             </div>
           </div>
-        </div>
+        `;
+      }).join('');
 
-        <!-- CAJA DE VEREDICTO EXPERTO -->
-        <div class="calc-verdict-box ${verdictClass}">
-          <div class="verdict-icon-symbol">${isLocked ? '🔒' : '💠'}</div>
-          <div class="verdict-text-content">
-            <p>${verdictText}</p>
-            ${isLocked ? `
-              <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1);font-size:.82rem;color:#cbd5e1;">
-                <b>💰 Estimación de Kuva con Bloqueo:</b>
-                5 tiradas = 35.000 Kuva · 10 tiradas = 70.000 Kuva · 20 tiradas = 140.000 Kuva.
+      // Renderizar resumen global
+      const avgQuality = slotCount > 0 ? (totalPct / slotCount) : 0;
+      let globalTier = 'TIER B (JUGABLE)';
+      let globalColor = '#38bdf8';
+      if (avgQuality >= 90) {
+        globalTier = '👑 GOD ROLL SUPREMO (TIER S+)';
+        globalColor = 'var(--gold)';
+      } else if (avgQuality >= 80) {
+        globalTier = '🔥 EXCELENTE META (TIER S / A+)';
+        globalColor = '#a855f7';
+      } else if (avgQuality < 65) {
+        globalTier = '📉 TIRADA POR DEBAJO DEL POTENCIAL';
+        globalColor = '#ef4444';
+      }
+
+      const summaryBox = $('#calc-global-summary-box', container);
+      if (summaryBox) {
+        const isAnyLocked = lockedSlotIdx !== -1;
+        summaryBox.innerHTML = `
+          <div class="calc-global-summary">
+            <div>
+              <span class="muted small" style="text-transform:uppercase;letter-spacing:0.8px;">Calidad General de la Tirada:</span>
+              <h3 style="margin:4px 0;font-size:1.6rem;color:${globalColor};">${globalTier}</h3>
+              <p class="muted small" style="margin:0;">
+                Tus estadísticas promedian el <b>${avgQuality.toFixed(1)}% de perfección</b> respecto al límite teórico del juego.
+              </p>
+            </div>
+
+            <div style="background:rgba(0,0,0,0.45);border:1px solid ${isAnyLocked ? '#fde047' : 'rgba(56,189,248,0.3)'};border-radius:14px;padding:14px 18px;min-width:260px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                <span class="small muted">Coste por Reroll:</span>
+                <span class="badge" style="border-color:${isAnyLocked ? '#fde047' : '#38bdf8'};color:${isAnyLocked ? '#fde047' : '#38bdf8'};font-weight:900;">
+                  ${isAnyLocked ? '🔒 7.000 Kuva / Tirada' : '3.500 Kuva / Tirada'}
+                </span>
               </div>
-            ` : ''}
+              <div class="small muted" style="margin-top:8px;line-height:1.4;">
+                ${isAnyLocked ? `
+                  <b style="color:#fef08a;">Candado activo en ${table[slots[lockedSlotIdx]?.stat]?.name || 'atributo'}:</b><br>
+                  5 tiradas = 35.000 Kuva · 10 tiradas = 70.000 Kuva.
+                ` : `
+                  Sin bloqueo activo (coste estándar tras tirada #9):<br>
+                  5 tiradas = 17.500 Kuva · 10 tiradas = 35.000 Kuva.
+                `}
+              </div>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      }
     }
 
     container.addEventListener('change', (e) => {
-      if (e.target.matches('#calc-cfg-select, #calc-stat-select, #calc-lock-toggle')) updateCalculator();
-    });
-    container.addEventListener('input', (e) => {
-      if (e.target.id === 'calc-user-val') updateCalculator();
+      if (e.target.id === 'calc-cfg-select') {
+        currentCfg = e.target.value;
+        renderSlots();
+      } else if (e.target.classList.contains('calc-slot-stat')) {
+        const idx = parseInt(e.target.dataset.slotIdx, 10);
+        if (slots[idx]) {
+          slots[idx].stat = e.target.value;
+          slots[idx].val = null; // reset to new avg
+          renderSlots();
+        }
+      }
     });
 
-    updateCalculator();
+    container.addEventListener('input', (e) => {
+      if (e.target.classList.contains('calc-slot-val')) {
+        const idx = parseInt(e.target.dataset.slotIdx, 10);
+        if (slots[idx]) {
+          slots[idx].val = parseFloat(e.target.value) || 0;
+          renderSlots();
+        }
+      }
+    });
+
+    container.addEventListener('click', (e) => {
+      const lockBtn = e.target.closest('[data-slot-lock]');
+      if (lockBtn) {
+        const idx = parseInt(lockBtn.dataset.slotLock, 10);
+        lockedSlotIdx = (lockedSlotIdx === idx) ? -1 : idx; // toggle
+        renderSlots();
+      }
+    });
+
+    renderSlots();
   }
 
   // ==========================================================================
