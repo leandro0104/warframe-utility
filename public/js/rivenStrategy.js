@@ -26,81 +26,81 @@ export const POPULAR_RIVEN_WEAPONS = [
 // ============================================================================
 export const BASE_RIVEN_STATS = {
   rifle: {
-    multishot: { name: 'Multidisparo', base: 90, unit: '%', isMetaPos: true },
-    critical_chance: { name: 'Probabilidad Crítica', base: 150, unit: '%', isMetaPos: true },
-    critical_damage: { name: 'Daño Crítico', base: 120, unit: '%', isMetaPos: true },
-    damage: { name: 'Daño', base: 165, unit: '%', isMetaPos: true },
-    fire_rate: { name: 'Cadencia de Fuego', base: 60, unit: '%', isMetaPos: true },
-    toxin: { name: 'Toxina', base: 90, unit: '%', isMetaPos: true },
-    heat: { name: 'Calor', base: 90, unit: '%', isMetaPos: true },
-    cold: { name: 'Frío', base: 90, unit: '%', isMetaPos: false },
-    electricity: { name: 'Electricidad', base: 90, unit: '%', isMetaPos: false },
-    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: false },
-    punch_through: { name: 'Atravesar', base: 2.7, unit: 'm', isMetaPos: false },
-    reload_speed: { name: 'Velocidad de Recarga', base: 50, unit: '%', isMetaPos: false },
-    magazine_capacity: { name: 'Capacidad de Cargador', base: 50, unit: '%', isMetaPos: false },
-    zoom: { name: 'Zoom (Negativo Ideal)', base: 50, unit: '%', isHarmlessNeg: true },
-    recoil: { name: 'Retroceso (Negativo Inofensivo)', base: 90, unit: '%', isHarmlessNeg: true },
-    damage_vs_infested: { name: 'Daño vs Infestados (Negativo Inocuo)', base: 45, unit: '%', isHarmlessNeg: true },
-    ammo_maximum: { name: 'Munición Máxima (Negativo Leve)', base: 50, unit: '%', isHarmlessNeg: true }
+    multishot: { name: 'Multidisparo', base: 90, unit: '%', isMetaPos: true, tier: 'god', note: 'Top 1 Multiplicador de Proyectiles' },
+    critical_damage: { name: 'Daño Crítico', base: 120, unit: '%', isMetaPos: true, tier: 'god', note: 'Top 1 Daño Crítico' },
+    critical_chance: { name: 'Probabilidad Crítica', base: 150, unit: '%', isMetaPos: true, tier: 'meta', note: 'Críticos Naranjas y Rojos' },
+    damage: { name: 'Daño', base: 165, unit: '%', isMetaPos: true, tier: 'meta', note: 'Daño Base Global' },
+    fire_rate: { name: 'Cadencia de Fuego', base: 60, unit: '%', isMetaPos: true, tier: 'meta', note: 'DPS y Estado Rápido' },
+    toxin: { name: 'Toxina', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Crea Viral Elemental' },
+    heat: { name: 'Calor', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Reduce Armadura -50%' },
+    cold: { name: 'Frío', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Multiplicador Crítico' },
+    electricity: { name: 'Electricidad', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Corrosivo / Radiación' },
+    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Procs de Estado' },
+    punch_through: { name: 'Atravesar', base: 2.7, unit: 'm', isMetaPos: false, tier: 'good', note: 'Multitudes' },
+    reload_speed: { name: 'Velocidad de Recarga', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Comodidad' },
+    magazine_capacity: { name: 'Capacidad de Cargador', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Cargador Extendido' },
+    zoom: { name: 'Zoom', base: 50, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'El mejor negativo: Cero penalización de DPS' },
+    recoil: { name: 'Retroceso', base: 90, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Imperceptible en ráfagas' },
+    damage_vs_infested: { name: 'Daño vs Infestados', base: 45, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo inofensivo' },
+    ammo_maximum: { name: 'Munición Máxima', base: 50, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo leve' }
   },
   pistol: {
-    multishot: { name: 'Multidisparo', base: 120, unit: '%', isMetaPos: true },
-    critical_chance: { name: 'Probabilidad Crítica', base: 150, unit: '%', isMetaPos: true },
-    critical_damage: { name: 'Daño Crítico', base: 90, unit: '%', isMetaPos: true },
-    damage: { name: 'Daño', base: 220, unit: '%', isMetaPos: true },
-    fire_rate: { name: 'Cadencia de Fuego', base: 75, unit: '%', isMetaPos: true },
-    toxin: { name: 'Toxina', base: 90, unit: '%', isMetaPos: true },
-    heat: { name: 'Calor', base: 90, unit: '%', isMetaPos: true },
-    cold: { name: 'Frío', base: 90, unit: '%', isMetaPos: false },
-    electricity: { name: 'Electricidad', base: 90, unit: '%', isMetaPos: false },
-    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: false },
-    punch_through: { name: 'Atravesar', base: 2.7, unit: 'm', isMetaPos: false },
-    reload_speed: { name: 'Velocidad de Recarga', base: 50, unit: '%', isMetaPos: false },
-    magazine_capacity: { name: 'Capacidad de Cargador', base: 50, unit: '%', isMetaPos: false },
-    zoom: { name: 'Zoom (Negativo Ideal)', base: 50, unit: '%', isHarmlessNeg: true },
-    recoil: { name: 'Retroceso (Negativo Inofensivo)', base: 90, unit: '%', isHarmlessNeg: true },
-    damage_vs_infested: { name: 'Daño vs Infestados (Negativo Inocuo)', base: 45, unit: '%', isHarmlessNeg: true },
-    ammo_maximum: { name: 'Munición Máxima (Negativo Leve)', base: 50, unit: '%', isHarmlessNeg: true }
+    multishot: { name: 'Multidisparo', base: 120, unit: '%', isMetaPos: true, tier: 'god', note: 'Top 1 Multiplicador de Balas' },
+    critical_damage: { name: 'Daño Crítico', base: 90, unit: '%', isMetaPos: true, tier: 'god', note: 'Top 1 Daño Crítico' },
+    critical_chance: { name: 'Probabilidad Crítica', base: 150, unit: '%', isMetaPos: true, tier: 'meta', note: 'Críticos Naranjas y Rojos' },
+    fire_rate: { name: 'Cadencia de Fuego', base: 75, unit: '%', isMetaPos: true, tier: 'meta', note: 'Disparo Ultrarrápido' },
+    damage: { name: 'Daño', base: 220, unit: '%', isMetaPos: true, tier: 'meta', note: 'Daño Base' },
+    toxin: { name: 'Toxina', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Viral Elemental' },
+    heat: { name: 'Calor', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Reduce Armadura' },
+    cold: { name: 'Frío', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Frío Elemental' },
+    electricity: { name: 'Electricidad', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Corrosivo' },
+    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Procs' },
+    punch_through: { name: 'Atravesar', base: 2.7, unit: 'm', isMetaPos: false, tier: 'good', note: 'Atraviesa' },
+    reload_speed: { name: 'Velocidad de Recarga', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Recarga' },
+    magazine_capacity: { name: 'Capacidad de Cargador', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Cargador' },
+    zoom: { name: 'Zoom', base: 50, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'El mejor negativo: Cero penalización' },
+    recoil: { name: 'Retroceso', base: 90, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo inofensivo' },
+    damage_vs_infested: { name: 'Daño vs Infestados', base: 45, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo inofensivo' },
+    ammo_maximum: { name: 'Munición Máxima', base: 50, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo leve' }
   },
   shotgun: {
-    multishot: { name: 'Multidisparo', base: 120, unit: '%', isMetaPos: true },
-    critical_chance: { name: 'Probabilidad Crítica', base: 90, unit: '%', isMetaPos: true },
-    critical_damage: { name: 'Daño Crítico', base: 90, unit: '%', isMetaPos: true },
-    damage: { name: 'Daño', base: 165, unit: '%', isMetaPos: true },
-    fire_rate: { name: 'Cadencia de Fuego', base: 90, unit: '%', isMetaPos: true },
-    toxin: { name: 'Toxina', base: 90, unit: '%', isMetaPos: true },
-    heat: { name: 'Calor', base: 90, unit: '%', isMetaPos: true },
-    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: true },
-    reload_speed: { name: 'Velocidad de Recarga', base: 50, unit: '%', isMetaPos: false },
-    zoom: { name: 'Zoom (Negativo Ideal)', base: 50, unit: '%', isHarmlessNeg: true },
-    recoil: { name: 'Retroceso (Negativo Inofensivo)', base: 90, unit: '%', isHarmlessNeg: true },
-    damage_vs_infested: { name: 'Daño vs Infestados (Negativo Inocuo)', base: 45, unit: '%', isHarmlessNeg: true }
+    multishot: { name: 'Multidisparo', base: 120, unit: '%', isMetaPos: true, tier: 'god', note: 'Multiplica perdigones brutos' },
+    critical_damage: { name: 'Daño Crítico', base: 90, unit: '%', isMetaPos: true, tier: 'god', note: 'Top 1 Daño Crítico' },
+    critical_chance: { name: 'Probabilidad Crítica', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Críticos Consistentes' },
+    damage: { name: 'Daño', base: 165, unit: '%', isMetaPos: true, tier: 'meta', note: 'Daño Base' },
+    fire_rate: { name: 'Cadencia de Fuego', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Cadencia Brutal' },
+    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Lluvia de Estados' },
+    toxin: { name: 'Toxina', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Viral' },
+    heat: { name: 'Calor', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Calor' },
+    reload_speed: { name: 'Velocidad de Recarga', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Recarga Rápida' },
+    zoom: { name: 'Zoom', base: 50, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'El mejor negativo' },
+    recoil: { name: 'Retroceso', base: 90, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo inofensivo' },
+    damage_vs_infested: { name: 'Daño vs Infestados', base: 45, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo inofensivo' }
   },
   melee: {
-    damage: { name: 'Daño Cuerpo a Cuerpo', base: 165, unit: '%', isMetaPos: true },
-    critical_damage: { name: 'Daño Crítico', base: 90, unit: '%', isMetaPos: true },
-    critical_chance: { name: 'Probabilidad Crítica', base: 90, unit: '%', isMetaPos: true },
-    attack_speed: { name: 'Velocidad de Ataque', base: 55, unit: '%', isMetaPos: true },
-    range: { name: 'Alcance', base: 120, unit: '%', isMetaPos: true },
-    initial_combo: { name: 'Combo Inicial', base: 25, unit: '', isMetaPos: true },
-    heavy_attack_efficiency: { name: 'Eficiencia Ataque Pesado', base: 75, unit: '%', isMetaPos: false },
-    toxin: { name: 'Toxina', base: 90, unit: '%', isMetaPos: true },
-    heat: { name: 'Calor', base: 90, unit: '%', isMetaPos: true },
-    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: false },
-    combo_duration: { name: 'Duración de Combo', base: 8, unit: 's', isMetaPos: false },
-    finisher_damage: { name: 'Daño de Remate (Negativo Inocuo)', base: 120, unit: '%', isHarmlessNeg: true },
-    slide_attack_critical_chance: { name: 'Crítico al Deslizar (Negativo Inocuo)', base: 90, unit: '%', isHarmlessNeg: true },
-    damage_vs_infested: { name: 'Daño vs Infestados (Negativo Inocuo)', base: 45, unit: '%', isHarmlessNeg: true }
+    critical_damage: { name: 'Daño Crítico', base: 90, unit: '%', isMetaPos: true, tier: 'god', note: 'Multiplicador Crítico Rey' },
+    range: { name: 'Alcance', base: 120, unit: '%', isMetaPos: true, tier: 'god', note: 'Área de Impacto Masiva' },
+    attack_speed: { name: 'Velocidad de Ataque', base: 55, unit: '%', isMetaPos: true, tier: 'god', note: 'Fluidez y Animaciones' },
+    initial_combo: { name: 'Combo Inicial', base: 25, unit: '', isMetaPos: true, tier: 'meta', note: 'Imprescindible Stat-Stick y Ataque Pesado' },
+    critical_chance: { name: 'Probabilidad Crítica', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Críticos Rojos' },
+    damage: { name: 'Daño Cuerpo a Cuerpo', base: 165, unit: '%', isMetaPos: true, tier: 'meta', note: 'Daño Base' },
+    toxin: { name: 'Toxina', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Viral Elemental' },
+    heat: { name: 'Calor', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Reducción de Armadura' },
+    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Procs' },
+    heavy_attack_efficiency: { name: 'Eficiencia Ataque Pesado', base: 75, unit: '%', isMetaPos: false, tier: 'good', note: 'Ataques Pesados' },
+    combo_duration: { name: 'Duración de Combo', base: 8, unit: 's', isMetaPos: false, tier: 'good', note: 'Mantiene Combo' },
+    finisher_damage: { name: 'Daño de Remate', base: 120, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo Inofensivo' },
+    slide_attack_critical_chance: { name: 'Crítico al Deslizar', base: 90, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo Inofensivo' },
+    damage_vs_infested: { name: 'Daño vs Infestados', base: 45, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo Inofensivo' }
   },
   archgun: {
-    multishot: { name: 'Multidisparo', base: 60, unit: '%', isMetaPos: true },
-    critical_chance: { name: 'Probabilidad Crítica', base: 100, unit: '%', isMetaPos: true },
-    critical_damage: { name: 'Daño Crítico', base: 80, unit: '%', isMetaPos: true },
-    damage: { name: 'Daño', base: 100, unit: '%', isMetaPos: true },
-    fire_rate: { name: 'Cadencia de Fuego', base: 60, unit: '%', isMetaPos: true },
-    toxin: { name: 'Toxina', base: 60, unit: '%', isMetaPos: true },
-    heat: { name: 'Calor', base: 60, unit: '%', isMetaPos: true }
+    multishot: { name: 'Multidisparo', base: 60, unit: '%', isMetaPos: true, tier: 'god', note: 'Proyectiles' },
+    critical_damage: { name: 'Daño Crítico', base: 80, unit: '%', isMetaPos: true, tier: 'god', note: 'Crítico' },
+    critical_chance: { name: 'Probabilidad Crítica', base: 100, unit: '%', isMetaPos: true, tier: 'meta', note: 'Prob. Crítica' },
+    damage: { name: 'Daño', base: 100, unit: '%', isMetaPos: true, tier: 'meta', note: 'Daño Base' },
+    fire_rate: { name: 'Cadencia de Fuego', base: 60, unit: '%', isMetaPos: true, tier: 'meta', note: 'Cadencia' },
+    toxin: { name: 'Toxina', base: 60, unit: '%', isMetaPos: true, tier: 'meta', note: 'Viral' },
+    heat: { name: 'Calor', base: 60, unit: '%', isMetaPos: true, tier: 'meta', note: 'Calor' }
   }
 };
 
@@ -219,7 +219,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
     mr: 4
   };
 
-  let activeTab = 'strategy'; // 'strategy' | 'calculator' | 'builder' | 'market'
+  let activeTab = 'calculator'; // 'calculator' | 'market' | 'strategy'
 
   function getWeaponCategoryKey(rt) {
     if (rt === 'shotgun') return 'shotgun';
@@ -243,8 +243,8 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       <section class="page-head">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
           <div>
-            <h1>🌀 Estrategia Maestra para Agrietados (God Rolls)</h1>
-            <p>Guía táctica interactiva para conseguir el Riven perfecto: optimización matemática de Kuva, tope máximo de estadísticas (¿139% o 150%?), el mito del bloqueo de stats y cuándo usar el transmutador/empalme.</p>
+            <h1>🌀 Simulador Holográfico & Calculadora de Rivens</h1>
+            <p>Calculadora visual en tiempo real para optimizar tu Agrietado: rangos exactos por disposición, tope teórico (¿139% o 150%?), Candado de atributos (Trait Locking) y cotización de mercado.</p>
           </div>
           <button class="btn ghost" id="btn-quick-market" style="border-color:#38bdf8;color:#38bdf8;">🛒 Ver Subastas en Vivo</button>
         </div>
@@ -263,13 +263,15 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       </div>
 
       <!-- BUSCADOR DE ARMA -->
-      <div class="toolbar" style="margin-top:12px;">
-        <input type="search" id="riven-weapon-search" placeholder="Buscar entre las 420 armas de Warframe (ej. Torid, Burston, Dual Toxocyst, Magistar, Latron, Hate, Felarx…)" value="${w.slug === initialSlug ? '' : esc(weaponNameEs)}" autocomplete="off">
+      <div class="toolbar" style="margin-top:12px;position:relative;">
+        <div style="position:relative;flex:1;min-width:280px;">
+          <input type="search" id="riven-weapon-search" placeholder="🔍 Escribe para buscar arma (ej. Torid, Boar, Burston, Dual Toxocyst, Magistar, Latron, Felarx…)" value="" autocomplete="off">
+          <div id="riven-search-dropdown" class="riven-search-dropdown hidden"></div>
+        </div>
         <div class="seg" id="riven-view-tabs">
-          <button data-tab="strategy" class="${activeTab === 'strategy' ? 'on' : ''}">🎯 Estrategia God Roll</button>
-          <button data-tab="calculator" class="${activeTab === 'calculator' ? 'on' : ''}">🧮 Calculadora de Topes</button>
-          <button data-tab="builder" class="${activeTab === 'builder' ? 'on' : ''}">🔬 Inspector de Tirada</button>
+          <button data-tab="calculator" class="${activeTab === 'calculator' ? 'on' : ''}">🧮 Calculadora & Simulador God Roll</button>
           <button data-tab="market" class="${activeTab === 'market' ? 'on' : ''}">🛒 Subastas en Vivo</button>
+          <button data-tab="strategy" class="${activeTab === 'strategy' ? 'on' : ''}">💠 Guía Transmutador & Kuva</button>
         </div>
       </div>
 
@@ -325,14 +327,12 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
     const area = $('#riven-tab-content', root);
     if (!area) return;
 
-    if (activeTab === 'strategy') {
-      renderStrategyTab(area);
-    } else if (activeTab === 'calculator') {
+    if (activeTab === 'calculator') {
       renderCalculatorTab(area);
-    } else if (activeTab === 'builder') {
-      renderBuilderTab(area);
     } else if (activeTab === 'market') {
       renderMarketTab(area);
+    } else if (activeTab === 'strategy') {
+      renderStrategyTab(area);
     }
   }
 
@@ -471,17 +471,65 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
     `;
   }
 
+  // Helper para generar opciones agrupadas y destacadas con estrellas
+  function renderStatSelectOptions(table, isNeg, selectedKey) {
+    if (isNeg) {
+      const harmless = Object.entries(table).filter(([k, v]) => v.isHarmlessNeg);
+      return `
+        <optgroup label="🛡️ NEGATIVOS INOCUOS (LOS MEJORES · ACTIVAN BONO +25%)">
+          ${harmless.map(([k, s]) => `
+            <option value="${k}" ${k === selectedKey ? 'selected' : ''}>
+              ⭐ - ${s.name} ${s.note ? `(${s.note})` : ''}
+            </option>
+          `).join('')}
+        </optgroup>
+        <optgroup label="⚠️ OTROS NEGATIVOS (PELIGROSOS)">
+          <option value="fatal_crit" ${selectedKey === 'fatal_crit' ? 'selected' : ''}>☠️ - Daño Crítico (Fatal: arruina la build)</option>
+          <option value="fatal_multi" ${selectedKey === 'fatal_multi' ? 'selected' : ''}>☠️ - Multidisparo (Fatal: arruina la build)</option>
+          <option value="fatal_dmg" ${selectedKey === 'fatal_dmg' ? 'selected' : ''}>☠️ - Daño Total (Fatal: arruina la build)</option>
+        </optgroup>
+      `;
+    }
+
+    const godStats = Object.entries(table).filter(([k, v]) => !v.isHarmlessNeg && v.tier === 'god');
+    const metaStats = Object.entries(table).filter(([k, v]) => !v.isHarmlessNeg && v.tier === 'meta');
+    const goodStats = Object.entries(table).filter(([k, v]) => !v.isHarmlessNeg && v.tier === 'good');
+
+    return `
+      <optgroup label="👑 ATRIBUTOS TOP GOD ROLL (Tier S+ · Máxima Prioridad)">
+        ${godStats.map(([k, s]) => `
+          <option value="${k}" ${k === selectedKey ? 'selected' : ''}>
+            ⭐ + ${s.name} ${s.note ? `— ${s.note}` : ''}
+          </option>
+        `).join('')}
+      </optgroup>
+      <optgroup label="✨ ATRIBUTOS META ALTOS (Tier S)">
+        ${metaStats.map(([k, s]) => `
+          <option value="${k}" ${k === selectedKey ? 'selected' : ''}>
+            ✨ + ${s.name} ${s.note ? `— ${s.note}` : ''}
+          </option>
+        `).join('')}
+      </optgroup>
+      ${goodStats.length > 0 ? `
+        <optgroup label="⚖️ ATRIBUTOS SITUACIONALES / SECUNDARIOS">
+          ${goodStats.map(([k, s]) => `
+            <option value="${k}" ${k === selectedKey ? 'selected' : ''}>
+              🔹 + ${s.name} ${s.note ? `— ${s.note}` : ''}
+            </option>
+          `).join('')}
+        </optgroup>
+      ` : ''}
+    `;
+  }
+
   // ==========================================================================
-  // PESTAÑA 2: CALCULADORA DE TOPES Y RANGOS MULTI-ESTADÍSTICA
+  // PESTAÑA 2: CALCULADORA & SIMULADOR HOLOGRÁFICO GOD ROLL
   // ==========================================================================
   function renderCalculatorTab(container) {
     const w = currentWeapon;
     const weaponNameEs = t(w.n, w.n);
     const catKey = getWeaponCategoryKey(w.rt);
     const table = BASE_RIVEN_STATS[catKey] || BASE_RIVEN_STATS.rifle;
-    const statKeys = Object.keys(table);
-    const posKeys = statKeys.filter(k => !table[k].isHarmlessNeg);
-    const negKeys = statKeys.filter(k => table[k].isHarmlessNeg);
 
     let currentCfg = '3pos_1neg';
     let lockedSlotIdx = -1; // -1 = sin candado
@@ -504,7 +552,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       } else if (cfg === '3pos_1neg') {
         const p1 = slots[0] || { id: 0, type: 'pos', stat: 'multishot', val: null };
         const p2 = slots[1] || { id: 1, type: 'pos', stat: 'critical_damage', val: null };
-        const p3 = slots[2] && slots[2].type === 'pos' ? slots[2] : { id: 2, type: 'pos', stat: 'damage', val: null };
+        const p3 = slots[2] && slots[2].type === 'pos' ? slots[2] : { id: 2, type: 'pos', stat: 'critical_chance', val: null };
         const n1 = slots.find(s => s.type === 'neg') || { id: 3, type: 'neg', stat: 'zoom', val: null };
         slots = [p1, p2, p3, n1];
       } else if (cfg === '2pos_0neg') {
@@ -516,56 +564,75 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
         slots = [
           slots[0] || { id: 0, type: 'pos', stat: 'multishot', val: null },
           slots[1] || { id: 1, type: 'pos', stat: 'critical_damage', val: null },
-          slots[2] && slots[2].type === 'pos' ? slots[2] : { id: 2, type: 'pos', stat: 'damage', val: null }
+          slots[2] && slots[2].type === 'pos' ? slots[2] : { id: 2, type: 'pos', stat: 'critical_chance', val: null }
         ];
       }
       if (lockedSlotIdx >= slots.length) lockedSlotIdx = -1;
     }
 
     container.innerHTML = `
-      <article class="card wide">
-        <header>
+      <!-- CARD DESTACADO: FÓRMULA MATEMÁTICA DEL GOD ROLL -->
+      <div class="riven-formula-highlight">
+        <div class="rfh-left">
+          <span class="rfh-icon">🧬</span>
           <div>
-            <h3>🧮 Calculadora de Rangos y Topes Máximos para ${esc(weaponNameEs)}</h3>
-            <p class="muted small">Evalúa todas las estadísticas de tu Riven simultáneamente hacia abajo. Comprueba si cada porcentaje está cerca del límite teórico del juego o si vale la pena rollear más.</p>
-          </div>
-        </header>
-
-        <div class="calc-controls-grid" style="grid-template-columns:1fr auto;align-items:center;">
-          <div class="calc-input-group">
-            <label>1. Tipo de Tirada en el Riven (Estructura de Atributos):</label>
-            <select id="calc-cfg-select" class="calc-select" style="font-size:1rem;font-weight:700;">
-              <option value="3pos_1neg" ${currentCfg === '3pos_1neg' ? 'selected' : ''}>⚔️ 3 Positivos + 1 Negativo (Bono +20% - 4 Estadísticas)</option>
-              <option value="2pos_1neg" ${currentCfg === '2pos_1neg' ? 'selected' : ''}>👑 2 Positivos + 1 Negativo (God Roll Puro - Bono +25% - 3 Estadísticas)</option>
-              <option value="2pos_0neg" ${currentCfg === '2pos_0neg' ? 'selected' : ''}>⚖️ 2 Positivos sin Negativo (Estándar - 2 Estadísticas)</option>
-              <option value="3pos_0neg" ${currentCfg === '3pos_0neg' ? 'selected' : ''}>📉 3 Positivos sin Negativo (Valores Bajos - 3 Estadísticas)</option>
-            </select>
-          </div>
-
-          <div class="calc-input-group" style="text-align:right;">
-            <label style="color:#94a3b8;">Disposición del Arma:</label>
-            <span class="badge ok" style="font-size:0.95rem;padding:6px 12px;">Disposición ${w.dis.toFixed(2)}x</span>
+            <h4>Fórmula Matemática del God Roll: ¿Por qué el Negativo Inocuo activa el Multiplicador +25%?</h4>
+            <p>
+              Un Riven sin negativo sufre una penalización oculta de hasta <b>-35%</b> en sus valores. Para alcanzar el <b>tope máximo del juego</b>, el Riven debe tener un <b>Negativo Inocuo</b> (como <i>-Zoom</i> o <i>-Retroceso</i>). Con el <b>Candado 🔒 (Trait Locking)</b> puedes asegurar tu mejor estadística por <b>7.000 Kuva por ciclo</b>.
+            </p>
           </div>
         </div>
+        <div class="rfh-badges">
+          <span class="rfh-pill s-tier">👑 2+ 1- : +25% Bono Máximo</span>
+          <span class="rfh-pill a-tier">⚔️ 3+ 1- : +20% Bono Versátil</span>
+          <span class="rfh-pill kuva-pill">🔒 Candado: 7.000 Kuva / ciclo</span>
+        </div>
+      </div>
 
-        <!-- CONTENEDOR DE SLOTS APILADOS HACIA ABAJO -->
-        <div id="calc-slots-wrapper" class="calc-slots-container"></div>
+      <!-- ESTRUCTURA SPLIT EN 2 COLUMNAS (Aprovecha todo el ancho) -->
+      <div class="riven-calc-split-container">
+        <!-- COLUMNA IZQUIERDA: CARTA HOLOGRÁFICA GRANDE Y EN VIVO -->
+        <div class="riven-calc-card-col">
+          <div id="calc-hologram-card-box" class="sticky-card"></div>
+        </div>
 
-        <!-- PANEL DE RESUMEN GLOBAL DEL RIVEN -->
-        <div id="calc-global-summary-box"></div>
-      </article>
+        <!-- COLUMNA DERECHA: CONFIGURACIÓN Y CASILLAS HACIA ABAJO -->
+        <div class="riven-calc-controls-col">
+          <div class="calc-cfg-header-card">
+            <div class="calc-input-group" style="flex:1;">
+              <label>1. Tipo de Tirada en el Riven (Estructura de Atributos):</label>
+              <select id="calc-cfg-select" class="calc-select" style="font-size:1.05rem;font-weight:700;">
+                <option value="3pos_1neg" ${currentCfg === '3pos_1neg' ? 'selected' : ''}>⚔️ 3 Positivos + 1 Negativo (Bono +20% · 4 Estadísticas)</option>
+                <option value="2pos_1neg" ${currentCfg === '2pos_1neg' ? 'selected' : ''}>👑 2 Positivos + 1 Negativo (God Roll Puro · Bono +25% · 3 Estadísticas)</option>
+                <option value="2pos_0neg" ${currentCfg === '2pos_0neg' ? 'selected' : ''}>⚖️ 2 Positivos sin Negativo (2 Estadísticas)</option>
+                <option value="3pos_0neg" ${currentCfg === '3pos_0neg' ? 'selected' : ''}>📉 3 Positivos sin Negativo (Valores Bajos · 3 Estadísticas)</option>
+              </select>
+            </div>
+            <div class="calc-input-group" style="text-align:right;">
+              <label style="color:#94a3b8;">Disposición del Arma:</label>
+              <span class="badge ok" style="font-size:1rem;padding:6px 14px;">Disposición ${w.dis.toFixed(2)}x</span>
+            </div>
+          </div>
+
+          <!-- CONTENEDOR DE SLOTS APILADOS -->
+          <div id="calc-slots-wrapper" class="calc-slots-container"></div>
+        </div>
+      </div>
     `;
 
     function renderSlots() {
       syncSlotsForCfg(currentCfg);
       const wrapper = $('#calc-slots-wrapper', container);
-      if (!wrapper) return;
+      const cardBox = $('#calc-hologram-card-box', container);
+      if (!wrapper || !cardBox) return;
 
       let totalPct = 0;
       let slotCount = slots.length;
+      const computedSlotData = [];
 
       wrapper.innerHTML = slots.map((slot, idx) => {
         const isNeg = slot.type === 'neg';
+        const isFatalNeg = slot.stat.startsWith('fatal_');
         const range = calculateRivenStatRange(catKey, w.dis, slot.stat, currentCfg, isNeg);
 
         if (slot.val === null || isNaN(slot.val)) {
@@ -580,7 +647,11 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
         let verdictBadge = 'RANGO MEDIO / JUGABLE';
         let adviceText = '';
 
-        if (pctOfMax >= 93) {
+        if (isFatalNeg) {
+          verdictClass = 'verdict-low';
+          verdictBadge = '☠️ NEGATIVO FATAL';
+          adviceText = `Este negativo anula por completo la viabilidad del arma en combate. Reroll obligatorio.`;
+        } else if (pctOfMax >= 93) {
           verdictClass = 'verdict-god';
           verdictBadge = '🌟 TIRO PERFECTO DE FÁBRICA (95%+)';
           adviceText = `¡Tirada perfecta! Tu <b>${slot.val}${range.unit}</b> roza el tope absoluto teórico de <b>${range.max.toFixed(1)}${range.unit}</b>. La probabilidad de mejorar este stat con más rerolls es menor al 1.5%.`;
@@ -598,16 +669,25 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
           adviceText = `Tu valor de <b>${slot.val}${range.unit}</b> está en la franja baja (tope potencial: ${range.max.toFixed(1)}${range.unit}). Conviene rollear si buscas potenciar el arma al máximo.`;
         }
 
+        computedSlotData.push({
+          slot,
+          range,
+          isNeg,
+          isLocked,
+          pctOfMax,
+          val: slot.val
+        });
+
         return `
           <div class="calc-slot-card ${isLocked ? 'is-locked' : ''}" id="slot-card-${idx}">
             <div class="calc-slot-top-bar">
               <div class="calc-slot-title-wrap">
                 <span class="calc-slot-badge ${isNeg ? 'neg' : 'pos'}">
-                  ${isNeg ? '🛡️ NEGATIVO (INOCUO)' : `+ POSITIVO #${idx + 1}`}
+                  ${isNeg ? '🛡️ NEGATIVO' : `+ POSITIVO #${idx + 1}`}
                 </span>
-                <h4 style="margin:0;font-size:1.15rem;color:#f0f9ff;text-transform:uppercase;letter-spacing:0.5px;">
+                <span class="calc-slot-stat-name">
                   ${range.name} en ${esc(weaponNameEs)}
-                </h4>
+                </span>
                 ${isLocked ? '<span class="badge" style="border-color:#fde047;color:#fde047;font-weight:700;">🔒 CANDADO ACTIVO</span>' : ''}
               </div>
 
@@ -615,24 +695,20 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
                 <button type="button" class="btn-riven-lock ${isLocked ? 'locked' : ''}" data-slot-lock="${idx}">
                   <span>${isLocked ? '🔒 Bloqueado (7.000 Kuva)' : '🔓 Bloquear Atributo'}</span>
                 </button>
-                <div class="calc-verdict-badge ${verdictClass}">${verdictBadge}</div>
+                <span class="calc-verdict-badge ${verdictClass}">${verdictBadge}</span>
               </div>
             </div>
 
             <div class="calc-slot-controls-row">
               <div class="calc-field-col">
-                <label class="calc-mini-label">Estadística en esta casilla:</label>
+                <label class="calc-mini-label">Selecciona el Atributo (Con ⭐ los mejores del juego):</label>
                 <select class="calc-select calc-slot-stat" data-slot-idx="${idx}">
-                  ${(isNeg ? negKeys : posKeys).map(k => `
-                    <option value="${k}" ${k === slot.stat ? 'selected' : ''}>
-                      ${isNeg ? '- ' : '+ '}${table[k].name}
-                    </option>
-                  `).join('')}
+                  ${renderStatSelectOptions(table, isNeg, slot.stat)}
                 </select>
               </div>
 
-              <div class="calc-field-col">
-                <label class="calc-mini-label">Introduce el porcentaje de tu Riven:</label>
+              <div class="calc-field-col" style="max-width:220px;">
+                <label class="calc-mini-label">Tu Porcentaje en el Riven:</label>
                 <div class="calc-input-addon">
                   <input type="number" class="calc-num-input calc-slot-val" data-slot-idx="${idx}" value="${slot.val}" step="0.1">
                   <span class="calc-addon-unit">${range.unit}</span>
@@ -656,6 +732,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
               </div>
             </div>
 
+            <!-- TEXTO DE DETALLE Y VEREDICTO EXPERTO -->
             <div class="calc-verdict-box ${verdictClass}">
               <div class="verdict-icon-symbol">${isLocked ? '🔒' : '💠'}</div>
               <div class="verdict-text-content">
@@ -666,54 +743,94 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
         `;
       }).join('');
 
-      // Renderizar resumen global
+      // Calcular métricas globales del Riven
       const avgQuality = slotCount > 0 ? (totalPct / slotCount) : 0;
       let globalTier = 'TIER B (JUGABLE)';
       let globalColor = '#38bdf8';
-      if (avgQuality >= 90) {
-        globalTier = '👑 GOD ROLL SUPREMO (TIER S+)';
-        globalColor = 'var(--gold)';
-      } else if (avgQuality >= 80) {
-        globalTier = '🔥 EXCELENTE META (TIER S / A+)';
-        globalColor = '#a855f7';
-      } else if (avgQuality < 65) {
-        globalTier = '📉 TIRADA POR DEBAJO DEL POTENCIAL';
+      let priceEst = `${estimateRivenMarketPrices(w).unrolledMin} - ${estimateRivenMarketPrices(w).decentMin} PL`;
+
+      const hasFatal = slots.some(s => s.stat.startsWith('fatal_'));
+      if (hasFatal) {
+        globalTier = '☠️ TIER F (NEGATIVO FATAL)';
         globalColor = '#ef4444';
+        priceEst = 'Precio de Chatarra / Unrolled (30 - 80 PL)';
+      } else if (avgQuality >= 90) {
+        globalTier = '👑 TIER S+ (GOD ROLL SUPREMO)';
+        globalColor = 'var(--gold)';
+        priceEst = `${estimateRivenMarketPrices(w).godMin.toLocaleString()} - ${estimateRivenMarketPrices(w).godMax.toLocaleString()}+ PL`;
+      } else if (avgQuality >= 80) {
+        globalTier = '🔥 TIER S (EXCELENTE META)';
+        globalColor = '#a855f7';
+        priceEst = `${Math.round(estimateRivenMarketPrices(w).decentMax * 1.3)} - ${Math.round(estimateRivenMarketPrices(w).godMin * 0.9)} PL`;
+      } else if (avgQuality >= 65) {
+        globalTier = '⚔️ TIER A (JUGABLE / SÓLIDO)';
+        globalColor = '#38bdf8';
+        priceEst = `${estimateRivenMarketPrices(w).decentMin} - ${estimateRivenMarketPrices(w).decentMax} PL`;
       }
 
-      const summaryBox = $('#calc-global-summary-box', container);
-      if (summaryBox) {
-        const isAnyLocked = lockedSlotIdx !== -1;
-        summaryBox.innerHTML = `
-          <div class="calc-global-summary">
-            <div>
-              <span class="muted small" style="text-transform:uppercase;letter-spacing:0.8px;">Calidad General de la Tirada:</span>
-              <h3 style="margin:4px 0;font-size:1.6rem;color:${globalColor};">${globalTier}</h3>
-              <p class="muted small" style="margin:0;">
-                Tus estadísticas promedian el <b>${avgQuality.toFixed(1)}% de perfección</b> respecto al límite teórico del juego.
-              </p>
+      // Nombre dinámico del Riven según afijos
+      const posStatKeys = slots.filter(s => s.type === 'pos').map(s => s.stat);
+      const rivenName = generateRivenName(w.n, posStatKeys);
+      const isAnyLocked = lockedSlotIdx !== -1;
+      const disStars = '●'.repeat(Math.min(5, Math.max(1, Math.round(w.dis)))) + '○'.repeat(Math.max(0, 5 - Math.round(w.dis)));
+
+      // Renderizar la CARTA HOLOGRÁFICA GRANDE en la Columna Izquierda
+      cardBox.innerHTML = `
+        <div class="hologram-riven-card large-riven-card">
+          <div class="riven-card-glow"></div>
+          <div class="riven-card-inner">
+            <div class="riven-card-top">
+              <span class="riven-icon-symbol">🌀</span>
+              <span class="riven-card-title">${esc(rivenName)}</span>
+              <span class="riven-card-pol">🗲</span>
             </div>
 
-            <div style="background:rgba(0,0,0,0.45);border:1px solid ${isAnyLocked ? '#fde047' : 'rgba(56,189,248,0.3)'};border-radius:14px;padding:14px 18px;min-width:260px;">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
-                <span class="small muted">Coste por Reroll:</span>
-                <span class="badge" style="border-color:${isAnyLocked ? '#fde047' : '#38bdf8'};color:${isAnyLocked ? '#fde047' : '#38bdf8'};font-weight:900;">
-                  ${isAnyLocked ? '🔒 7.000 Kuva / Tirada' : '3.500 Kuva / Tirada'}
-                </span>
-              </div>
-              <div class="small muted" style="margin-top:8px;line-height:1.4;">
-                ${isAnyLocked ? `
-                  <b style="color:#fef08a;">Candado activo en ${table[slots[lockedSlotIdx]?.stat]?.name || 'atributo'}:</b><br>
-                  5 tiradas = 35.000 Kuva · 10 tiradas = 70.000 Kuva.
-                ` : `
-                  Sin bloqueo activo (coste estándar tras tirada #9):<br>
-                  5 tiradas = 17.500 Kuva · 10 tiradas = 35.000 Kuva.
-                `}
-              </div>
+            <div class="riven-card-stats-list">
+              ${computedSlotData.map(d => {
+                if (d.isNeg) {
+                  return `
+                    <div class="riven-card-stat-line neg ${d.isLocked ? 'is-locked-stat' : ''}">
+                      ${d.isLocked ? '<span class="lock-indicator" title="Atributo Bloqueado">🔒</span> ' : ''}-${d.val}${d.range.unit} ${d.range.name}
+                    </div>
+                  `;
+                }
+                return `
+                  <div class="riven-card-stat-line pos ${d.isLocked ? 'is-locked-stat' : ''}">
+                    ${d.isLocked ? '<span class="lock-indicator" title="Atributo Bloqueado">🔒</span> ' : ''}+${d.val}${d.range.unit} ${d.range.name}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <div class="riven-card-bottom">
+              <span>MR ${w.mr}</span>
+              <span>${disStars}</span>
+              <span>${isAnyLocked ? '🔒 7.000 Kuva / ciclo' : '3.500 Kuva / ciclo'}</span>
             </div>
           </div>
-        `;
-      }
+        </div>
+
+        <div class="builder-verdict-summary" style="margin-top:14px;width:100%;">
+          <div class="verdict-tier-badge" style="border-color:${globalColor};color:${globalColor};">
+            ${globalTier}
+          </div>
+          <div class="verdict-price-row">
+            <span class="muted small">Valor Estimado en Mercado:</span>
+            <span class="verdict-price-value">${priceEst}</span>
+          </div>
+          <p class="builder-advice-text" style="font-size:0.85rem;margin:4px 0 0;">
+            Promedio de Perfección: <b>${avgQuality.toFixed(1)}%</b> del tope teórico.
+          </p>
+          <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.1);font-size:0.78rem;color:#94a3b8;">
+            ${isAnyLocked ? `
+              <b style="color:#fde047;">🔒 Candado Activo en ${table[slots[lockedSlotIdx]?.stat]?.name || 'atributo'}:</b><br>
+              5 tiradas = 35.000 Kuva · 10 tiradas = 70.000 Kuva.
+            ` : `
+              Coste normal sin candado: 3.500 Kuva por ciclo.
+            `}
+          </div>
+        </div>
+      `;
     }
 
     container.addEventListener('change', (e) => {
@@ -724,7 +841,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
         const idx = parseInt(e.target.dataset.slotIdx, 10);
         if (slots[idx]) {
           slots[idx].stat = e.target.value;
-          slots[idx].val = null; // reset to new avg
+          slots[idx].val = null; // reset to new average
           renderSlots();
         }
       }
@@ -1109,28 +1226,88 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       }
     });
 
-    // Buscador de armas con sugerencias
+    // Buscador de armas con sugerencias interactivas sin autocompletar forzado
     const searchInput = $('#riven-weapon-search', root);
-    if (searchInput) {
-      searchInput.addEventListener('input', debounce((e) => {
+    const dropdown = $('#riven-search-dropdown', root);
+
+    function closeDropdown() {
+      if (dropdown) dropdown.classList.add('hidden');
+    }
+
+    if (searchInput && dropdown) {
+      searchInput.addEventListener('input', (e) => {
         const query = norm(e.target.value.trim());
-        if (!query) return;
+        if (!query) {
+          dropdown.innerHTML = '';
+          dropdown.classList.add('hidden');
+          return;
+        }
 
-        const match = weapons.find(w => {
+        const matches = weapons.filter(w => {
           const es = norm(t(w.n, w.n));
-          return es.startsWith(query) || norm(w.n).startsWith(query) || es.includes(query) || norm(w.n).includes(query);
-        });
+          const en = norm(w.n);
+          return es.includes(query) || en.includes(query);
+        }).slice(0, 9);
 
-        if (match && match.slug !== currentWeapon.slug) {
-          currentWeapon = match;
-          renderView();
-          const inp = $('#riven-weapon-search', root);
-          if (inp) {
-            inp.focus();
-            inp.setSelectionRange(inp.value.length, inp.value.length);
+        if (matches.length === 0) {
+          dropdown.innerHTML = `<div style="padding:10px 14px;color:#94a3b8;font-size:0.85rem;">No se encontraron armas que coincidan con "${esc(e.target.value)}"</div>`;
+          dropdown.classList.remove('hidden');
+          return;
+        }
+
+        dropdown.innerHTML = matches.map((m, idx) => {
+          const esName = t(m.n, m.n);
+          const stars = '●'.repeat(Math.min(5, Math.max(1, Math.round(m.dis)))) + '○'.repeat(Math.max(0, 5 - Math.round(m.dis)));
+          return `
+            <div class="riven-search-item ${idx === 0 ? 'active' : ''}" data-slug="${m.slug}">
+              <div class="rsi-info">
+                <span class="rsi-name">${esc(esName)} <small>(${esc(m.n)})</small></span>
+                <span class="rsi-meta">${esc(m.rt.toUpperCase())} · Maestría ${m.mr} · Disposición: ${m.dis.toFixed(2)}x</span>
+              </div>
+              <span class="rsi-stars">${stars}</span>
+            </div>
+          `;
+        }).join('');
+        dropdown.classList.remove('hidden');
+      });
+
+      // Selección al hacer clic en un elemento del dropdown
+      dropdown.addEventListener('click', (e) => {
+        const item = e.target.closest('.riven-search-item');
+        if (item) {
+          const slug = item.dataset.slug;
+          const match = weapons.find(w => w.slug === slug);
+          if (match) {
+            currentWeapon = match;
+            renderView();
           }
         }
-      }, 250));
+      });
+
+      // Selección con Enter o cerrar con Escape
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const firstItem = dropdown.querySelector('.riven-search-item');
+          if (firstItem) {
+            const slug = firstItem.dataset.slug;
+            const match = weapons.find(w => w.slug === slug);
+            if (match) {
+              currentWeapon = match;
+              renderView();
+            }
+          }
+        } else if (e.key === 'Escape') {
+          closeDropdown();
+        }
+      });
+
+      // Cerrar dropdown al hacer clic fuera
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#riven-weapon-search') && !e.target.closest('#riven-search-dropdown')) {
+          closeDropdown();
+        }
+      });
     }
   }
 

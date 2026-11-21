@@ -1,6 +1,6 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, srcList, modImg, debounce, norm, t } from './util.js';
 import { TYPE_ES, translateLocation } from './lang.js';
-import { formatCountdown, fetchWorldState, translateStreamTitle, getTwitchStreamAlerts } from './viewStatus.js?v=25.3';
+import { formatCountdown, fetchWorldState, translateStreamTitle, getTwitchStreamAlerts } from './viewStatus.js?v=26.0';
 
 const relicChip = (r) => `<button class="chip relic ${r.rar?.toLowerCase()}" data-act="relic" data-relic="${esc(r.id)}" title="${esc(r.id)} · ${esc(r.rar)} · ${chance(r.ch)}${r.av ? '' : ' · vaulted'}">${esc(r.id)}<small>${chance(r.ch)}</small></button>`;
 
