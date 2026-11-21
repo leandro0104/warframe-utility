@@ -5441,6 +5441,7 @@ button.btn-riven-lock.locked {
   gap: 16px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, .45);
 }
+
 .rfh-left {
   display: flex;
   align-items: center;
@@ -5448,27 +5449,32 @@ button.btn-riven-lock.locked {
   flex: 1;
   min-width: 280px;
 }
+
 .rfh-icon {
   font-size: 2rem;
   line-height: 1;
   flex: none;
 }
+
 .rfh-left h4 {
   margin: 0 0 4px;
   font-size: 1.15rem;
   color: #f0f9ff;
 }
+
 .rfh-left p {
   margin: 0;
   font-size: .86rem;
   color: #cbd5e1;
   line-height: 1.45;
 }
+
 .rfh-badges {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
+
 .rfh-pill {
   font-size: .78rem;
   font-weight: 900;
@@ -5477,16 +5483,19 @@ button.btn-riven-lock.locked {
   border: 1px solid;
   letter-spacing: .5px;
 }
+
 .rfh-pill.s-tier {
   background: rgba(251, 191, 36, .15);
   border-color: #fbbf24;
   color: #fde047;
 }
+
 .rfh-pill.a-tier {
   background: rgba(56, 189, 248, .15);
   border-color: #38bdf8;
   color: #7dd3fc;
 }
+
 .rfh-pill.kuva-pill {
   background: rgba(168, 85, 247, .15);
   border-color: #a855f7;
@@ -5501,25 +5510,30 @@ button.btn-riven-lock.locked {
   align-items: start;
   margin-top: 14px;
 }
+
 @media(max-width: 992px) {
   .riven-calc-split-container {
     grid-template-columns: 1fr;
   }
 }
+
 .riven-calc-card-col {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
 }
+
 .large-riven-card {
   max-width: 340px;
   width: 100%;
 }
+
 .sticky-card {
   position: sticky;
   top: 20px;
 }
+
 .calc-cfg-header-card {
   display: flex;
   justify-content: space-between;
@@ -5532,6 +5546,7 @@ button.btn-riven-lock.locked {
   padding: 16px 20px;
   margin-bottom: 18px;
 }
+
 .calc-slot-stat-name {
   font-size: 1.15rem;
   font-weight: 800;
@@ -5539,9 +5554,3 @@ button.btn-riven-lock.locked {
   letter-spacing: .5px;
   text-transform: uppercase;
 }
-
-
-
-
-
-

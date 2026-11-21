@@ -31,37 +31,53 @@ export const BASE_RIVEN_STATS = {
     critical_chance: { name: 'Probabilidad Crítica', base: 150, unit: '%', isMetaPos: true, tier: 'meta', note: 'Críticos Naranjas y Rojos' },
     damage: { name: 'Daño', base: 165, unit: '%', isMetaPos: true, tier: 'meta', note: 'Daño Base Global' },
     fire_rate: { name: 'Cadencia de Fuego', base: 60, unit: '%', isMetaPos: true, tier: 'meta', note: 'DPS y Estado Rápido' },
+    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Procs de Estado' },
     toxin: { name: 'Toxina', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Crea Viral Elemental' },
     heat: { name: 'Calor', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Reduce Armadura -50%' },
     cold: { name: 'Frío', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Multiplicador Crítico' },
     electricity: { name: 'Electricidad', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Corrosivo / Radiación' },
-    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Procs de Estado' },
-    punch_through: { name: 'Atravesar', base: 2.7, unit: 'm', isMetaPos: false, tier: 'good', note: 'Multitudes' },
-    reload_speed: { name: 'Velocidad de Recarga', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Comodidad' },
+    slash: { name: 'Daño Cortante', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Aumenta sesgo hacia proc Cortante (Sangrado)' },
+    puncture: { name: 'Daño de Perforación', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Daño de perforación' },
+    impact: { name: 'Daño de Impacto', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Daño de impacto' },
+    status_duration: { name: 'Duración de Estado', base: 100, unit: '%', isMetaPos: false, tier: 'good', note: 'Alarga duración de sangrado y fuego' },
+    punch_through: { name: 'Atravesar', base: 2.7, unit: 'm', isMetaPos: false, tier: 'good', note: 'Multitudes y coberturas' },
+    reload_speed: { name: 'Velocidad de Recarga', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Comodidad en combate' },
     magazine_capacity: { name: 'Capacidad de Cargador', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Cargador Extendido' },
-    zoom: { name: 'Zoom', base: 50, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'El mejor negativo: Cero penalización de DPS' },
-    recoil: { name: 'Retroceso', base: 90, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Imperceptible en ráfagas' },
-    damage_vs_infested: { name: 'Daño vs Infestados', base: 45, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo inofensivo' },
-    ammo_maximum: { name: 'Munición Máxima', base: 50, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo leve' }
+    ammo_maximum: { name: 'Munición Máxima', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Reserva de munición' },
+    projectile_speed: { name: 'Velocidad de Proyectil', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Velocidad de viaje y caída' },
+    recoil: { name: 'Retroceso', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Estabilidad de disparo' },
+    zoom: { name: 'Zoom', base: 60, unit: '%', isMetaPos: false, tier: 'good', note: 'Aumento visual de mira' },
+    damage_vs_grineer: { name: 'Daño vs Grineer', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Multiplicador de facción Grineer' },
+    damage_vs_corpus: { name: 'Daño vs Corpus', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Multiplicador de facción Corpus' },
+    damage_vs_infested: { name: 'Daño vs Infestados', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Multiplicador de facción Infestados' },
+    damage_vs_corrupted: { name: 'Daño vs Corruptos / Murmur', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Multiplicador Corruptos y Murmur' }
   },
   pistol: {
     multishot: { name: 'Multidisparo', base: 120, unit: '%', isMetaPos: true, tier: 'god', note: 'Top 1 Multiplicador de Balas' },
     critical_damage: { name: 'Daño Crítico', base: 90, unit: '%', isMetaPos: true, tier: 'god', note: 'Top 1 Daño Crítico' },
     critical_chance: { name: 'Probabilidad Crítica', base: 150, unit: '%', isMetaPos: true, tier: 'meta', note: 'Críticos Naranjas y Rojos' },
     fire_rate: { name: 'Cadencia de Fuego', base: 75, unit: '%', isMetaPos: true, tier: 'meta', note: 'Disparo Ultrarrápido' },
-    damage: { name: 'Daño', base: 220, unit: '%', isMetaPos: true, tier: 'meta', note: 'Daño Base' },
+    damage: { name: 'Daño', base: 220, unit: '%', isMetaPos: true, tier: 'meta', note: 'Daño Base Secundario' },
+    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Procs' },
     toxin: { name: 'Toxina', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Viral Elemental' },
     heat: { name: 'Calor', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Reduce Armadura' },
     cold: { name: 'Frío', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Frío Elemental' },
     electricity: { name: 'Electricidad', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Corrosivo' },
-    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Procs' },
+    slash: { name: 'Daño Cortante', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Sesgo Cortante' },
+    puncture: { name: 'Daño de Perforación', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Perforación' },
+    impact: { name: 'Daño de Impacto', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Impacto' },
+    status_duration: { name: 'Duración de Estado', base: 100, unit: '%', isMetaPos: false, tier: 'good', note: 'Duración de procs' },
     punch_through: { name: 'Atravesar', base: 2.7, unit: 'm', isMetaPos: false, tier: 'good', note: 'Atraviesa' },
     reload_speed: { name: 'Velocidad de Recarga', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Recarga' },
     magazine_capacity: { name: 'Capacidad de Cargador', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Cargador' },
-    zoom: { name: 'Zoom', base: 50, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'El mejor negativo: Cero penalización' },
-    recoil: { name: 'Retroceso', base: 90, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo inofensivo' },
-    damage_vs_infested: { name: 'Daño vs Infestados', base: 45, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo inofensivo' },
-    ammo_maximum: { name: 'Munición Máxima', base: 50, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo leve' }
+    ammo_maximum: { name: 'Munición Máxima', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Munición' },
+    projectile_speed: { name: 'Velocidad de Proyectil', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Velocidad Proyectil' },
+    recoil: { name: 'Retroceso', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Estabilidad' },
+    zoom: { name: 'Zoom', base: 60, unit: '%', isMetaPos: false, tier: 'good', note: 'Zoom' },
+    damage_vs_grineer: { name: 'Daño vs Grineer', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Multiplicador Grineer' },
+    damage_vs_corpus: { name: 'Daño vs Corpus', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Multiplicador Corpus' },
+    damage_vs_infested: { name: 'Daño vs Infestados', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Multiplicador Infestados' },
+    damage_vs_corrupted: { name: 'Daño vs Corruptos / Murmur', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Multiplicador Corruptos' }
   },
   shotgun: {
     multishot: { name: 'Multidisparo', base: 120, unit: '%', isMetaPos: true, tier: 'god', note: 'Multiplica perdigones brutos' },
@@ -72,26 +88,49 @@ export const BASE_RIVEN_STATS = {
     status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Lluvia de Estados' },
     toxin: { name: 'Toxina', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Viral' },
     heat: { name: 'Calor', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Calor' },
+    cold: { name: 'Frío', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Frío' },
+    electricity: { name: 'Electricidad', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Electricidad' },
+    slash: { name: 'Daño Cortante', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Sesgo Cortante' },
+    puncture: { name: 'Daño de Perforación', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Perforación' },
+    impact: { name: 'Daño de Impacto', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Impacto' },
+    status_duration: { name: 'Duración de Estado', base: 100, unit: '%', isMetaPos: false, tier: 'good', note: 'Duración' },
+    punch_through: { name: 'Atravesar', base: 2.7, unit: 'm', isMetaPos: false, tier: 'good', note: 'Atraviesa grupos' },
     reload_speed: { name: 'Velocidad de Recarga', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Recarga Rápida' },
-    zoom: { name: 'Zoom', base: 50, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'El mejor negativo' },
-    recoil: { name: 'Retroceso', base: 90, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo inofensivo' },
-    damage_vs_infested: { name: 'Daño vs Infestados', base: 45, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo inofensivo' }
+    magazine_capacity: { name: 'Capacidad de Cargador', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Cargador' },
+    ammo_maximum: { name: 'Munición Máxima', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Reserva' },
+    projectile_speed: { name: 'Velocidad de Proyectil', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Velocidad perdigones' },
+    recoil: { name: 'Retroceso', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Menor patada' },
+    zoom: { name: 'Zoom', base: 60, unit: '%', isMetaPos: false, tier: 'good', note: 'Zoom' },
+    damage_vs_grineer: { name: 'Daño vs Grineer', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Grineer' },
+    damage_vs_corpus: { name: 'Daño vs Corpus', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Corpus' },
+    damage_vs_infested: { name: 'Daño vs Infestados', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Infestados' },
+    damage_vs_corrupted: { name: 'Daño vs Corruptos / Murmur', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Corruptos' }
   },
   melee: {
     critical_damage: { name: 'Daño Crítico', base: 90, unit: '%', isMetaPos: true, tier: 'god', note: 'Multiplicador Crítico Rey' },
     range: { name: 'Alcance', base: 120, unit: '%', isMetaPos: true, tier: 'god', note: 'Área de Impacto Masiva' },
     attack_speed: { name: 'Velocidad de Ataque', base: 55, unit: '%', isMetaPos: true, tier: 'god', note: 'Fluidez y Animaciones' },
-    initial_combo: { name: 'Combo Inicial', base: 25, unit: '', isMetaPos: true, tier: 'meta', note: 'Imprescindible Stat-Stick y Ataque Pesado' },
+    initial_combo: { name: 'Combo Inicial', base: 25, unit: '', isMetaPos: true, tier: 'god', note: 'Imprescindible Stat-Stick y Ataque Pesado' },
     critical_chance: { name: 'Probabilidad Crítica', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Críticos Rojos' },
     damage: { name: 'Daño Cuerpo a Cuerpo', base: 165, unit: '%', isMetaPos: true, tier: 'meta', note: 'Daño Base' },
+    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Procs' },
     toxin: { name: 'Toxina', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Viral Elemental' },
     heat: { name: 'Calor', base: 90, unit: '%', isMetaPos: true, tier: 'meta', note: 'Reducción de Armadura' },
-    status_chance: { name: 'Probabilidad de Estado', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Procs' },
+    cold: { name: 'Frío', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Frío' },
+    electricity: { name: 'Electricidad', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Electricidad' },
+    slash: { name: 'Daño Cortante', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Sesgo Cortante' },
+    puncture: { name: 'Daño de Perforación', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Perforación' },
+    impact: { name: 'Daño de Impacto', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Impacto' },
+    status_duration: { name: 'Duración de Estado', base: 100, unit: '%', isMetaPos: false, tier: 'good', note: 'Sangrados más largos' },
     heavy_attack_efficiency: { name: 'Eficiencia Ataque Pesado', base: 75, unit: '%', isMetaPos: false, tier: 'good', note: 'Ataques Pesados' },
     combo_duration: { name: 'Duración de Combo', base: 8, unit: 's', isMetaPos: false, tier: 'good', note: 'Mantiene Combo' },
-    finisher_damage: { name: 'Daño de Remate', base: 120, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo Inofensivo' },
-    slide_attack_critical_chance: { name: 'Crítico al Deslizar', base: 90, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo Inofensivo' },
-    damage_vs_infested: { name: 'Daño vs Infestados', base: 45, unit: '%', isHarmlessNeg: true, tier: 'god_neg', note: 'Negativo Inofensivo' }
+    combo_count_chance: { name: 'Prob. Conteo de Combo Adicional', base: 100, unit: '%', isMetaPos: false, tier: 'good', note: 'Multiplicador de Combo Rápido' },
+    finisher_damage: { name: 'Daño de Remate', base: 120, unit: '%', isMetaPos: false, tier: 'good', note: 'Remates' },
+    slide_attack_critical_chance: { name: 'Crítico al Deslizar', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Ataque Deslizante' },
+    damage_vs_grineer: { name: 'Daño vs Grineer', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Grineer' },
+    damage_vs_corpus: { name: 'Daño vs Corpus', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Corpus' },
+    damage_vs_infested: { name: 'Daño vs Infestados', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Infestados' },
+    damage_vs_corrupted: { name: 'Daño vs Corruptos / Murmur', base: 45, unit: '%', isMetaPos: false, tier: 'good', note: 'Corruptos' }
   },
   archgun: {
     multishot: { name: 'Multidisparo', base: 60, unit: '%', isMetaPos: true, tier: 'god', note: 'Proyectiles' },
@@ -99,8 +138,22 @@ export const BASE_RIVEN_STATS = {
     critical_chance: { name: 'Probabilidad Crítica', base: 100, unit: '%', isMetaPos: true, tier: 'meta', note: 'Prob. Crítica' },
     damage: { name: 'Daño', base: 100, unit: '%', isMetaPos: true, tier: 'meta', note: 'Daño Base' },
     fire_rate: { name: 'Cadencia de Fuego', base: 60, unit: '%', isMetaPos: true, tier: 'meta', note: 'Cadencia' },
+    status_chance: { name: 'Probabilidad de Estado', base: 60, unit: '%', isMetaPos: true, tier: 'meta', note: 'Procs' },
     toxin: { name: 'Toxina', base: 60, unit: '%', isMetaPos: true, tier: 'meta', note: 'Viral' },
-    heat: { name: 'Calor', base: 60, unit: '%', isMetaPos: true, tier: 'meta', note: 'Calor' }
+    heat: { name: 'Calor', base: 60, unit: '%', isMetaPos: true, tier: 'meta', note: 'Calor' },
+    cold: { name: 'Frío', base: 60, unit: '%', isMetaPos: false, tier: 'good', note: 'Frío' },
+    electricity: { name: 'Electricidad', base: 60, unit: '%', isMetaPos: false, tier: 'good', note: 'Electricidad' },
+    slash: { name: 'Daño Cortante', base: 100, unit: '%', isMetaPos: false, tier: 'good', note: 'Cortante' },
+    puncture: { name: 'Daño de Perforación', base: 100, unit: '%', isMetaPos: false, tier: 'good', note: 'Perforación' },
+    impact: { name: 'Daño de Impacto', base: 100, unit: '%', isMetaPos: false, tier: 'good', note: 'Impacto' },
+    status_duration: { name: 'Duración de Estado', base: 100, unit: '%', isMetaPos: false, tier: 'good', note: 'Duración' },
+    punch_through: { name: 'Atravesar', base: 2.7, unit: 'm', isMetaPos: false, tier: 'good', note: 'Atraviesa' },
+    reload_speed: { name: 'Velocidad de Recarga', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Recarga' },
+    magazine_capacity: { name: 'Capacidad de Cargador', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Cargador' },
+    ammo_maximum: { name: 'Munición Máxima', base: 50, unit: '%', isMetaPos: false, tier: 'good', note: 'Munición' },
+    projectile_speed: { name: 'Velocidad de Proyectil', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Proyectil' },
+    recoil: { name: 'Retroceso', base: 90, unit: '%', isMetaPos: false, tier: 'good', note: 'Retroceso' },
+    zoom: { name: 'Zoom', base: 60, unit: '%', isMetaPos: false, tier: 'good', note: 'Zoom' }
   }
 };
 
@@ -119,9 +172,28 @@ const RIVEN_AFFIXES = {
   cold: { pre: 'Geli', suf: 'do' },
   electricity: { pre: 'Vexi', suf: 'tio' },
   status_chance: { pre: 'Hera', suf: 'nak' },
+  status_duration: { pre: 'Deci', suf: 'des' },
+  slash: { pre: 'Sci', suf: 'cton' },
+  puncture: { pre: 'Conci', suf: 'nak' },
+  impact: { pre: 'Cronti', suf: 'mag' },
   range: { pre: 'Locti', suf: 'tor' },
   punch_through: { pre: 'Feha', suf: 'con' },
-  initial_combo: { pre: 'Manti', suf: 'dex' }
+  initial_combo: { pre: 'Manti', suf: 'dex' },
+  reload_speed: { pre: 'Feva', suf: 'drak' },
+  magazine_capacity: { pre: 'Arma', suf: 'tin' },
+  ammo_maximum: { pre: 'Amphi', suf: 'bin' },
+  projectile_speed: { pre: 'Flight', suf: 'dra' },
+  recoil: { pre: 'Zeti', suf: 'vis' },
+  zoom: { pre: 'Hera', suf: 'lis' },
+  heavy_attack_efficiency: { pre: 'Forti', suf: 'lex' },
+  combo_duration: { pre: 'Tempi', suf: 'nem' },
+  combo_count_chance: { pre: 'Visi', suf: 'dex' },
+  finisher_damage: { pre: 'Puni', suf: 'tor' },
+  slide_attack_critical_chance: { pre: 'Plexi', suf: 'nent' },
+  damage_vs_grineer: { pre: 'Manti', suf: 'cor' },
+  damage_vs_corpus: { pre: 'Argi', suf: 'bin' },
+  damage_vs_infested: { pre: 'Puri', suf: 'tox' },
+  damage_vs_corrupted: { pre: 'Bane', suf: 'bane' }
 };
 
 export function generateRivenName(weaponName, statKeys) {
@@ -138,21 +210,26 @@ export function generateRivenName(weaponName, statKeys) {
 // ============================================================================
 // 4. MOTOR DE CÁLCULO DE ESTADÍSTICAS Y TOPES MÁXIMOS
 // ============================================================================
-export function calculateRivenStatRange(weaponType, disposition, statKey, configType) {
+export function calculateRivenStatRange(weaponType, disposition, statKey, configType, isNeg = false) {
   const table = BASE_RIVEN_STATS[weaponType] || BASE_RIVEN_STATS.rifle;
-  const statInfo = table[statKey] || table.multishot;
+  let effectiveKey = statKey;
+  if (statKey === 'fatal_crit') effectiveKey = 'critical_damage';
+  else if (statKey === 'fatal_multi') effectiveKey = 'multishot';
+  else if (statKey === 'fatal_dmg') effectiveKey = 'damage';
+  else if (statKey === 'fatal_fire_rate') effectiveKey = 'fire_rate';
+
+  const statInfo = table[effectiveKey] || table.multishot;
   const disp = disposition || 1.0;
 
-  // Multiplicadores oficiales según configuración de Agrietado
+  // Multiplicadores oficiales según configuración de Agrietado (Wiki Warframe)
   const cfgMultipliers = {
-    '2pos_1neg': 1.25, // God Roll: Positivos aumentados un +25%
-    '3pos_1neg': 0.94, // 3 Positivos con Negativo
-    '2pos_0neg': 1.00, // Estándar sin negativo
-    '3pos_0neg': 0.75  // 3 Positivos sin negativo (los más débiles)
+    '2pos_1neg': isNeg ? 0.50 : 1.25, // Negativo es magnitud ~50% de base, Positivos +25%
+    '3pos_1neg': isNeg ? 0.75 : 0.94, // Negativo es magnitud ~75% de base, Positivos -6%
+    '2pos_0neg': 1.00,
+    '3pos_0neg': 0.75
   };
-  const mult = cfgMultipliers[configType] || 1.25;
+  const mult = cfgMultipliers[configType] || (isNeg ? 0.50 : 1.25);
 
-  // Cada tirada tiene una varianza aleatoria de calidad entre 0.90 (-10%) y 1.10 (+10%)
   const minVal = statInfo.base * disp * mult * 0.90;
   const avgVal = statInfo.base * disp * mult * 1.00;
   const maxVal = statInfo.base * disp * mult * 1.10;
@@ -347,7 +424,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
 
     // Obtener positivos y negativos
     const metaPositives = Object.entries(table).filter(([k, v]) => v.isMetaPos);
-    const harmlessNegatives = Object.entries(table).filter(([k, v]) => v.isHarmlessNeg);
+    const harmlessNegatives = Object.entries(table).filter(([k, v]) => HARMLESS_NEG_KEYS.includes(k));
 
     container.innerHTML = `
       <div class="grid cards" style="grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px;">
@@ -471,29 +548,66 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
     `;
   }
 
+  const HARMLESS_NEG_KEYS = [
+    'zoom', 'recoil', 'impact', 'puncture', 'damage_vs_infested',
+    'ammo_maximum', 'finisher_damage', 'slide_attack_critical_chance'
+  ];
+  const FATAL_NEG_KEYS = [
+    'critical_damage', 'critical_chance', 'multishot', 'damage',
+    'fire_rate', 'attack_speed', 'status_chance', 'slash', 'range',
+    'fatal_crit', 'fatal_multi', 'fatal_dmg', 'fatal_fire_rate'
+  ];
+
   // Helper para generar opciones agrupadas y destacadas con estrellas
   function renderStatSelectOptions(table, isNeg, selectedKey) {
     if (isNeg) {
-      const harmless = Object.entries(table).filter(([k, v]) => v.isHarmlessNeg);
+      const harmless = Object.entries(table).filter(([k, v]) => HARMLESS_NEG_KEYS.includes(k));
+      const fatal = Object.entries(table).filter(([k, v]) => FATAL_NEG_KEYS.includes(k));
+      const situational = Object.entries(table).filter(([k, v]) => !HARMLESS_NEG_KEYS.includes(k) && !FATAL_NEG_KEYS.includes(k));
+
       return `
-        <optgroup label="🛡️ NEGATIVOS INOCUOS (LOS MEJORES · ACTIVAN BONO +25%)">
+        <optgroup label="🛡️ NEGATIVOS INOCUOS / TOP ROLL (Bono +25% · Cero o Mínima Penalización)">
           ${harmless.map(([k, s]) => `
             <option value="${k}" ${k === selectedKey ? 'selected' : ''}>
               ⭐ - ${s.name} ${s.note ? `(${s.note})` : ''}
             </option>
           `).join('')}
         </optgroup>
-        <optgroup label="⚠️ OTROS NEGATIVOS (PELIGROSOS)">
-          <option value="fatal_crit" ${selectedKey === 'fatal_crit' ? 'selected' : ''}>☠️ - Daño Crítico (Fatal: arruina la build)</option>
-          <option value="fatal_multi" ${selectedKey === 'fatal_multi' ? 'selected' : ''}>☠️ - Multidisparo (Fatal: arruina la build)</option>
-          <option value="fatal_dmg" ${selectedKey === 'fatal_dmg' ? 'selected' : ''}>☠️ - Daño Total (Fatal: arruina la build)</option>
+        <optgroup label="⚠️ NEGATIVOS MODERADOS / SITUACIONALES (Activan Bono +25%)">
+          ${situational.map(([k, s]) => `
+            <option value="${k}" ${k === selectedKey ? 'selected' : ''}>
+              🔹 - ${s.name} ${s.note ? `(${s.note})` : ''}
+            </option>
+          `).join('')}
+        </optgroup>
+        <optgroup label="☠️ NEGATIVOS FATALES / DESTRUCTORES (¡Arruinan la build!)">
+          ${fatal.map(([k, s]) => `
+            <option value="${k}" ${k === selectedKey ? 'selected' : ''}>
+              ☠️ - ${s.name} (Fatal: destruye el daño/viabilidad)
+            </option>
+          `).join('')}
         </optgroup>
       `;
     }
 
-    const godStats = Object.entries(table).filter(([k, v]) => !v.isHarmlessNeg && v.tier === 'god');
-    const metaStats = Object.entries(table).filter(([k, v]) => !v.isHarmlessNeg && v.tier === 'meta');
-    const goodStats = Object.entries(table).filter(([k, v]) => !v.isHarmlessNeg && v.tier === 'good');
+    const godStats = Object.entries(table).filter(([k, v]) => v.tier === 'god');
+    const metaStats = Object.entries(table).filter(([k, v]) => v.tier === 'meta');
+    
+    // Físicos y Elementales:
+    const elemPhysicalKeys = ['slash', 'puncture', 'impact', 'cold', 'electricity'];
+    const elemPhysicalStats = Object.entries(table).filter(([k, v]) => elemPhysicalKeys.includes(k));
+    
+    // Utilidad y Estado:
+    const utilityKeys = ['status_duration', 'punch_through', 'reload_speed', 'magazine_capacity', 'projectile_speed', 'heavy_attack_efficiency', 'combo_duration', 'combo_count_chance', 'ammo_maximum'];
+    const utilityStats = Object.entries(table).filter(([k, v]) => utilityKeys.includes(k));
+    
+    // Facciones:
+    const factionKeys = ['damage_vs_grineer', 'damage_vs_corpus', 'damage_vs_corrupted', 'damage_vs_infested'];
+    const factionStats = Object.entries(table).filter(([k, v]) => factionKeys.includes(k));
+
+    // Otros:
+    const otherKeys = ['zoom', 'recoil', 'finisher_damage', 'slide_attack_critical_chance'];
+    const otherStats = Object.entries(table).filter(([k, v]) => otherKeys.includes(k));
 
     return `
       <optgroup label="👑 ATRIBUTOS TOP GOD ROLL (Tier S+ · Máxima Prioridad)">
@@ -503,18 +617,45 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
           </option>
         `).join('')}
       </optgroup>
-      <optgroup label="✨ ATRIBUTOS META ALTOS (Tier S)">
+      <optgroup label="✨ ATRIBUTOS META PRINCIPALES (Tier S)">
         ${metaStats.map(([k, s]) => `
           <option value="${k}" ${k === selectedKey ? 'selected' : ''}>
             ✨ + ${s.name} ${s.note ? `— ${s.note}` : ''}
           </option>
         `).join('')}
       </optgroup>
-      ${goodStats.length > 0 ? `
-        <optgroup label="⚖️ ATRIBUTOS SITUACIONALES / SECUNDARIOS">
-          ${goodStats.map(([k, s]) => `
+      ${elemPhysicalStats.length > 0 ? `
+        <optgroup label="⚔️ DAÑO ELEMENTAL Y FÍSICO">
+          ${elemPhysicalStats.map(([k, s]) => `
+            <option value="${k}" ${k === selectedKey ? 'selected' : ''}>
+              ⚔️ + ${s.name} ${s.note ? `— ${s.note}` : ''}
+            </option>
+          `).join('')}
+        </optgroup>
+      ` : ''}
+      ${utilityStats.length > 0 ? `
+        <optgroup label="💠 UTILIDAD Y ESTADO">
+          ${utilityStats.map(([k, s]) => `
             <option value="${k}" ${k === selectedKey ? 'selected' : ''}>
               🔹 + ${s.name} ${s.note ? `— ${s.note}` : ''}
+            </option>
+          `).join('')}
+        </optgroup>
+      ` : ''}
+      ${factionStats.length > 0 ? `
+        <optgroup label="🎯 DAÑO A FACCIONES">
+          ${factionStats.map(([k, s]) => `
+            <option value="${k}" ${k === selectedKey ? 'selected' : ''}>
+              🎯 + ${s.name} ${s.note ? `— ${s.note}` : ''}
+            </option>
+          `).join('')}
+        </optgroup>
+      ` : ''}
+      ${otherStats.length > 0 ? `
+        <optgroup label="⚖️ OTROS ATRIBUTOS">
+          ${otherStats.map(([k, s]) => `
+            <option value="${k}" ${k === selectedKey ? 'selected' : ''}>
+              ⚖️ + ${s.name} ${s.note ? `— ${s.note}` : ''}
             </option>
           `).join('')}
         </optgroup>
@@ -641,7 +782,8 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
     `;
 
     function getSlotEvaluation(slot, range) {
-      const isFatalNeg = slot.stat.startsWith('fatal_');
+      const isFatalNeg = FATAL_NEG_KEYS.includes(slot.stat) || slot.stat.startsWith('fatal_');
+      const isHarmlessNeg = HARMLESS_NEG_KEYS.includes(slot.stat);
       const rawPct = range.max > 0 ? (slot.val / range.max) * 100 : 0;
       const clampedPct = Math.min(100, Math.max(0, rawPct));
 
@@ -649,11 +791,24 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       let verdictBadge = 'RANGO MEDIO / JUGABLE';
       let adviceText = '';
 
-      if (isFatalNeg) {
-        verdictClass = 'verdict-low';
-        verdictBadge = '☠️ NEGATIVO FATAL';
-        adviceText = `Este negativo anula por completo la viabilidad del arma en combate. Reroll obligatorio.`;
-      } else if (rawPct > 100.5) {
+      if (slot.type === 'neg') {
+        if (isFatalNeg) {
+          verdictClass = 'verdict-low';
+          verdictBadge = '☠️ NEGATIVO FATAL';
+          adviceText = `Este negativo (-${range.name}) destruye el DPS o la viabilidad del arma. Reroll obligatorio.`;
+        } else if (isHarmlessNeg) {
+          verdictClass = 'verdict-god';
+          verdictBadge = '🛡️ NEGATIVO INOCUO (TOP GOD ROLL)';
+          adviceText = `¡Negativo perfecto! <b>-${slot.val}${range.unit} ${range.name}</b> apenas penaliza en combate real y activa el <b>multiplicador oculto +25% de potencia</b> en los atributos positivos.`;
+        } else {
+          verdictClass = 'verdict-mid';
+          verdictBadge = '⚠️ NEGATIVO SITUACIONAL';
+          adviceText = `Este negativo (-${range.name}) activa el bono +25%, pero reduce una estadística útil. Comprueba si tu build puede compensarlo.`;
+        }
+        return { rawPct, clampedPct, verdictClass, verdictBadge, adviceText };
+      }
+
+      if (rawPct > 100.5) {
         verdictClass = 'verdict-god';
         verdictBadge = '🌟 SUPERA TOPE ESTÁNDAR (100%+)';
         adviceText = `¡Valor extraordinario! Tu <b>${slot.val}${range.unit}</b> supera el tope teórico base (<b>${range.max.toFixed(1)}${range.unit}</b>). Esto sucede al combinar <b>Empalme de Agrietado</b>, variantes Coda/Kuva o disposiciones heredadas de balance previo.`;
@@ -973,10 +1128,6 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
     const weaponNameEs = t(w.n, w.n);
     const catKey = getWeaponCategoryKey(w.rt);
     const table = BASE_RIVEN_STATS[catKey] || BASE_RIVEN_STATS.rifle;
-    const statKeys = Object.keys(table);
-
-    const posStats = statKeys.filter(k => !table[k].isHarmlessNeg);
-    const negStats = statKeys.filter(k => table[k].isHarmlessNeg);
 
     container.innerHTML = `
       <article class="card wide">
@@ -993,14 +1144,14 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
             <div class="calc-input-group">
               <label>Primer Atributo Positivo (+):</label>
               <select id="builder-pos1" class="calc-select">
-                ${posStats.map(k => `<option value="${k}" ${k === 'multishot' ? 'selected' : ''}>+ ${table[k].name}</option>`).join('')}
+                ${renderStatSelectOptions(table, false, 'multishot')}
               </select>
             </div>
 
             <div class="calc-input-group">
               <label>Segundo Atributo Positivo (+):</label>
               <select id="builder-pos2" class="calc-select">
-                ${posStats.map(k => `<option value="${k}" ${k === 'critical_damage' ? 'selected' : ''}>+ ${table[k].name}</option>`).join('')}
+                ${renderStatSelectOptions(table, false, 'critical_damage')}
               </select>
             </div>
 
@@ -1008,7 +1159,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
               <label>Tercer Atributo Positivo (Opcional):</label>
               <select id="builder-pos3" class="calc-select">
                 <option value="none" selected>— Ninguno (Configuración 2 Positivos) —</option>
-                ${posStats.map(k => `<option value="${k}">+ ${table[k].name}</option>`).join('')}
+                ${renderStatSelectOptions(table, false, '')}
               </select>
             </div>
 
@@ -1016,15 +1167,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
               <label>Atributo Negativo (-):</label>
               <select id="builder-neg" class="calc-select">
                 <option value="none">— Sin Negativo —</option>
-                <optgroup label="🛡️ Negativos Inocuos (Los Mejores)">
-                  ${negStats.map(k => `<option value="${k}" ${k === 'zoom' ? 'selected' : ''}>- ${table[k].name}</option>`).join('')}
-                </optgroup>
-                <optgroup label="☠️ Negativos Destructores (Arruinan la Tirada)">
-                  <option value="fatal_crit">- Daño Crítico / Prob. Crítica (Fatal)</option>
-                  <option value="fatal_multi">- Multidisparo (Fatal)</option>
-                  <option value="fatal_dmg">- Daño Total (Fatal)</option>
-                  <option value="fatal_fire_rate">- Cadencia Extrema (Fatal)</option>
-                </optgroup>
+                ${renderStatSelectOptions(table, true, 'zoom')}
               </select>
             </div>
 
@@ -1061,7 +1204,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
 
       const hasPos3 = pos3 !== 'none';
       const hasNeg = neg !== 'none';
-      const isFatalNeg = neg.startsWith('fatal_');
+      const isFatalNeg = FATAL_NEG_KEYS.includes(neg) || neg.startsWith('fatal_');
 
       // Determinar configuración
       let cfg = '2pos_0neg';
@@ -1081,7 +1224,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
 
       let negRange = null;
       if (hasNeg && !isFatalNeg) {
-        negRange = calculateRivenStatRange(catKey, w.dis, neg, cfg);
+        negRange = calculateRivenStatRange(catKey, w.dis, neg, cfg, true);
       }
 
       // Evaluar Tier de la tirada
@@ -1417,7 +1560,12 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       fire_rate: 'Aumenta las balas por segundo. Esencial para activar efectos de estado y vaciar el cargador.',
       attack_speed: 'Acelera las animaciones de combate cuerpo a cuerpo y la fluidez del ataque pesado.',
       range: 'Aumenta el área de impacto para golpear a decenas de enemigos a la vez.',
-      initial_combo: 'Permite mantener combos altos permanentes sin necesidad de golpear antes del ataque pesado (clave para Stat-Sticks).'
+      initial_combo: 'Permite mantener combos altos permanentes sin necesidad de golpear antes del ataque pesado (clave para Stat-Sticks).',
+      status_chance: 'Aumenta la probabilidad de aplicar efectos de estado elementales o físicos por cada impacto.',
+      status_duration: 'Extiende el tiempo que duran los efectos de estado (como sangrados de cortante y calor acumulativo).',
+      slash: 'Aumenta la proporción de daño Cortante, sesgando el arma para aplicar procs de Sangrado puro que ignoran armadura.',
+      puncture: 'Aumenta el daño de Perforación y la probabilidad de reducir el daño que infligen los enemigos.',
+      impact: 'Aumenta el daño de Impacto y la posibilidad de desestabilizar o activar Mercy/Hemorragia interna.'
     };
     return map[statKey] || 'Mejora considerablemente el rendimiento y sinergia del arma.';
   }
@@ -1426,11 +1574,14 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
     const map = {
       zoom: 'Disminuye el aumento de la mira al apuntar. No tiene NINGÚN impacto en el daño ni en el DPS. ¡El mejor negativo del juego!',
       recoil: 'Aumenta el retroceso. En armas de ráfagas controladas o semi-automáticas es totalmente imperceptible.',
+      impact: '¡Excelente en builds cortantes! Al reducir el Impacto, el arma aplica con mucha mayor frecuencia procs de Cortante (Sangrado).',
+      puncture: 'Inocuo en armas orientadas a daño cortante o estados puros. Apenas afecta el DPS real.',
       damage_vs_infested: 'Reduce el daño contra Infestados. Como los infestados tienen muy poca vida y armadura, mueren de un disparo de todos modos.',
-      ammo_maximum: 'Reduce la reserva total de munición. Se soluciona instantáneamente con el centinela Portador (Carrier) o Mod Exilus.',
-      finisher_damage: 'Reduce el daño de remate furtivo, el cual casi nunca se usa en misiones normales o Camino de Acero.'
+      ammo_maximum: 'Reduce la reserva total de munición. Se soluciona instantáneamente con Mutación de Munición, Portador o Arcanos.',
+      finisher_damage: 'Reduce el daño de remate furtivo, el cual casi nunca se usa en misiones normales o Camino de Acero.',
+      slide_attack_critical_chance: 'Reduce el daño de ataques giratorios deslizantes, una mecánica casi en desuso actualmente.'
     };
-    return map[negKey] || 'Penalización menor que no perjudica el daño real contra enemigos.';
+    return map[negKey] || 'Penalización menor que activa el multiplicador +25% de potencia en los atributos positivos.';
   }
 
   renderView();
