@@ -1,6 +1,6 @@
 import { $, $$, esc, D, P, img, imgM, imgC, fmt, plat, platBtn, price, chance, rar, slugImg, modImg, debounce, norm, t } from './util.js';
 import { formatCountdown, fetchWorldState } from './viewStatus.js';
-import { renderRivenStrategyView } from './rivenStrategy.js?v=26.0';
+import { renderRivenStrategyView } from './rivenStrategy.js?v=26.1';
 
 // ============================================================================
 // 1. SISTEMA DE NOTIFICACIONES WEB (CASCADA SP, LOTUS, TWITCH, BARO)

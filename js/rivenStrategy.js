@@ -531,7 +531,19 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
     const catKey = getWeaponCategoryKey(w.rt);
     const table = BASE_RIVEN_STATS[catKey] || BASE_RIVEN_STATS.rifle;
 
+    const RIVEN_SPLICES = {
+      none: { label: 'Ninguno (Riven Estándar)', bonusText: '', short: '' },
+      ammo_eff: { label: '💠 +30% Eficiencia de Munición (Empalme)', bonusText: '+30% Eficiencia de Munición', short: '+30% Efic. Munición' },
+      reload_spd: { label: '💠 +30% Velocidad de Recarga (Empalme)', bonusText: '+30% Velocidad de Recarga', short: '+30% Vel. Recarga' },
+      recoil_red: { label: '💠 -35% Retroceso de Arma (Empalme)', bonusText: '-35% Retroceso de Arma', short: '-35% Retroceso' },
+      mag_cap: { label: '💠 +25% Capacidad de Cargador (Empalme)', bonusText: '+25% Capacidad de Cargador', short: '+25% Cargador' },
+      proj_spd: { label: '💠 +20% Velocidad de Proyectil (Empalme)', bonusText: '+20% Velocidad de Proyectil', short: '+20% Vel. Proyectil' },
+      punch_through: { label: '💠 +0.6 Traspasar / Penetración (Empalme)', bonusText: '+0.6 Traspasar / Penetración', short: '+0.6 Traspasar' },
+      holster_spd: { label: '💠 +25% Velocidad de Cambio de Arma (Empalme)', bonusText: '+25% Velocidad de Cambio', short: '+25% Cambio Arma' }
+    };
+
     let currentCfg = '3pos_1neg';
+    let currentSplice = 'none';
     let lockedSlotIdx = -1; // -1 = sin candado
 
     // Slots iniciales
@@ -578,7 +590,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
           <div>
             <h4>Fórmula Matemática del God Roll: ¿Por qué el Negativo Inocuo activa el Multiplicador +25%?</h4>
             <p>
-              Un Riven sin negativo sufre una penalización oculta de hasta <b>-35%</b> en sus valores. Para alcanzar el <b>tope máximo del juego</b>, el Riven debe tener un <b>Negativo Inocuo</b> (como <i>-Zoom</i> o <i>-Retroceso</i>). Con el <b>Candado 🔒 (Trait Locking)</b> puedes asegurar tu mejor estadística por <b>7.000 Kuva por ciclo</b>.
+              Un Riven sin negativo sufre una penalización oculta de hasta <b>-35%</b> en sus valores. Para alcanzar el <b>tope máximo del juego</b>, el Riven debe tener un <b>Negativo Inocuo</b> (como <i>-Zoom</i> o <i>-Retroceso</i>). Con el <b>Candado 🔒 (Trait Locking)</b> aseguras tu mejor stat por <b>7.000 Kuva por ciclo</b>, y con el <b>Empalme de Agrietado 💠</b> agregas un bono utilitario permanente.
             </p>
           </div>
         </div>
@@ -599,18 +611,26 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
         <!-- COLUMNA DERECHA: CONFIGURACIÓN Y CASILLAS HACIA ABAJO -->
         <div class="riven-calc-controls-col">
           <div class="calc-cfg-header-card">
-            <div class="calc-input-group" style="flex:1;">
+            <div class="calc-input-group" style="flex:1.2;min-width:240px;">
               <label>1. Tipo de Tirada en el Riven (Estructura de Atributos):</label>
-              <select id="calc-cfg-select" class="calc-select" style="font-size:1.05rem;font-weight:700;">
+              <select id="calc-cfg-select" class="calc-select" style="font-size:0.95rem;font-weight:700;">
                 <option value="3pos_1neg" ${currentCfg === '3pos_1neg' ? 'selected' : ''}>⚔️ 3 Positivos + 1 Negativo (Bono +20% · 4 Estadísticas)</option>
                 <option value="2pos_1neg" ${currentCfg === '2pos_1neg' ? 'selected' : ''}>👑 2 Positivos + 1 Negativo (God Roll Puro · Bono +25% · 3 Estadísticas)</option>
                 <option value="2pos_0neg" ${currentCfg === '2pos_0neg' ? 'selected' : ''}>⚖️ 2 Positivos sin Negativo (2 Estadísticas)</option>
                 <option value="3pos_0neg" ${currentCfg === '3pos_0neg' ? 'selected' : ''}>📉 3 Positivos sin Negativo (Valores Bajos · 3 Estadísticas)</option>
               </select>
             </div>
-            <div class="calc-input-group" style="text-align:right;">
-              <label style="color:#94a3b8;">Disposición del Arma:</label>
-              <span class="badge ok" style="font-size:1rem;padding:6px 14px;">Disposición ${w.dis.toFixed(2)}x</span>
+            <div class="calc-input-group" style="flex:1.1;min-width:230px;">
+              <label>2. Empalme de Agrietado (Riven Splice):</label>
+              <select id="calc-splice-select" class="calc-select" style="font-size:0.95rem;font-weight:700;">
+                ${Object.entries(RIVEN_SPLICES).map(([k, sp]) => `
+                  <option value="${k}" ${k === currentSplice ? 'selected' : ''}>${sp.label}</option>
+                `).join('')}
+              </select>
+            </div>
+            <div class="calc-input-group" style="text-align:right;flex:none;">
+              <label style="color:#94a3b8;">Disposición:</label>
+              <span class="badge ok" style="font-size:0.95rem;padding:6px 14px;">${w.dis.toFixed(2)}x</span>
             </div>
           </div>
 
@@ -620,19 +640,214 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       </div>
     `;
 
-    function renderSlots() {
-      syncSlotsForCfg(currentCfg);
-      const wrapper = $('#calc-slots-wrapper', container);
+    function getSlotEvaluation(slot, range) {
+      const isFatalNeg = slot.stat.startsWith('fatal_');
+      const rawPct = range.max > 0 ? (slot.val / range.max) * 100 : 0;
+      const clampedPct = Math.min(100, Math.max(0, rawPct));
+
+      let verdictClass = 'verdict-mid';
+      let verdictBadge = 'RANGO MEDIO / JUGABLE';
+      let adviceText = '';
+
+      if (isFatalNeg) {
+        verdictClass = 'verdict-low';
+        verdictBadge = '☠️ NEGATIVO FATAL';
+        adviceText = `Este negativo anula por completo la viabilidad del arma en combate. Reroll obligatorio.`;
+      } else if (rawPct > 100.5) {
+        verdictClass = 'verdict-god';
+        verdictBadge = '🌟 SUPERA TOPE ESTÁNDAR (100%+)';
+        adviceText = `¡Valor extraordinario! Tu <b>${slot.val}${range.unit}</b> supera el tope teórico base (<b>${range.max.toFixed(1)}${range.unit}</b>). Esto sucede al combinar <b>Empalme de Agrietado</b>, variantes Coda/Kuva o disposiciones heredadas de balance previo.`;
+      } else if (clampedPct >= 93) {
+        verdictClass = 'verdict-god';
+        verdictBadge = '🌟 TIRO PERFECTO DE FÁBRICA (95%+)';
+        adviceText = `¡Tirada perfecta! Tu <b>${slot.val}${range.unit}</b> roza el tope absoluto teórico de <b>${range.max.toFixed(1)}${range.unit}</b>. La probabilidad de mejorar este stat con más rerolls es menor al 1.5%.`;
+      } else if (clampedPct >= 82) {
+        verdictClass = 'verdict-great';
+        verdictBadge = '🔥 EXCELENTE (RANGO S / A+)';
+        adviceText = `Muy alto: tienes el <b>${clampedPct.toFixed(1)}% del tope teórico</b> (máximo: ${range.max.toFixed(1)}${range.unit}). Rendimiento formidable en Camino de Acero.`;
+      } else if (clampedPct >= 68) {
+        verdictClass = 'verdict-mid';
+        verdictBadge = '⚖️ RANGO MEDIO / JUGABLE';
+        adviceText = `Tu valor de <b>${slot.val}${range.unit}</b> es aceptable pero está algo lejos del tope de <b>${range.max.toFixed(1)}${range.unit}</b>. Si tienes Kuva de sobra, puedes buscar un valor más cercano al promedio de ${range.avg.toFixed(1)}${range.unit}.`;
+      } else {
+        verdictClass = 'verdict-low';
+        verdictBadge = '📉 ROLL BAJO O RESTRINGIDO';
+        adviceText = `Tu valor de <b>${slot.val}${range.unit}</b> está en la franja baja (tope potencial: ${range.max.toFixed(1)}${range.unit}). Conviene rollear si buscas potenciar el arma al máximo.`;
+      }
+
+      return { rawPct, clampedPct, verdictClass, verdictBadge, adviceText };
+    }
+
+    function updateHologramCard() {
       const cardBox = $('#calc-hologram-card-box', container);
-      if (!wrapper || !cardBox) return;
+      if (!cardBox) return;
 
       let totalPct = 0;
       let slotCount = slots.length;
       const computedSlotData = [];
 
+      slots.forEach((slot, idx) => {
+        const isNeg = slot.type === 'neg';
+        const range = calculateRivenStatRange(catKey, w.dis, slot.stat, currentCfg, isNeg);
+        if (slot.val === null || isNaN(slot.val)) {
+          slot.val = Math.round(range.avg * 10) / 10;
+        }
+        const evalData = getSlotEvaluation(slot, range);
+        totalPct += evalData.clampedPct;
+        computedSlotData.push({
+          slot,
+          range,
+          isNeg,
+          isLocked: lockedSlotIdx === idx,
+          val: slot.val
+        });
+      });
+
+      const avgQuality = slotCount > 0 ? (totalPct / slotCount) : 0;
+      let globalTier = 'TIER B (JUGABLE)';
+      let globalColor = '#38bdf8';
+      let priceEst = `${estimateRivenMarketPrices(w).unrolledMin} - ${estimateRivenMarketPrices(w).decentMin} PL`;
+
+      const hasFatal = slots.some(s => s.stat.startsWith('fatal_'));
+      if (hasFatal) {
+        globalTier = '☠️ TIER F (NEGATIVO FATAL)';
+        globalColor = '#ef4444';
+        priceEst = 'Precio de Chatarra / Unrolled (30 - 80 PL)';
+      } else if (avgQuality >= 90) {
+        globalTier = '👑 TIER S+ (GOD ROLL SUPREMO)';
+        globalColor = 'var(--gold)';
+        priceEst = `${estimateRivenMarketPrices(w).godMin.toLocaleString()} - ${estimateRivenMarketPrices(w).godMax.toLocaleString()}+ PL`;
+      } else if (avgQuality >= 80) {
+        globalTier = '🔥 TIER S (EXCELENTE META)';
+        globalColor = '#a855f7';
+        priceEst = `${Math.round(estimateRivenMarketPrices(w).decentMax * 1.3)} - ${Math.round(estimateRivenMarketPrices(w).godMin * 0.9)} PL`;
+      } else if (avgQuality >= 65) {
+        globalTier = '⚔️ TIER A (JUGABLE / SÓLIDO)';
+        globalColor = '#38bdf8';
+        priceEst = `${estimateRivenMarketPrices(w).decentMin} - ${estimateRivenMarketPrices(w).decentMax} PL`;
+      }
+
+      const posStatKeys = slots.filter(s => s.type === 'pos').map(s => s.stat);
+      const rivenName = generateRivenName(w.n, posStatKeys);
+      const isAnyLocked = lockedSlotIdx !== -1;
+      const disStars = '●'.repeat(Math.min(5, Math.max(1, Math.round(w.dis)))) + '○'.repeat(Math.max(0, 5 - Math.round(w.dis)));
+      const hasSplice = currentSplice !== 'none';
+      const spliceObj = RIVEN_SPLICES[currentSplice];
+
+      cardBox.innerHTML = `
+        <div class="hologram-riven-card large-riven-card">
+          <div class="riven-card-glow"></div>
+          <div class="riven-card-inner">
+            <div class="riven-card-top">
+              <span class="riven-icon-symbol">🌀</span>
+              <span class="riven-card-title">${esc(rivenName)}</span>
+              <span class="riven-card-pol">🗲</span>
+            </div>
+
+            <div class="riven-card-stats-list">
+              ${computedSlotData.map(d => {
+                if (d.isNeg) {
+                  return `
+                    <div class="riven-card-stat-line neg ${d.isLocked ? 'is-locked-stat' : ''}">
+                      ${d.isLocked ? '<span class="lock-indicator" title="Atributo Bloqueado">🔒</span> ' : ''}-${d.val}${d.range.unit} ${d.range.name}
+                    </div>
+                  `;
+                }
+                return `
+                  <div class="riven-card-stat-line pos ${d.isLocked ? 'is-locked-stat' : ''}">
+                    ${d.isLocked ? '<span class="lock-indicator" title="Atributo Bloqueado">🔒</span> ' : ''}+${d.val}${d.range.unit} ${d.range.name}
+                  </div>
+                `;
+              }).join('')}
+
+              ${hasSplice ? `
+                <div class="riven-card-stat-line splice-line">
+                  <span class="splice-ico">💠</span> ${esc(spliceObj.bonusText)} <span class="splice-tag">Empalme</span>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="riven-card-bottom">
+              <span>MR ${w.mr}</span>
+              <span>${disStars}</span>
+              <span>${isAnyLocked ? '🔒 7.000 Kuva / ciclo' : '3.500 Kuva / ciclo'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="builder-verdict-summary" style="margin-top:14px;width:100%;">
+          <div class="verdict-tier-badge" style="border-color:${globalColor};color:${globalColor};">
+            ${globalTier}
+          </div>
+          <div class="verdict-price-row">
+            <span class="muted small">Valor Estimado en Mercado:</span>
+            <span class="verdict-price-value">${priceEst}</span>
+          </div>
+          <p class="builder-advice-text" style="font-size:0.85rem;margin:4px 0 0;">
+            Promedio de Perfección: <b>${avgQuality.toFixed(1)}%</b> del tope teórico.
+          </p>
+          ${hasSplice ? `
+            <div class="splice-info-note">
+              💠 <b>Empalme Activo:</b> ${esc(spliceObj.bonusText)} (no altera el coste de Kuva ni la disposición).
+            </div>
+          ` : ''}
+          <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.1);font-size:0.78rem;color:#94a3b8;">
+            ${isAnyLocked ? `
+              <b style="color:#fde047;">🔒 Candado Activo en ${table[slots[lockedSlotIdx]?.stat]?.name || 'atributo'}:</b><br>
+              5 tiradas = 35.000 Kuva · 10 tiradas = 70.000 Kuva.
+            ` : `
+              Coste normal sin candado: 3.500 Kuva por ciclo.
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    function updateSlotLive(idx) {
+      const slot = slots[idx];
+      if (!slot) return;
+      const isNeg = slot.type === 'neg';
+      const range = calculateRivenStatRange(catKey, w.dis, slot.stat, currentCfg, isNeg);
+      const evalData = getSlotEvaluation(slot, range);
+
+      const slotCard = $(`#slot-card-${idx}`, container);
+      if (slotCard) {
+        const fill = $('.stat-gauge-fill', slotCard);
+        if (fill) {
+          fill.style.width = `${evalData.clampedPct.toFixed(1)}%`;
+          fill.className = `stat-gauge-fill ${evalData.verdictClass}`;
+        }
+        const marker = $('.stat-gauge-marker', slotCard);
+        if (marker) {
+          marker.style.left = `${evalData.clampedPct.toFixed(1)}%`;
+        }
+        const bubble = $('.marker-bubble', slotCard);
+        if (bubble) {
+          bubble.textContent = `${slot.val}${range.unit} (${evalData.rawPct.toFixed(1)}%)`;
+        }
+        const badge = $('.calc-verdict-badge', slotCard);
+        if (badge) {
+          badge.className = `calc-verdict-badge ${evalData.verdictClass}`;
+          badge.textContent = evalData.verdictBadge;
+        }
+        const vBox = $('.calc-verdict-box', slotCard);
+        if (vBox) {
+          vBox.className = `calc-verdict-box ${evalData.verdictClass}`;
+          const p = $('p', vBox);
+          if (p) p.innerHTML = evalData.adviceText;
+        }
+      }
+
+      updateHologramCard();
+    }
+
+    function renderSlots() {
+      syncSlotsForCfg(currentCfg);
+      const wrapper = $('#calc-slots-wrapper', container);
+      if (!wrapper) return;
+
       wrapper.innerHTML = slots.map((slot, idx) => {
         const isNeg = slot.type === 'neg';
-        const isFatalNeg = slot.stat.startsWith('fatal_');
         const range = calculateRivenStatRange(catKey, w.dis, slot.stat, currentCfg, isNeg);
 
         if (slot.val === null || isNaN(slot.val)) {
@@ -640,43 +855,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
         }
 
         const isLocked = lockedSlotIdx === idx;
-        const pctOfMax = range.max > 0 ? Math.min(100, Math.max(0, (slot.val / range.max) * 100)) : 0;
-        totalPct += pctOfMax;
-
-        let verdictClass = 'verdict-mid';
-        let verdictBadge = 'RANGO MEDIO / JUGABLE';
-        let adviceText = '';
-
-        if (isFatalNeg) {
-          verdictClass = 'verdict-low';
-          verdictBadge = '☠️ NEGATIVO FATAL';
-          adviceText = `Este negativo anula por completo la viabilidad del arma en combate. Reroll obligatorio.`;
-        } else if (pctOfMax >= 93) {
-          verdictClass = 'verdict-god';
-          verdictBadge = '🌟 TIRO PERFECTO DE FÁBRICA (95%+)';
-          adviceText = `¡Tirada perfecta! Tu <b>${slot.val}${range.unit}</b> roza el tope absoluto teórico de <b>${range.max.toFixed(1)}${range.unit}</b>. La probabilidad de mejorar este stat con más rerolls es menor al 1.5%.`;
-        } else if (pctOfMax >= 82) {
-          verdictClass = 'verdict-great';
-          verdictBadge = '🔥 EXCELENTE (RANGO S / A+)';
-          adviceText = `Muy alto: tienes el <b>${pctOfMax.toFixed(1)}% del tope teórico</b> (máximo: ${range.max.toFixed(1)}${range.unit}). Rendimiento formidable en Camino de Acero.`;
-        } else if (pctOfMax >= 68) {
-          verdictClass = 'verdict-mid';
-          verdictBadge = '⚖️ RANGO MEDIO / JUGABLE';
-          adviceText = `Tu valor de <b>${slot.val}${range.unit}</b> es aceptable pero está algo lejos del tope de <b>${range.max.toFixed(1)}${range.unit}</b>. Si tienes Kuva de sobra, puedes buscar un valor más cercano al promedio de ${range.avg.toFixed(1)}${range.unit}.`;
-        } else {
-          verdictClass = 'verdict-low';
-          verdictBadge = '📉 ROLL BAJO O RESTRINGIDO';
-          adviceText = `Tu valor de <b>${slot.val}${range.unit}</b> está en la franja baja (tope potencial: ${range.max.toFixed(1)}${range.unit}). Conviene rollear si buscas potenciar el arma al máximo.`;
-        }
-
-        computedSlotData.push({
-          slot,
-          range,
-          isNeg,
-          isLocked,
-          pctOfMax,
-          val: slot.val
-        });
+        const evalData = getSlotEvaluation(slot, range);
 
         return `
           <div class="calc-slot-card ${isLocked ? 'is-locked' : ''}" id="slot-card-${idx}">
@@ -695,7 +874,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
                 <button type="button" class="btn-riven-lock ${isLocked ? 'locked' : ''}" data-slot-lock="${idx}">
                   <span>${isLocked ? '🔒 Bloqueado (7.000 Kuva)' : '🔓 Bloquear Atributo'}</span>
                 </button>
-                <span class="calc-verdict-badge ${verdictClass}">${verdictBadge}</span>
+                <span class="calc-verdict-badge ${evalData.verdictClass}">${evalData.verdictBadge}</span>
               </div>
             </div>
 
@@ -725,118 +904,34 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
               </div>
 
               <div class="stat-gauge-track">
-                <div class="stat-gauge-fill ${verdictClass}" style="width:${pctOfMax.toFixed(1)}%;"></div>
-                <div class="stat-gauge-marker" style="left:${pctOfMax.toFixed(1)}%;">
-                  <span class="marker-bubble">${slot.val}${range.unit} (${pctOfMax.toFixed(1)}%)</span>
+                <div class="stat-gauge-fill ${evalData.verdictClass}" style="width:${evalData.clampedPct.toFixed(1)}%;"></div>
+                <div class="stat-gauge-marker" style="left:${evalData.clampedPct.toFixed(1)}%;">
+                  <span class="marker-bubble">${slot.val}${range.unit} (${evalData.rawPct.toFixed(1)}%)</span>
                 </div>
               </div>
             </div>
 
             <!-- TEXTO DE DETALLE Y VEREDICTO EXPERTO -->
-            <div class="calc-verdict-box ${verdictClass}">
+            <div class="calc-verdict-box ${evalData.verdictClass}">
               <div class="verdict-icon-symbol">${isLocked ? '🔒' : '💠'}</div>
               <div class="verdict-text-content">
-                <p>${adviceText}</p>
+                <p>${evalData.adviceText}</p>
               </div>
             </div>
           </div>
         `;
       }).join('');
 
-      // Calcular métricas globales del Riven
-      const avgQuality = slotCount > 0 ? (totalPct / slotCount) : 0;
-      let globalTier = 'TIER B (JUGABLE)';
-      let globalColor = '#38bdf8';
-      let priceEst = `${estimateRivenMarketPrices(w).unrolledMin} - ${estimateRivenMarketPrices(w).decentMin} PL`;
-
-      const hasFatal = slots.some(s => s.stat.startsWith('fatal_'));
-      if (hasFatal) {
-        globalTier = '☠️ TIER F (NEGATIVO FATAL)';
-        globalColor = '#ef4444';
-        priceEst = 'Precio de Chatarra / Unrolled (30 - 80 PL)';
-      } else if (avgQuality >= 90) {
-        globalTier = '👑 TIER S+ (GOD ROLL SUPREMO)';
-        globalColor = 'var(--gold)';
-        priceEst = `${estimateRivenMarketPrices(w).godMin.toLocaleString()} - ${estimateRivenMarketPrices(w).godMax.toLocaleString()}+ PL`;
-      } else if (avgQuality >= 80) {
-        globalTier = '🔥 TIER S (EXCELENTE META)';
-        globalColor = '#a855f7';
-        priceEst = `${Math.round(estimateRivenMarketPrices(w).decentMax * 1.3)} - ${Math.round(estimateRivenMarketPrices(w).godMin * 0.9)} PL`;
-      } else if (avgQuality >= 65) {
-        globalTier = '⚔️ TIER A (JUGABLE / SÓLIDO)';
-        globalColor = '#38bdf8';
-        priceEst = `${estimateRivenMarketPrices(w).decentMin} - ${estimateRivenMarketPrices(w).decentMax} PL`;
-      }
-
-      // Nombre dinámico del Riven según afijos
-      const posStatKeys = slots.filter(s => s.type === 'pos').map(s => s.stat);
-      const rivenName = generateRivenName(w.n, posStatKeys);
-      const isAnyLocked = lockedSlotIdx !== -1;
-      const disStars = '●'.repeat(Math.min(5, Math.max(1, Math.round(w.dis)))) + '○'.repeat(Math.max(0, 5 - Math.round(w.dis)));
-
-      // Renderizar la CARTA HOLOGRÁFICA GRANDE en la Columna Izquierda
-      cardBox.innerHTML = `
-        <div class="hologram-riven-card large-riven-card">
-          <div class="riven-card-glow"></div>
-          <div class="riven-card-inner">
-            <div class="riven-card-top">
-              <span class="riven-icon-symbol">🌀</span>
-              <span class="riven-card-title">${esc(rivenName)}</span>
-              <span class="riven-card-pol">🗲</span>
-            </div>
-
-            <div class="riven-card-stats-list">
-              ${computedSlotData.map(d => {
-                if (d.isNeg) {
-                  return `
-                    <div class="riven-card-stat-line neg ${d.isLocked ? 'is-locked-stat' : ''}">
-                      ${d.isLocked ? '<span class="lock-indicator" title="Atributo Bloqueado">🔒</span> ' : ''}-${d.val}${d.range.unit} ${d.range.name}
-                    </div>
-                  `;
-                }
-                return `
-                  <div class="riven-card-stat-line pos ${d.isLocked ? 'is-locked-stat' : ''}">
-                    ${d.isLocked ? '<span class="lock-indicator" title="Atributo Bloqueado">🔒</span> ' : ''}+${d.val}${d.range.unit} ${d.range.name}
-                  </div>
-                `;
-              }).join('')}
-            </div>
-
-            <div class="riven-card-bottom">
-              <span>MR ${w.mr}</span>
-              <span>${disStars}</span>
-              <span>${isAnyLocked ? '🔒 7.000 Kuva / ciclo' : '3.500 Kuva / ciclo'}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="builder-verdict-summary" style="margin-top:14px;width:100%;">
-          <div class="verdict-tier-badge" style="border-color:${globalColor};color:${globalColor};">
-            ${globalTier}
-          </div>
-          <div class="verdict-price-row">
-            <span class="muted small">Valor Estimado en Mercado:</span>
-            <span class="verdict-price-value">${priceEst}</span>
-          </div>
-          <p class="builder-advice-text" style="font-size:0.85rem;margin:4px 0 0;">
-            Promedio de Perfección: <b>${avgQuality.toFixed(1)}%</b> del tope teórico.
-          </p>
-          <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.1);font-size:0.78rem;color:#94a3b8;">
-            ${isAnyLocked ? `
-              <b style="color:#fde047;">🔒 Candado Activo en ${table[slots[lockedSlotIdx]?.stat]?.name || 'atributo'}:</b><br>
-              5 tiradas = 35.000 Kuva · 10 tiradas = 70.000 Kuva.
-            ` : `
-              Coste normal sin candado: 3.500 Kuva por ciclo.
-            `}
-          </div>
-        </div>
-      `;
+      updateHologramCard();
     }
 
     container.addEventListener('change', (e) => {
       if (e.target.id === 'calc-cfg-select') {
         currentCfg = e.target.value;
         renderSlots();
+      } else if (e.target.id === 'calc-splice-select') {
+        currentSplice = e.target.value;
+        updateHologramCard();
       } else if (e.target.classList.contains('calc-slot-stat')) {
         const idx = parseInt(e.target.dataset.slotIdx, 10);
         if (slots[idx]) {
@@ -851,8 +946,9 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       if (e.target.classList.contains('calc-slot-val')) {
         const idx = parseInt(e.target.dataset.slotIdx, 10);
         if (slots[idx]) {
-          slots[idx].val = parseFloat(e.target.value) || 0;
-          renderSlots();
+          const val = parseFloat(e.target.value);
+          slots[idx].val = isNaN(val) ? 0 : val;
+          updateSlotLive(idx);
         }
       }
     });
