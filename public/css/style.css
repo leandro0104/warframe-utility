@@ -5347,6 +5347,28 @@ button.btn-riven-lock.locked {
   line-height: 1.35
 }
 
+.calc-slot-card.splice-slot-card {
+  border-color: rgba(52, 211, 153, .45);
+  background: linear-gradient(165deg, rgba(6, 30, 24, .95) 0%, rgba(4, 18, 14, .98) 100%);
+  box-shadow: 0 4px 20px rgba(52, 211, 153, .15)
+}
+
+.calc-slot-badge.splice-badge {
+  background: rgba(52, 211, 153, .18);
+  border: 1px solid #34d399;
+  color: #6ee7b7
+}
+
+.splice-desc-box {
+  background: rgba(0, 0, 0, .35);
+  border: 1px solid rgba(52, 211, 153, .25);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: .82rem;
+  color: #a7f3d0;
+  line-height: 1.35
+}
+
 .calc-global-summary {
   background: linear-gradient(135deg, rgba(16, 30, 64, .9) 0%, rgba(10, 18, 40, .96) 100%);
   border: 1.5px solid rgba(56, 189, 248, .45);

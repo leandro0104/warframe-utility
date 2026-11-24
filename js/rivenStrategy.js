@@ -673,18 +673,19 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
     const table = BASE_RIVEN_STATS[catKey] || BASE_RIVEN_STATS.rifle;
 
     const RIVEN_SPLICES = {
-      none: { label: 'Ninguno (Riven Estándar)', bonusText: '', short: '' },
-      ammo_eff: { label: '💠 +30% Eficiencia de Munición (Empalme)', bonusText: '+30% Eficiencia de Munición', short: '+30% Efic. Munición' },
-      reload_spd: { label: '💠 +30% Velocidad de Recarga (Empalme)', bonusText: '+30% Velocidad de Recarga', short: '+30% Vel. Recarga' },
-      recoil_red: { label: '💠 -35% Retroceso de Arma (Empalme)', bonusText: '-35% Retroceso de Arma', short: '-35% Retroceso' },
-      mag_cap: { label: '💠 +25% Capacidad de Cargador (Empalme)', bonusText: '+25% Capacidad de Cargador', short: '+25% Cargador' },
-      proj_spd: { label: '💠 +20% Velocidad de Proyectil (Empalme)', bonusText: '+20% Velocidad de Proyectil', short: '+20% Vel. Proyectil' },
-      punch_through: { label: '💠 +0.6 Traspasar / Penetración (Empalme)', bonusText: '+0.6 Traspasar / Penetración', short: '+0.6 Traspasar' },
-      holster_spd: { label: '💠 +25% Velocidad de Cambio de Arma (Empalme)', bonusText: '+25% Velocidad de Cambio', short: '+25% Cambio Arma' }
+      none: { label: 'Ninguno (Riven Estándar)', name: 'Ninguno', base: 0, unit: '', note: 'Sin bonificación de empalme' },
+      ammo_eff: { label: '💠 Eficiencia de Munición (Empalme)', name: 'Eficiencia de Munición', base: 35.0, unit: '%', prefix: '+', tier: 'god', note: 'Disparos sin gastar munición del cargador (receta: Cargador + Recarga o Retroceso + Munición Máxima)' },
+      reload_spd: { label: '💠 Velocidad de Recarga (Empalme)', name: 'Velocidad de Recarga', base: 35.0, unit: '%', prefix: '+', tier: 'meta', note: 'Acelera notablemente la recarga del arma' },
+      recoil_red: { label: '💠 Reducción de Retroceso (Empalme)', name: 'Reducción de Retroceso', base: 40.0, unit: '%', prefix: '-', tier: 'good', note: 'Disparos mucho más estables y agrupados' },
+      mag_cap: { label: '💠 Capacidad de Cargador (Empalme)', name: 'Capacidad de Cargador', base: 35.0, unit: '%', prefix: '+', tier: 'good', note: 'Incrementa los proyectiles por tambor o cargador' },
+      proj_spd: { label: '💠 Velocidad de Proyectil (Empalme)', name: 'Velocidad de Proyectil', base: 45.0, unit: '%', prefix: '+', tier: 'good', note: 'Aumenta velocidad de viaje y alcance efectivo' },
+      punch_through: { label: '💠 Atravesar / Penetración (Empalme)', name: 'Atravesar', base: 1.5, unit: 'm', prefix: '+', tier: 'good', note: 'Perfora enemigos en fila y coberturas' },
+      holster_spd: { label: '💠 Velocidad de Cambio (Empalme)', name: 'Velocidad de Cambio', base: 40.0, unit: '%', prefix: '+', tier: 'good', note: 'Permite cambiar instantáneamente entre armas' }
     };
 
     let currentCfg = '3pos_1neg';
     let currentSplice = 'none';
+    let currentSpliceVal = null;
     let lockedSlotIdx = -1; // -1 = sin candado
 
     // Slots iniciales
@@ -694,6 +695,68 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       { id: 2, type: 'pos', stat: 'critical_chance', val: null },
       { id: 3, type: 'neg', stat: 'zoom', val: null }
     ];
+
+    function calculateSpliceRange(spliceKey, disposition, configType) {
+      const info = RIVEN_SPLICES[spliceKey];
+      if (!info || info.base === 0) return null;
+      const disp = disposition || 1.0;
+      const cfgMultipliers = {
+        '2pos_1neg': 1.25,
+        '3pos_1neg': 0.94,
+        '2pos_0neg': 1.00,
+        '3pos_0neg': 0.75
+      };
+      const mult = cfgMultipliers[configType] || 1.25;
+
+      const minVal = info.base * disp * mult * 0.90;
+      const avgVal = info.base * disp * mult * 1.00;
+      const maxVal = info.base * disp * mult * 1.10;
+
+      return {
+        name: info.name,
+        unit: info.unit,
+        prefix: info.prefix || '+',
+        base: info.base,
+        disp,
+        mult,
+        min: minVal,
+        avg: avgVal,
+        max: maxVal
+      };
+    }
+
+    function getSpliceEvaluation(val, range) {
+      const rawPct = range.max > 0 ? (val / range.max) * 100 : 0;
+      const clampedPct = Math.min(100, Math.max(0, rawPct));
+
+      let verdictClass = 'verdict-mid';
+      let verdictBadge = 'RANGO MEDIO / JUGABLE';
+      let adviceText = '';
+
+      if (rawPct > 100.5) {
+        verdictClass = 'verdict-god';
+        verdictBadge = '🌟 SUPERA TOPE ESTÁNDAR (100%+)';
+        adviceText = `¡Empalme extraordinario! Tu valor de <b>${range.prefix}${val}${range.unit}</b> supera el tope teórico base (${range.prefix}${range.max.toFixed(1)}${range.unit}). Ocurre por combinaciones de armas Coda/Kuva o disposiciones heredadas.`;
+      } else if (clampedPct >= 93) {
+        verdictClass = 'verdict-god';
+        verdictBadge = '🌟 TIRO PERFECTO DE FÁBRICA (95%+)';
+        adviceText = `¡Empalme perfecto! Tu <b>${range.prefix}${val}${range.unit}</b> roza el tope absoluto teórico de <b>${range.prefix}${range.max.toFixed(1)}${range.unit}</b>. Máxima optimización para tu build.`;
+      } else if (clampedPct >= 82) {
+        verdictClass = 'verdict-great';
+        verdictBadge = '🔥 EXCELENTE (TIER S / A+)';
+        adviceText = `Muy alto: tienes el <b>${clampedPct.toFixed(1)}% del tope teórico</b> (máximo: ${range.prefix}${range.max.toFixed(1)}${range.unit}). Rendimiento formidable en Camino de Acero.`;
+      } else if (clampedPct >= 68) {
+        verdictClass = 'verdict-mid';
+        verdictBadge = '⚖️ RANGO MEDIO / JUGABLE';
+        adviceText = `Tu valor de <b>${range.prefix}${val}${range.unit}</b> es jugable pero está algo lejos del tope de <b>${range.prefix}${range.max.toFixed(1)}${range.unit}</b> (promedio: ${range.prefix}${range.avg.toFixed(1)}${range.unit}).`;
+      } else {
+        verdictClass = 'verdict-low';
+        verdictBadge = '📉 EMPALME BAJO';
+        adviceText = `Tu valor de <b>${range.prefix}${val}${range.unit}</b> está en la franja baja (tope potencial: ${range.prefix}${range.max.toFixed(1)}${range.unit}).`;
+      }
+
+      return { rawPct, clampedPct, verdictClass, verdictBadge, adviceText };
+    }
 
     function syncSlotsForCfg(cfg) {
       if (cfg === '2pos_1neg') {
@@ -887,7 +950,11 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       const isAnyLocked = lockedSlotIdx !== -1;
       const disStars = '●'.repeat(Math.min(5, Math.max(1, Math.round(w.dis)))) + '○'.repeat(Math.max(0, 5 - Math.round(w.dis)));
       const hasSplice = currentSplice !== 'none';
-      const spliceObj = RIVEN_SPLICES[currentSplice];
+      const sRange = hasSplice ? calculateSpliceRange(currentSplice, w.dis, currentCfg) : null;
+      if (hasSplice && sRange && (currentSpliceVal === null || isNaN(currentSpliceVal))) {
+        currentSpliceVal = Math.round(sRange.avg * 10) / 10;
+      }
+      const sEval = (hasSplice && sRange) ? getSpliceEvaluation(currentSpliceVal, sRange) : null;
 
       cardBox.innerHTML = `
         <div class="hologram-riven-card large-riven-card">
@@ -915,9 +982,9 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
                 `;
               }).join('')}
 
-              ${hasSplice ? `
+              ${hasSplice && sRange ? `
                 <div class="riven-card-stat-line splice-line">
-                  <span class="splice-ico">💠</span> ${esc(spliceObj.bonusText)} <span class="splice-tag">Empalme</span>
+                  <span class="splice-ico">💠</span> ${sRange.prefix}${currentSpliceVal}${sRange.unit} ${sRange.name} <span class="splice-tag">Empalme</span>
                 </div>
               ` : ''}
             </div>
@@ -941,9 +1008,9 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
           <p class="builder-advice-text" style="font-size:0.85rem;margin:4px 0 0;">
             Promedio de Perfección: <b>${avgQuality.toFixed(1)}%</b> del tope teórico.
           </p>
-          ${hasSplice ? `
+          ${hasSplice && sRange ? `
             <div class="splice-info-note">
-              💠 <b>Empalme Activo:</b> ${esc(spliceObj.bonusText)} (no altera el coste de Kuva ni la disposición).
+              💠 <b>Empalme Activo:</b> ${sRange.prefix}${currentSpliceVal}${sRange.unit} ${sRange.name} (${sEval.rawPct.toFixed(1)}% del tope teórico de ${sRange.prefix}${sRange.max.toFixed(1)}${sRange.unit}). No altera el coste de Kuva ni la disposición.
             </div>
           ` : ''}
           <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.1);font-size:0.78rem;color:#94a3b8;">
@@ -956,6 +1023,43 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
           </div>
         </div>
       `;
+    }
+
+    function updateSpliceLive() {
+      if (currentSplice === 'none') return;
+      const sRange = calculateSpliceRange(currentSplice, w.dis, currentCfg);
+      if (!sRange) return;
+      const sEval = getSpliceEvaluation(currentSpliceVal, sRange);
+
+      const card = $('#slot-card-splice', container);
+      if (card) {
+        const fill = $('.stat-gauge-fill', card);
+        if (fill) {
+          fill.style.width = `${sEval.clampedPct.toFixed(1)}%`;
+          fill.className = `stat-gauge-fill ${sEval.verdictClass}`;
+        }
+        const marker = $('.stat-gauge-marker', card);
+        if (marker) {
+          marker.style.left = `${sEval.clampedPct.toFixed(1)}%`;
+        }
+        const bubble = $('.marker-bubble', card);
+        if (bubble) {
+          bubble.textContent = `${sRange.prefix}${currentSpliceVal}${sRange.unit} (${sEval.rawPct.toFixed(1)}%)`;
+        }
+        const badge = $('.calc-verdict-badge', card);
+        if (badge) {
+          badge.className = `calc-verdict-badge ${sEval.verdictClass}`;
+          badge.textContent = sEval.verdictBadge;
+        }
+        const vBox = $('.calc-verdict-box', card);
+        if (vBox) {
+          vBox.className = `calc-verdict-box ${sEval.verdictClass}`;
+          const p = $('p', vBox);
+          if (p) p.innerHTML = sEval.adviceText;
+        }
+      }
+
+      updateHologramCard();
     }
 
     function updateSlotLive(idx) {
@@ -1001,7 +1105,7 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
       const wrapper = $('#calc-slots-wrapper', container);
       if (!wrapper) return;
 
-      wrapper.innerHTML = slots.map((slot, idx) => {
+      let html = slots.map((slot, idx) => {
         const isNeg = slot.type === 'neg';
         const range = calculateRivenStatRange(catKey, w.dis, slot.stat, currentCfg, isNeg);
 
@@ -1077,6 +1181,78 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
         `;
       }).join('');
 
+      if (currentSplice !== 'none') {
+        const sRange = calculateSpliceRange(currentSplice, w.dis, currentCfg);
+        if (sRange) {
+          if (currentSpliceVal === null || isNaN(currentSpliceVal)) {
+            currentSpliceVal = Math.round(sRange.avg * 10) / 10;
+          }
+          const sEval = getSpliceEvaluation(currentSpliceVal, sRange);
+
+          html += `
+            <div class="calc-slot-card splice-slot-card" id="slot-card-splice">
+              <div class="calc-slot-top-bar">
+                <div class="calc-slot-title-wrap">
+                  <span class="calc-slot-badge splice-badge">
+                    💠 EMPALME DE AGRIETADO
+                  </span>
+                  <span class="calc-slot-stat-name">
+                    ${sRange.name} en ${esc(weaponNameEs)}
+                  </span>
+                  <span class="badge" style="border-color:#34d399;color:#34d399;font-weight:700;">INJERTO PERMANENTE</span>
+                </div>
+
+                <div class="calc-slot-actions">
+                  <span class="calc-verdict-badge ${sEval.verdictClass}">${sEval.verdictBadge}</span>
+                </div>
+              </div>
+
+              <div class="calc-slot-controls-row">
+                <div class="calc-field-col">
+                  <label class="calc-mini-label">Atributo Injertado (Riven Splicer):</label>
+                  <div class="splice-desc-box">
+                    <b>${sRange.name}:</b> ${RIVEN_SPLICES[currentSplice].note}
+                  </div>
+                </div>
+
+                <div class="calc-field-col" style="max-width:220px;">
+                  <label class="calc-mini-label">Tu Porcentaje en el Empalme:</label>
+                  <div class="calc-input-addon">
+                    <input type="number" class="calc-num-input calc-splice-val" id="calc-splice-val-input" value="${currentSpliceVal}" step="0.1">
+                    <span class="calc-addon-unit">${sRange.unit}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- MEDIDOR VISUAL HOLOGRÁFICO CON ESPACIO DESPEJADO -->
+              <div class="stat-gauge-wrapper">
+                <div class="gauge-labels-row">
+                  <span>Mínimo: <b>${sRange.prefix}${sRange.min.toFixed(1)}${sRange.unit}</b></span>
+                  <span>Promedio: <b style="color:#38bdf8;">${sRange.prefix}${sRange.avg.toFixed(1)}${sRange.unit}</b></span>
+                  <span>Tope Máximo Teórico: <b style="color:#34d399;">${sRange.prefix}${sRange.max.toFixed(1)}${sRange.unit}</b></span>
+                </div>
+
+                <div class="stat-gauge-track">
+                  <div class="stat-gauge-fill ${sEval.verdictClass}" style="width:${sEval.clampedPct.toFixed(1)}%;"></div>
+                  <div class="stat-gauge-marker" style="left:${sEval.clampedPct.toFixed(1)}%;">
+                    <span class="marker-bubble">${sRange.prefix}${currentSpliceVal}${sRange.unit} (${sEval.rawPct.toFixed(1)}%)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TEXTO DE DETALLE Y VEREDICTO EXPERTO -->
+              <div class="calc-verdict-box ${sEval.verdictClass}">
+                <div class="verdict-icon-symbol">💠</div>
+                <div class="verdict-text-content">
+                  <p>${sEval.adviceText}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      wrapper.innerHTML = html;
       updateHologramCard();
     }
 
@@ -1086,7 +1262,8 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
         renderSlots();
       } else if (e.target.id === 'calc-splice-select') {
         currentSplice = e.target.value;
-        updateHologramCard();
+        currentSpliceVal = null; // reset to default avg
+        renderSlots();
       } else if (e.target.classList.contains('calc-slot-stat')) {
         const idx = parseInt(e.target.dataset.slotIdx, 10);
         if (slots[idx]) {
@@ -1098,7 +1275,11 @@ export function renderRivenStrategyView(root, initialSlug = 'torid') {
     });
 
     container.addEventListener('input', (e) => {
-      if (e.target.classList.contains('calc-slot-val')) {
+      if (e.target.id === 'calc-splice-val-input' || e.target.classList.contains('calc-splice-val')) {
+        const val = parseFloat(e.target.value);
+        currentSpliceVal = isNaN(val) ? 0 : val;
+        updateSpliceLive();
+      } else if (e.target.classList.contains('calc-slot-val')) {
         const idx = parseInt(e.target.dataset.slotIdx, 10);
         if (slots[idx]) {
           const val = parseFloat(e.target.value);
